@@ -8,6 +8,7 @@
 //  Project SynchroTime: Time synchronization of the Precision RTC module DS3231
 //  with the UTC System Time via the Serial Interface (UART).
 //------------------------------------------------------------------------------
+
 /**
 * @mainpage SynchroTime - client console application
 *
