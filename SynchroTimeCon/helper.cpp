@@ -252,14 +252,11 @@ int handleVersionRequest( Session *const session )
     session->getInterface()->closeSocket();
 
     // Check of the Received request
-    if ( !session->getInterface()->getReceivedData().isEmpty() )
+    if ( !session->getInterface()->getReceivedData().isEmpty() && session->getInterface()->getReceivedData().count() >= 4 )
     {
-        qint64 numberOfSec = 0U;
-        foreach ( const quint8 &byte, session->getInterface()->getReceivedData() )
-        {
-            numberOfSec = (numberOfSec << 8) + byte;
-        }
-        QDateTime time(QDateTime::fromMSecsSinceEpoch( numberOfSec*1000 ));
+        quint32 numberOfSec;
+        memcpy( &numberOfSec, session->getInterface()->getReceivedData().data(), sizeof(numberOfSec) );
+        QDateTime time(QDateTime::fromMSecsSinceEpoch( qint64(numberOfSec)*1000 ));
         standardOutput << "RTC DS3231 time " << numberOfSec << "s: " << time.toString() << endl;
         standardOutput << "Loc System time " << local.toMSecsSinceEpoch()/1000 << "s: " << local.toString() << endl;
         standardOutput << "Difference between " << numberOfSec - local.toMSecsSinceEpoch()/1000 << 's' << endl;
