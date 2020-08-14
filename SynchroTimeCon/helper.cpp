@@ -157,28 +157,33 @@ inline bool parserHelper( CMDcommand *const cmdCom, const QString &str )
 //! Set Command Line Parser's parameters and optins
 //!
 //! \details
-//!
+//! \todo
 //! \param[in,out] parser of the type QCommandLineParser
 //!
 // ------------------------------------------------------------------------
 void setCommandLineParser( QCommandLineParser &parser )
 {
 #ifndef GUI_APP
-    parser.setApplicationDescription( "Description: This program is used for servicing DLC-X devices.\n"
-                                      "It can upload firmware and perform other manipulations with storage devices:\n"
-                                      "read, write, format, and erase of memory blocks." );
+    parser.setApplicationDescription( "Description: Console app is used for adjustment of the RTC DS3231 module.\n"
+                                      "The console app can synchronize the time with a computer via Serial Port and \n"
+                                      "compensate for the time-drift of the DS3231 and save the parameters into flash." );
 #endif
 
     parser.addPositionalArgument( "Command", QCoreApplication::translate( "main", "String containing a storage command request" ) );
-    parser.addPositionalArgument( "InputFile", QCoreApplication::translate( "main", "Input file [path/]input.bin" ) );
-    parser.addPositionalArgument( "OutputFile", QCoreApplication::translate( "main", "Output file [path/]output.bin" ) );
+//    parser.addPositionalArgument( "InputFile", QCoreApplication::translate( "main", "Input file [path/]input.bin" ) );
+//    parser.addPositionalArgument( "OutputFile", QCoreApplication::translate( "main", "Output file [path/]output.bin" ) );
 
 #ifndef GUI_APP
     QCommandLineOption discovery( QStringList() << DISCOVERY << "discovery",
-                                       QCoreApplication::translate( "main", "Discovery of existing serial ports and print on the console" ),
+                                       QCoreApplication::translate( "main", "Discover for existing Serial Ports in the System" ),
                                        QCoreApplication::translate( "main", "" ), "0" );
     parser.addOption( discovery );
 #endif
+
+    QCommandLineOption portName( QStringList() << PORTNAME << "port",
+                                       QCoreApplication::translate( "main", "Set up an available Serial Port (ttyUSB0 or COM2)" ),
+                                       QCoreApplication::translate( "main", "PortName" ), "0" );
+    parser.addOption( portName );
 
     QCommandLineOption configure( QStringList() << CONFIGURE << "config",
                                        QCoreApplication::translate( "main", "Read configuration of accessible storage devices" ),

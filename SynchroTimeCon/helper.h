@@ -60,6 +60,7 @@ typedef struct
 #define DISCOVERY  "d"
 #define CMDLIST    "l"
 #endif
+#define PORTNAME   "p"
 #define CONFIGURE  "c"
 #define CMDSTRING  "f"
 #define TEST       "t"
