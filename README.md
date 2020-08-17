@@ -9,7 +9,16 @@
    * Synchronize RTC DS3231 with computer time;
    * Correct the DS3231 RTC clock drift. The algorithm performs correction in the range from -12.8 to +12.7 ppm;
    * Automatically save parameters and calibration data to energy independent memory. In case there is a power failure to the module.
-```
+`
 ~$ ./synchroTime -h
-```
+`
 ![synchroTime -h](images/consoleApp_About.png)
+
+## Using the app
+
+ * Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a virtual device - Serial port will appear in the system (under Linux it will be /dev/ttyUSBx, under Windows - COMx).
+ To find a new port, you can view the entire list of ports in the system with the discovery command. To do this, call the application with the -d (--discovery) switch:
+ `
+ ~$ ./synchroTime -d
+ `
+ * 
