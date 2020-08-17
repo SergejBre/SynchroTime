@@ -24,8 +24,9 @@ inline void intToHex( byte* const buff, unsigned long value );
 unsigned long hexToInt( byte* const buff );
 unsigned long getUTCtime( unsigned long localTimeSecs );
 void adjustTime( unsigned long utcTimeSecs );
-void adjustDrift( int8_t ppm ); // todo
-char string_parser();
+boolean adjustTimeDrift( float drift_in_ppm );
+float calculateDrift_ppm( unsigned long utcTimeSecs, unsigned long currentTimeSecs );
+char string_parser(); // todo
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
@@ -35,10 +36,10 @@ void setup () {
     while (1);
   }
 
-  int8_t offset_reg = readFromOffsetReg();
+  int8_t offset_val = readFromOffsetReg();
 /*
   Serial.print( F("Offset register value = ") );
-  Serial.println( offset_reg );
+  Serial.println( offset_val );
   Serial.println();
 */
   if ( rtc.lostPower() ) {
@@ -46,14 +47,15 @@ void setup () {
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
     rtc.adjust( DateTime( F(__DATE__), F(__TIME__) ) + TimeSpan( 0, 0, 0, 15 ) );
 
-//    offset_reg = -32; // from -127 to +127, default 0
-    offset_reg = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
-    writeToOffsetReg( offset_reg );
+//    offset_val = -32; // from -128 to +127, default 0
+    offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+    writeToOffsetReg( offset_val );
     Serial.print( F( "Set Offset Reg: " ) );
-    Serial.println( offset_reg );
+    Serial.println( offset_val );
   }
-/*
-  intToHex( buff, 123456789 ); // data to write
+// August 5, 2020 at 12:00 you would call:
+/*  Serial.println( DateTime(2020, 8, 5, 12, 0, 0).unixtime(), DEC );
+  intToHex( buff, DateTime(2020, 8, 5, 12, 0, 0).unixtime() ); // data to write
   i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write to EEPROM AT24C256
   delay(100); //add a small delay
   Serial.println( F("Memory written") );
@@ -142,10 +144,10 @@ int8_t readFromOffsetReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
   Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
   Wire.endTransmission();
-  int8_t offset_reg;
+  int8_t offset_val;
   Wire.requestFrom( DS3231_ADDRESS, 1 ); // Read a byte from register
-  offset_reg = int8_t( Wire.read() );
-  return offset_reg;
+  offset_val = int8_t( Wire.read() );
+  return offset_val;
 }
 
 boolean writeToOffsetReg( int8_t value ) {
@@ -171,49 +173,80 @@ unsigned long getUTCtime( unsigned long localTimeSecs ) {
 void adjustTime( unsigned long utcTimeSecs ) {
   rtc.adjust( DateTime( utcTimeSecs - SECONDS_FROM_1970_TO_2000 + TIME_ZONE*3600 ) );
   intToHex( buff, utcTimeSecs ); // data to write
-  i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write to EEPROM AT24C256
+  i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
 }
 
-byte i2c_eeprom_read_byte( int deviceaddress, unsigned int eeaddress ) {
+boolean adjustTimeDrift( float drift_in_ppm ) {
+  int8_t offset = int8_t( drift_in_ppm * 10 );
+  if ( offset == 0 ) return true;  // if offset is 0, nothing needs to be done
+  int8_t last_offset_reg = readFromOffsetReg();
+  int8_t last_offset_ee = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+  if ( last_offset_reg == last_offset_ee ) {
+    offset = int8_t( drift_in_ppm * 10 + last_offset_reg );
+  }
+  i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, offset );  // write offset value to EEPROM AT24C256
+  return writeToOffsetReg( offset );
+}
+
+// "drift in ppm unit" - this is the ratio of the clock drift from the reference time,
+// which is expressed in terms of one million control seconds.
+// For example, reference_time = 1597590276 sec, clock_time = 1597590292 sec, last_set_time = 1596628800 sec,
+// time_drift = reference_time - clock_time = -16 sec
+// number_of_control_seconds = reference_time - last_set_time = 961476 sec, i.e about 0.961476*10^6 sec
+// drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16 / 0.961476 = -16.641081 ppm
+float calculateDrift_ppm( unsigned long referenceTimeSecs, unsigned long clockTimeSecs ) {
+  if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
+    return 0;
+  }
+  unsigned long last_set_timeSecs = hexToInt( buff );
+  if ( referenceTimeSecs <= last_set_timeSecs ) {
+    return 0;
+  }
+  long time_drift = referenceTimeSecs - clockTimeSecs;
+  return float(time_drift)*1000000/(referenceTimeSecs - last_set_timeSecs);
+}
+
+byte i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
   byte rdata = 0xFF;
-  Wire.beginTransmission( deviceaddress );
-  Wire.write( (int)( eeaddress >> 8 ) ); // MSB
-  Wire.write( (int)( eeaddress & 0xFF)); // LSB
+  Wire.beginTransmission( deviceAddress );
+  Wire.write( (int)( eeAddress >> 8 ) ); // MSB
+  Wire.write( (int)( eeAddress & 0xFF)); // LSB
   Wire.endTransmission();
-  Wire.requestFrom( deviceaddress, 1 );
+  Wire.requestFrom( deviceAddress, 1 );
   if ( Wire.available() ) rdata = Wire.read();
   return rdata;
 }
 
-void i2c_eeprom_read_buffer( int deviceaddress, unsigned int eeaddress, byte* const buffer, int length ) {
-  Wire.beginTransmission( deviceaddress );
-  Wire.write( (int)( eeaddress >> 8 ) ); // MSB
-  Wire.write( (int)( eeaddress & 0xFF ) ); // LSB
-  Wire.endTransmission();
-  Wire.requestFrom( deviceaddress, length );
+boolean i2c_eeprom_read_buffer( int deviceAddress, unsigned int eeAddress, byte* const buffer, int length ) {
+  Wire.beginTransmission( deviceAddress );
+  Wire.write( (int)( eeAddress >> 8 ) ); // MSB
+  Wire.write( (int)( eeAddress & 0xFF ) ); // LSB
+  boolean ret_val = ( Wire.endTransmission() == 0 );
+  Wire.requestFrom( deviceAddress, length );
   int i;
   for ( i = 0; i < length; i++ ) {
     if ( Wire.available() ) {
       buffer[i] = Wire.read();
     }
   }
+  return ret_val;
 }
 
-boolean i2c_eeprom_write_byte( int deviceaddress, unsigned int eeaddress, byte data ) {
+boolean i2c_eeprom_write_byte( int deviceAddress, unsigned int eeAddress, byte data ) {
   int rdata = data;
-  Wire.beginTransmission( deviceaddress );
-  Wire.write( (int)( eeaddress >> 8 ) ); // MSB
-  Wire.write( (int)( eeaddress & 0xFF)); // LSB
+  Wire.beginTransmission( deviceAddress );
+  Wire.write( (int)( eeAddress >> 8 ) ); // MSB
+  Wire.write( (int)( eeAddress & 0xFF)); // LSB
   Wire.write( rdata );
   return ( Wire.endTransmission() == 0 );
 }
 
 // WARNING: address is a page address, 6-bit end will wrap around
 // also, data can be maximum of about 30 bytes, because the Wire library has a buffer of 32 bytes
-boolean i2c_eeprom_write_page( int deviceaddress, unsigned int eeaddresspage, byte* const data, uint8_t length ) {
-  Wire.beginTransmission( deviceaddress );
-  Wire.write( (int)( eeaddresspage >> 8 ) ); // MSB
-  Wire.write( (int)( eeaddresspage & 0xFF ) ); // LSB
+boolean i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, byte* const data, uint8_t length ) {
+  Wire.beginTransmission( deviceAddress );
+  Wire.write( (int)( eeAddressPage >> 8 ) ); // MSB
+  Wire.write( (int)( eeAddressPage & 0xFF ) ); // LSB
   uint8_t i;
   for ( i = 0; i < length; i++ ) {
     Wire.write( data[i] );
