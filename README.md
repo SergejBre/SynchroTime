@@ -21,5 +21,7 @@
  To find a new port, you can view the entire list of ports in the system with the discovery command. To do this, call the application with the -d (--discovery) switch:
  `
  ~$ ./synchroTime -d
- `
+ ``
+![synchroTime -d](images/consoleApp_Discovery.png)
+ 
  * 
