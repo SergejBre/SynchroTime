@@ -9,7 +9,7 @@
    * Synchronize RTC DS3231 with computer time;
    * Correct the DS3231 RTC clock drift. The algorithm performs correction in the range from -12.8 to +12.7 ppm;
    * Automatically save parameters and calibration data to energy independent memory. In case there is a power failure to the module.
- * .
+ * Command Help 
 `
 ~$ ./synchroTime -h
 `
