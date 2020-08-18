@@ -23,4 +23,7 @@
 `
 ![synchroTime -d](images/consoleApp_Discovery.png)
  
- * 
+ * To select a virtual Serial Port, enter its system name after the command -p <portName>. The app will automatically create a configuration file, and the next call will contact the selected port.
+`
+~$ ./synchroTime -p
+`

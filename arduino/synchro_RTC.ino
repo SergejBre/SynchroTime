@@ -8,7 +8,6 @@
  * welche Jahreszeit Winter- (+1) oder Sommerzeit (+2) ist.
  */
 #include <Wire.h>
-//#include <EEPROM.h>
 #include "RTClib.h"
 
 #define TIME_ZONE 2          // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
@@ -21,23 +20,24 @@ byte buff[4];
 int8_t readFromOffsetReg( void ); // read from offset register
 boolean writeToOffsetReg( int8_t value ); // write to offset register
 inline void intToHex( byte* const buff, unsigned long value );
+inline void floatToHex( byte* const buff, float value );
 unsigned long hexToInt( byte* const buff );
 unsigned long getUTCtime( unsigned long localTimeSecs );
 void adjustTime( unsigned long utcTimeSecs );
 boolean adjustTimeDrift( float drift_in_ppm );
-float calculateDrift_ppm( unsigned long utcTimeSecs, unsigned long currentTimeSecs );
-char string_parser(); // todo
+float calculateDrift_ppm( unsigned long referenceTimeSecs, unsigned long clockTimeSecs );
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
+  Serial.setTimeout( 5 ); // timeout 5ms
 
   if ( !rtc.begin() ) {
     Serial.println( F( "Couldn't find DS3231 RTC modul" ) );
     while (1);
   }
 
-  int8_t offset_val = readFromOffsetReg();
 /*
+  int8_t offset_val = readFromOffsetReg();
   Serial.print( F("Offset register value = ") );
   Serial.println( offset_val );
   Serial.println();
@@ -48,7 +48,7 @@ void setup () {
     rtc.adjust( DateTime( F(__DATE__), F(__TIME__) ) + TimeSpan( 0, 0, 0, 15 ) );
 
 //    offset_val = -32; // from -128 to +127, default 0
-    offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+    int8_t offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
     writeToOffsetReg( offset_val );
     Serial.print( F( "Set Offset Reg: " ) );
     Serial.println( offset_val );
@@ -69,17 +69,19 @@ void setup () {
 void loop () {
   char task = 'n';
   uint8_t i = 0;
-  unsigned long intValue = 0U;
+  int8_t offset_val = 0x0;
+  float drift_in_ppm = 0;
   unsigned long utc_time = 0U;
+  unsigned long ref_time = 0U;
 
   if ( Serial.available() ) {  // if there is data available
 
     DateTime now = rtc.now();
 
-    while ( Serial.available() && i < 31 ) {
-      char thisChar = Serial.read();      // read the first byte
+    while ( Serial.available() && i < 32 ) {
+      char thisChar = Serial.read();      // read the first byte of command
       if ( thisChar == '@' && Serial.available() ) {
-        thisChar = Serial.read();      // read the first request for..
+        thisChar = Serial.read();      // read the request for..
         switch ( thisChar )
         {
         case 'a': // time adjustment request
@@ -98,12 +100,14 @@ void loop () {
           task = 'n';
           Serial.println( "unknown request " + thisChar );
         }
+
+        Serial.readBytes( buff, 4 ); // reading reference time
+        ref_time = hexToInt( buff );
+
         switch ( task )
         {
         case 'a': // adjust time
-          Serial.readBytes( buff, 4 ); // reading new time
-          utc_time = hexToInt( buff );
-          adjustTime( utc_time );
+          adjustTime( ref_time );
           Serial.print( "successful" );
           task = 'n';
           break;
@@ -112,16 +116,19 @@ void loop () {
           task = 'n';
           break;
         case 's': // set time
-          Serial.readBytes( buff, 4 ); // reading new time
-          utc_time = hexToInt( buff );
-          adjustTime( utc_time );
+          adjustTime( ref_time );
           Serial.print( "successful" );
           task = 'n';
           break;
         case 'v': // get version
-          utc_time = getUTCtime( now.unixtime() );
+          utc_time = getUTCtime( now.unixtime() ); // reading clock time
           intToHex( buff, utc_time );
           Serial.write( buff, 4 );  // send UTC time
+          offset_val = readFromOffsetReg();
+          Serial.write( offset_val );  // send offset value
+          drift_in_ppm = calculateDrift_ppm( ref_time, utc_time );
+          floatToHex( buff, drift_in_ppm );
+          Serial.write( buff, 4 );  // send drift time
           task = 'n';
           break;
         case 'n': // idle task
@@ -130,9 +137,6 @@ void loop () {
           Serial.println( "unknown task " + task );
           task = 'n';
         }
-      }
-      if ( isDigit(thisChar) ) {
-        intValue = intValue * 10 + thisChar - '0';
       }
       i++;
     }
@@ -144,7 +148,7 @@ int8_t readFromOffsetReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
   Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
   Wire.endTransmission();
-  int8_t offset_val;
+  int8_t offset_val = 0x00;
   Wire.requestFrom( DS3231_ADDRESS, 1 ); // Read a byte from register
   offset_val = int8_t( Wire.read() );
   return offset_val;
@@ -158,6 +162,10 @@ boolean writeToOffsetReg( int8_t value ) {
 }
 
 inline void intToHex( byte* const buff, unsigned long value ) {
+  memcpy( buff, &value, sizeof(value) );
+}
+
+inline void floatToHex( byte* const buff, float value ) {
   memcpy( buff, &value, sizeof(value) );
 }
 
@@ -190,10 +198,10 @@ boolean adjustTimeDrift( float drift_in_ppm ) {
 
 // "drift in ppm unit" - this is the ratio of the clock drift from the reference time,
 // which is expressed in terms of one million control seconds.
-// For example, reference_time = 1597590276 sec, clock_time = 1597590292 sec, last_set_time = 1596628800 sec,
-// time_drift = reference_time - clock_time = -16 sec
-// number_of_control_seconds = reference_time - last_set_time = 961476 sec, i.e about 0.961476*10^6 sec
-// drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16 / 0.961476 = -16.641081 ppm
+// For example, reference_time = 1597590292 sec, clock_time = 1597590276 sec, last_set_time = 1596628800 sec,
+// time_drift = clock_time - reference_time = -16 sec
+// number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
+// drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
 float calculateDrift_ppm( unsigned long referenceTimeSecs, unsigned long clockTimeSecs ) {
   if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
     return 0;
@@ -202,7 +210,7 @@ float calculateDrift_ppm( unsigned long referenceTimeSecs, unsigned long clockTi
   if ( referenceTimeSecs <= last_set_timeSecs ) {
     return 0;
   }
-  long time_drift = referenceTimeSecs - clockTimeSecs;
+  long time_drift = clockTimeSecs - referenceTimeSecs;
   return float(time_drift)*1000000/(referenceTimeSecs - last_set_timeSecs);
 }
 
