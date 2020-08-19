@@ -27,3 +27,14 @@
 ```
 ~$ ./synchroTime -p
 ```
+3.
+
+## Specification
+
+![circuit](images/Steckplatine_DS3231.png)
+
+## System requirements
+
+## Installation
+
+## TODO
