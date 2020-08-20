@@ -27,7 +27,7 @@
 ```
 ~$ ./synchroTime -p ttyUSB0 
 ```
-![synchroTime -p](images/consoleApp_SetPort)
+![synchroTime -p](images/consoleApp_SetPort.png)
 
 3.
 
