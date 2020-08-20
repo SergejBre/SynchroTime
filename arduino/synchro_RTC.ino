@@ -9,23 +9,27 @@
  */
 #include <Wire.h>
 #include "RTClib.h"
+#include <wiring.c>
 
 #define TIME_ZONE 2          // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
-#define OFFSET_REGISTER 0x10
-#define EEPROM_ADDRESS 0x57  // AT24C256 (256 kbit = 32 kbyte serial EEPROM)
+#define OFFSET_REGISTER 0x10  // Aging offset register address
+#define CONRTOL_REGISTER 0x0E // Control Register address
+#define EEPROM_ADDRESS 0x57  // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 RTC_DS3231 rtc;
 byte buff[4];
+byte byteBuffer[11];
 
 // Function Prototypes
 int8_t readFromOffsetReg( void ); // read from offset register
 boolean writeToOffsetReg( int8_t value ); // write to offset register
-inline void intToHex( byte* const buff, unsigned long value );
+boolean setControlReg1Hz( void ); // Control Register to 1 Hz Out (SQW-pin)
+inline void intToHex( byte* const buff, uint32_t value );
 inline void floatToHex( byte* const buff, float value );
-unsigned long hexToInt( byte* const buff );
-unsigned long getUTCtime( unsigned long localTimeSecs );
-void adjustTime( unsigned long utcTimeSecs );
+uint32_t hexToInt( byte* const buff );
+uint32_t getUTCtime( uint32_t localTimeSecs );
+void adjustTime( uint32_t utcTimeSecs );
 boolean adjustTimeDrift( float drift_in_ppm );
-float calculateDrift_ppm( unsigned long referenceTimeSecs, unsigned long clockTimeSecs );
+float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs );
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
@@ -36,46 +40,53 @@ void setup () {
     while (1);
   }
 
-/*
-  int8_t offset_val = readFromOffsetReg();
-  Serial.print( F("Offset register value = ") );
-  Serial.println( offset_val );
-  Serial.println();
-*/
+  Ds3231SqwPinMode mode = rtc.readSqwPinMode();
+  if ( mode != DS3231_SquareWave1Hz ) {
+    rtc.writeSqwPinMode( DS3231_SquareWave1Hz );
+  }
+
   if ( rtc.lostPower() ) {
     Serial.println( F("RTC lost power, lets set the time!") );
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
     rtc.adjust( DateTime( F(__DATE__), F(__TIME__) ) + TimeSpan( 0, 0, 0, 15 ) );
 
-//    offset_val = -32; // from -128 to +127, default 0
+//    offset_val = -32; // from -128 to +127, default is 0
     int8_t offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
     writeToOffsetReg( offset_val );
     Serial.print( F( "Set Offset Reg: " ) );
     Serial.println( offset_val );
   }
-// August 5, 2020 at 12:00 you would call:
-/*  Serial.println( DateTime(2020, 8, 5, 12, 0, 0).unixtime(), DEC );
-  intToHex( buff, DateTime(2020, 8, 5, 12, 0, 0).unixtime() ); // data to write
+/* August 5, 2020 at 12:00 you would call:
+  Serial.println( DateTime(2020, 7, 13, 18, 0, 0).unixtime(), DEC );
+  intToHex( buff, DateTime(2020, 7, 13, 18, 0, 0).unixtime() ); // data to write
   i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write to EEPROM AT24C256
   delay(100); //add a small delay
   Serial.println( F("Memory written") );
 
   i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff) );
-  unsigned long value = hexToInt( buff );
+  uint32_t value = hexToInt( buff );
   Serial.println( value, DEC );
 */
+  attachInterrupt( 0, oneHertz, FALLING );
+}
+
+void oneHertz( void ) {
+  timer0_millis = 0;
 }
 
 void loop () {
   char task = 'n';
   uint8_t i = 0;
-  int8_t offset_val = 0x0;
+//  int8_t offset_val = 0;
   float drift_in_ppm = 0;
-  unsigned long utc_time = 0U;
-  unsigned long ref_time = 0U;
+  uint16_t milliSecs = 0U;
+  uint16_t ref_milliSecs = 0U;
+  uint32_t utc_time = 0UL;
+  uint32_t ref_time = 0UL;
 
   if ( Serial.available() ) {  // if there is data available
 
+    milliSecs = millis();
     DateTime now = rtc.now();
 
     while ( Serial.available() && i < 32 ) {
@@ -101,8 +112,10 @@ void loop () {
           Serial.println( "unknown request " + thisChar );
         }
 
-        Serial.readBytes( buff, 4 ); // reading reference time
-        ref_time = hexToInt( buff );
+        Serial.readBytes( byteBuffer, 6 ); // reading reference time + ms
+        ref_time = hexToInt( byteBuffer );
+        uint16_t *y = (uint16_t *)( byteBuffer + 4 );
+        ref_milliSecs = y[0];
 
         switch ( task )
         {
@@ -121,14 +134,13 @@ void loop () {
           task = 'n';
           break;
         case 'v': // get version
-          utc_time = getUTCtime( now.unixtime() ); // reading clock time
-          intToHex( buff, utc_time );
-          Serial.write( buff, 4 );  // send UTC time
-          offset_val = readFromOffsetReg();
-          Serial.write( offset_val );  // send offset value
-          drift_in_ppm = calculateDrift_ppm( ref_time, utc_time );
-          floatToHex( buff, drift_in_ppm );
-          Serial.write( buff, 4 );  // send drift time
+          utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
+          intToHex( byteBuffer, utc_time );
+          memcpy( byteBuffer + 4, &milliSecs, sizeof(milliSecs) );  // reading ms
+          byteBuffer[6] = readFromOffsetReg();  // reading offset value
+          drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, milliSecs );  // reading drift time
+          floatToHex( byteBuffer + 7, drift_in_ppm );
+          Serial.write( byteBuffer, 11 );  // send buffer
           task = 'n';
           break;
         case 'n': // idle task
@@ -141,7 +153,6 @@ void loop () {
       i++;
     }
   }
-  delay( 5 );
 }
 
 int8_t readFromOffsetReg( void ) {
@@ -161,7 +172,14 @@ boolean writeToOffsetReg( int8_t value ) {
   return ( Wire.endTransmission() == 0 );
 }
 
-inline void intToHex( byte* const buff, unsigned long value ) {
+boolean setControlReg1Hz( void ) {
+  Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
+  Wire.write( uint8_t( CONRTOL_REGISTER ) ); // sets the Control Register address
+  Wire.write( B01000000 ); // sets 1 Hz Out (SQW-pin)
+  return ( Wire.endTransmission() == 0 );
+}
+
+inline void intToHex( byte* const buff, uint32_t value ) {
   memcpy( buff, &value, sizeof(value) );
 }
 
@@ -169,16 +187,16 @@ inline void floatToHex( byte* const buff, float value ) {
   memcpy( buff, &value, sizeof(value) );
 }
 
-unsigned long hexToInt( byte* const buff ) {
-  unsigned long *y = (unsigned long *)buff;
+uint32_t hexToInt( byte* const buff ) {
+  uint32_t *y = (uint32_t *)buff;
   return y[0];
 }
 
-unsigned long getUTCtime( unsigned long localTimeSecs ) {
+uint32_t getUTCtime( uint32_t localTimeSecs ) {
   return ( localTimeSecs - TIME_ZONE*3600 ); // UTC_time = local_Time - TIME_ZONE*3600 sec
 }
 
-void adjustTime( unsigned long utcTimeSecs ) {
+void adjustTime( uint32_t utcTimeSecs ) {
   rtc.adjust( DateTime( utcTimeSecs - SECONDS_FROM_1970_TO_2000 + TIME_ZONE*3600 ) );
   intToHex( buff, utcTimeSecs ); // data to write
   i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
@@ -202,16 +220,18 @@ boolean adjustTimeDrift( float drift_in_ppm ) {
 // time_drift = clock_time - reference_time = -16 sec
 // number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
 // drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
-float calculateDrift_ppm( unsigned long referenceTimeSecs, unsigned long clockTimeSecs ) {
+float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs ) {
   if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
     return 0;
   }
-  unsigned long last_set_timeSecs = hexToInt( buff );
+  uint32_t last_set_timeSecs = hexToInt( buff );
   if ( referenceTimeSecs <= last_set_timeSecs ) {
     return 0;
   }
-  long time_drift = clockTimeSecs - referenceTimeSecs;
-  return float(time_drift)*1000000/(referenceTimeSecs - last_set_timeSecs);
+  int32_t time_driftSecs = clockTimeSecs - referenceTimeSecs;
+  int16_t time_driftMs = clockTimeMs - referenceTimeMs;
+  float time_drift = time_driftSecs*1000 + time_driftMs;
+  return time_drift*1000/(referenceTimeSecs - last_set_timeSecs);
 }
 
 byte i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {

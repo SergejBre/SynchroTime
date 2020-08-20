@@ -33,7 +33,7 @@
 // Types
 //------------------------------------------------------------------------------
 // Interval for a time-out in milliseconds
-#define REBOOT_WAIT 2000
+#define REBOOT_WAIT 2500
 
 //! \brief Interface
 //! The base class Interface provides for the communication between

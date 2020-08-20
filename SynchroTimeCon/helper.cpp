@@ -244,11 +244,14 @@ int handleVersionRequest( Session *const session )
 
     // Request for Version
 //    const QByteArray requestForVersion = session->getProtocol()->requestVersion();
-    QByteArray requestForVersion("@vbbbb");
+    QByteArray requestForVersion("@vbbbbmm");
 
     QDateTime local(QDateTime::currentDateTime());
-    quint32 localTimeSecs = local.toMSecsSinceEpoch()/1000;
+    qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    quint32 localTimeSecs = localTimeMSecs/1000;
+    quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
     memcpy( requestForVersion.data() + 2, &localTimeSecs, sizeof(localTimeSecs) );
+    memcpy( requestForVersion.data() + 6, &milliSecs, sizeof(milliSecs) );
 
     // Send a command to the device
     session->getInterface()->writeTheData( requestForVersion );
@@ -260,20 +263,24 @@ int handleVersionRequest( Session *const session )
     session->getInterface()->closeSocket();
 
     // Check of the Received request
-    if ( !session->getInterface()->getReceivedData().isEmpty() && session->getInterface()->getReceivedData().count() >= 4 )
+    if ( !session->getInterface()->getReceivedData().isEmpty() && session->getInterface()->getReceivedData().count() >= 8 )
     {
-        quint32 numberOfSec;
-        memcpy( &numberOfSec, session->getInterface()->getReceivedData().data(), sizeof(numberOfSec) );
-        QDateTime time(QDateTime::fromMSecsSinceEpoch( qint64(numberOfSec)*1000 ));
-        standardOutput << "DS3231 clock time " << numberOfSec << "s: " << time.toString() << endl;
-        standardOutput << "System local time " << localTimeSecs << "s: " << local.toString() << endl;
-        standardOutput << "Difference between " << qint32(numberOfSec - localTimeSecs) << 's' << endl;
-        if ( session->getInterface()->getReceivedData().count() >= 5 ) {
-            qint8 offset_reg = session->getInterface()->getReceivedData().at(4);
+        qint64 numberOfMSec = 0LL;
+        quint16 numberOfSec = 0U;
+        memcpy( &numberOfMSec, session->getInterface()->getReceivedData().data(), 4 );
+        numberOfMSec *= 1000;
+        memcpy( &numberOfSec, session->getInterface()->getReceivedData().data() + 4, sizeof(numberOfSec) );
+        numberOfMSec += numberOfSec;
+        QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
+        standardOutput << "DS3231 clock time " << numberOfMSec << "ms: " << time.toString() << endl;
+        standardOutput << "System local time " << localTimeMSecs << "ms: " << local.toString() << endl;
+        standardOutput << "Difference between " << numberOfMSec - localTimeMSecs << "ms" << endl;
+        if ( session->getInterface()->getReceivedData().count() >= 6 ) {
+            qint8 offset_reg = session->getInterface()->getReceivedData().at(6);
             standardOutput << "Offset register val " << offset_reg << endl;
-            if ( session->getInterface()->getReceivedData().count() >= 9 ) {
-                float drift_in_ppm = 0;
-                memcpy( &drift_in_ppm, session->getInterface()->getReceivedData().data() + 5, sizeof(drift_in_ppm) );
+            if ( session->getInterface()->getReceivedData().count() >= 10 ) {
+                float drift_in_ppm = 0.0;
+                memcpy( &drift_in_ppm, session->getInterface()->getReceivedData().data() + 7, sizeof(drift_in_ppm) );
                 standardOutput << "Time drift in ppm: " << drift_in_ppm << endl;
             }
         }
