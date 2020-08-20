@@ -159,7 +159,7 @@ int8_t readFromOffsetReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
   Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
   Wire.endTransmission();
-  int8_t offset_val = 0x00;
+  int8_t offset_val = 0x0;
   Wire.requestFrom( DS3231_ADDRESS, 1 ); // Read a byte from register
   offset_val = int8_t( Wire.read() );
   return offset_val;
@@ -202,13 +202,16 @@ void adjustTime( uint32_t utcTimeSecs ) {
   i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
 }
 
+// the result is rounded to the maximum possible values of type uint8_t
 boolean adjustTimeDrift( float drift_in_ppm ) {
-  int8_t offset = int8_t( drift_in_ppm * 10 );
+  drift_in_ppm *= 10;
+  int8_t offset = (drift_in_ppm > 0) ? int8_t( drift_in_ppm + 0.5 ) : int8_t( drift_in_ppm - 0.5 );
   if ( offset == 0 ) return true;  // if offset is 0, nothing needs to be done
   int8_t last_offset_reg = readFromOffsetReg();
   int8_t last_offset_ee = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
   if ( last_offset_reg == last_offset_ee ) {
-    offset = int8_t( drift_in_ppm * 10 + last_offset_reg );
+    drift_in_ppm += last_offset_reg;
+    offset = (drift_in_ppm > 0) ? int8_t( drift_in_ppm + 0.5 ) : int8_t( drift_in_ppm - 0.5 );
   }
   i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, offset );  // write offset value to EEPROM AT24C256
   return writeToOffsetReg( offset );
