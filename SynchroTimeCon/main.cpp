@@ -210,6 +210,34 @@ int main(int argc, char *argv[])
     }
 
     // ------------------------------------------------------------------------
+    // command line option port: -p
+    // ------------------------------------------------------------------------
+    else if ( parser.isSet( PORTNAME ) )
+    {
+
+        if ( args.count() > 0 )
+        {
+            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+        }
+
+        // Read Serial Port Name
+        QString portName = parser.value( PORTNAME );
+
+        // new object instance
+        InterfaceSP *interfaceSP = new InterfaceSP( &app );
+
+        // Information about this serial port
+        if ( interfaceSP->searchSerialPort( portName ) )
+        {
+            settings->setPortName( portName );
+            standardOutput << "New serial interface was set up " << portName << endl;
+        }
+
+        // Release the memory
+        interfaceSP->deleteLater();
+    }
+
+    // ------------------------------------------------------------------------
     // command line option configure: -c -i <configfile>
     // ------------------------------------------------------------------------
     else if ( parser.isSet( CONFIGURE ) )

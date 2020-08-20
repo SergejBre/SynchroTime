@@ -639,7 +639,7 @@ bool InterfaceSP::openSocket( void )
         return false;
     }
 
-    this->serialPort->setFlowControl(QSerialPort::HardwareControl);
+//    this->serialPort->setFlowControl(QSerialPort::HardwareControl);
 
     // open the Serial Port for the read and the write
     if ( !this->serialPort->open( QIODevice::ReadWrite ) )

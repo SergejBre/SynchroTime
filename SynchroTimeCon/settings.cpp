@@ -105,12 +105,30 @@ QString Settings::portName() const
 }
 
 /**
+ * @brief Settings::setPortName
+ * @param port
+ */
+void Settings::setPortName(const QString &port)
+{
+    this->m_portName = port;
+}
+
+/**
  * @brief Settings::portBaudRate
  * @return
  */
 qint32 Settings::portBaudRate() const
 {
     return this->m_baudRate;
+}
+
+/**
+ * @brief Settings::setBaudRate
+ * @param baudRate
+ */
+void Settings::setBaudRate(const qint32 baudRate)
+{
+    this->m_baudRate = baudRate;
 }
 
 /**

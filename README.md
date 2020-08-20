@@ -19,14 +19,16 @@
 1. Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a virtual device - Serial port will appear in the system (under Linux it will be /dev/ttyUSBx, under Windows - COMx).
  To find a new port, you can view the entire list of ports in the system with the discovery command. To do this, call the application with the -d (--discovery) switch:
 ```
-~$ ./synchroTime -d
+~$ ./synchroTime -d 
 ```
 ![synchroTime -d](images/consoleApp_Discovery.png)
  
 2. To select a virtual Serial Port, enter its system name after the command -p <portName>. The app will automatically create a configuration file, and the next call will contact the selected port.
 ```
-~$ ./synchroTime -p
+~$ ./synchroTime -p ttyUSB0 
 ```
+![synchroTime -p](images/consoleApp_SetPort)
+
 3.
 
 ## Specification

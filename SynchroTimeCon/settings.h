@@ -47,7 +47,9 @@ public:
     void setPath( const QString &path );
     QString pathToLog( void ) const;
     QString portName( void ) const;
+    void setPortName( const QString &port );
     qint32 portBaudRate( void ) const;
+    void setBaudRate( const qint32 baudRate );
 
 signals:
     void paramChanged( void );

@@ -182,7 +182,7 @@ void setCommandLineParser( QCommandLineParser &parser )
 
     QCommandLineOption portName( QStringList() << PORTNAME << "port",
                                        QCoreApplication::translate( "main", "Set up an available Serial Port (ttyUSB0 or COM2)" ),
-                                       QCoreApplication::translate( "main", "PortName" ), "0" );
+                                       QCoreApplication::translate( "main", "PortName" ), "1" );
     parser.addOption( portName );
 
     QCommandLineOption configure( QStringList() << CONFIGURE << "config",
