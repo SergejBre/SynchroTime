@@ -9,26 +9,25 @@
  */
 #include <Wire.h>
 #include "RTClib.h"
-#include <wiring.c>
 
 #define TIME_ZONE 2          // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define OFFSET_REGISTER 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57  // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 RTC_DS3231 rtc;
-byte buff[4];
-byte byteBuffer[11];
+uint8_t buff[4];
+uint8_t byteBuffer[11];
 
 // Function Prototypes
 int8_t readFromOffsetReg( void ); // read from offset register
-boolean writeToOffsetReg( int8_t value ); // write to offset register
-boolean setControlReg1Hz( void ); // Control Register to 1 Hz Out (SQW-pin)
-inline void intToHex( byte* const buff, uint32_t value );
-inline void floatToHex( byte* const buff, float value );
-uint32_t hexToInt( byte* const buff );
-uint32_t getUTCtime( uint32_t localTimeSecs );
-void adjustTime( uint32_t utcTimeSecs );
-boolean adjustTimeDrift( float drift_in_ppm );
+bool writeToOffsetReg( const int8_t value ); // write to offset register
+bool setControlReg1Hz( void ); // Control Register to 1 Hz Out (SQW-pin)
+inline void intToHex( uint8_t* const buff, const uint32_t value );
+inline void floatToHex( uint8_t* const buff, const float value );
+uint32_t hexToInt( uint8_t* const buff );
+uint32_t getUTCtime( const uint32_t localTimeSecs );
+void adjustTime( const uint32_t utcTimeSecs );
+bool adjustTimeDrift( float drift_in_ppm );
 float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs );
 
 void setup () {
@@ -70,25 +69,31 @@ void setup () {
   attachInterrupt( 0, oneHertz, FALLING );
 }
 
+//extern volatile unsigned long timer0_millis;
+volatile uint32_t tickCounter;
+
 void oneHertz( void ) {
-  timer0_millis = 0;
+//  timer0_millis = 0;
+  tickCounter = millis();
 }
 
 void loop () {
   char task = 'n';
   uint8_t i = 0;
 //  int8_t offset_val = 0;
-  float drift_in_ppm = 0;
   uint16_t utc_milliSecs = 0U;
   uint16_t ref_milliSecs = 0U;
   uint32_t utc_time = 0UL;
   uint32_t ref_time = 0UL;
+  float drift_in_ppm = 0;
 
   if ( Serial.available() ) {  // if there is data available
 
-    while( timer0_millis > 998 );
-    utc_milliSecs = timer0_millis;
-    DateTime now = rtc.now();
+//    while( timer0_millis > 998 );
+//    utc_milliSecs = timer0_millis;
+    while( millis() - tickCounter > 998 );
+    utc_milliSecs = millis() - tickCounter;
+    DateTime now = rtc.now(); // read clock time + ms
 
     while ( Serial.available() && i < 32 ) {
       char thisChar = Serial.read();      // read the first byte of command
@@ -166,45 +171,45 @@ int8_t readFromOffsetReg( void ) {
   return offset_val;
 }
 
-boolean writeToOffsetReg( int8_t value ) {
+bool writeToOffsetReg( const int8_t value ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
   Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
-  Wire.write( uint8_t( value ) ); // Write value to register
+  Wire.write( value ); // Write value to register
   return ( Wire.endTransmission() == 0 );
 }
 
-boolean setControlReg1Hz( void ) {
+bool setControlReg1Hz( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
   Wire.write( uint8_t( CONRTOL_REGISTER ) ); // sets the Control Register address
   Wire.write( B01000000 ); // sets 1 Hz Out (SQW-pin)
   return ( Wire.endTransmission() == 0 );
 }
 
-inline void intToHex( byte* const buff, uint32_t value ) {
+inline void intToHex( uint8_t* const buff, const uint32_t value ) {
   memcpy( buff, &value, sizeof(value) );
 }
 
-inline void floatToHex( byte* const buff, float value ) {
+inline void floatToHex( uint8_t* const buff, const float value ) {
   memcpy( buff, &value, sizeof(value) );
 }
 
-uint32_t hexToInt( byte* const buff ) {
+uint32_t hexToInt( uint8_t* const buff ) {
   uint32_t *y = (uint32_t *)buff;
   return y[0];
 }
 
-uint32_t getUTCtime( uint32_t localTimeSecs ) {
+uint32_t getUTCtime( const uint32_t localTimeSecs ) {
   return ( localTimeSecs - TIME_ZONE*3600 ); // UTC_time = local_Time - TIME_ZONE*3600 sec
 }
 
-void adjustTime( uint32_t utcTimeSecs ) {
+void adjustTime( const uint32_t utcTimeSecs ) {
   rtc.adjust( DateTime( utcTimeSecs - SECONDS_FROM_1970_TO_2000 + TIME_ZONE*3600 ) );
   intToHex( buff, utcTimeSecs ); // data to write
   i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
 }
 
 // the result is rounded to the maximum possible values of type uint8_t
-boolean adjustTimeDrift( float drift_in_ppm ) {
+bool adjustTimeDrift( float drift_in_ppm ) {
   drift_in_ppm *= 10;
   int8_t offset = (drift_in_ppm > 0) ? int8_t( drift_in_ppm + 0.5 ) : int8_t( drift_in_ppm - 0.5 );
   if ( offset == 0 ) return true;  // if offset is 0, nothing needs to be done
@@ -238,8 +243,8 @@ float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, 
   return time_drift*1000/(referenceTimeSecs - last_set_timeSecs);
 }
 
-byte i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
-  byte rdata = 0xFF;
+uint8_t i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
+  uint8_t rdata = 0xFF;
   Wire.beginTransmission( deviceAddress );
   Wire.write( (int)( eeAddress >> 8 ) ); // MSB
   Wire.write( (int)( eeAddress & 0xFF)); // LSB
@@ -249,11 +254,11 @@ byte i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
   return rdata;
 }
 
-boolean i2c_eeprom_read_buffer( int deviceAddress, unsigned int eeAddress, byte* const buffer, int length ) {
+bool i2c_eeprom_read_buffer( int deviceAddress, unsigned int eeAddress, uint8_t* const buffer, int length ) {
   Wire.beginTransmission( deviceAddress );
   Wire.write( (int)( eeAddress >> 8 ) ); // MSB
   Wire.write( (int)( eeAddress & 0xFF ) ); // LSB
-  boolean ret_val = ( Wire.endTransmission() == 0 );
+  bool ret_val = ( Wire.endTransmission() == 0 );
   Wire.requestFrom( deviceAddress, length );
   int i;
   for ( i = 0; i < length; i++ ) {
@@ -264,7 +269,7 @@ boolean i2c_eeprom_read_buffer( int deviceAddress, unsigned int eeAddress, byte*
   return ret_val;
 }
 
-boolean i2c_eeprom_write_byte( int deviceAddress, unsigned int eeAddress, byte data ) {
+bool i2c_eeprom_write_byte( int deviceAddress, unsigned int eeAddress, uint8_t data ) {
   int rdata = data;
   Wire.beginTransmission( deviceAddress );
   Wire.write( (int)( eeAddress >> 8 ) ); // MSB
@@ -275,7 +280,7 @@ boolean i2c_eeprom_write_byte( int deviceAddress, unsigned int eeAddress, byte d
 
 // WARNING: address is a page address, 6-bit end will wrap around
 // also, data can be maximum of about 30 bytes, because the Wire library has a buffer of 32 bytes
-boolean i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, byte* const data, uint8_t length ) {
+bool i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, uint8_t* const data, uint8_t length ) {
   Wire.beginTransmission( deviceAddress );
   Wire.write( (int)( eeAddressPage >> 8 ) ); // MSB
   Wire.write( (int)( eeAddressPage & 0xFF ) ); // LSB
