@@ -79,14 +79,15 @@ void loop () {
   uint8_t i = 0;
 //  int8_t offset_val = 0;
   float drift_in_ppm = 0;
-  uint16_t milliSecs = 0U;
+  uint16_t utc_milliSecs = 0U;
   uint16_t ref_milliSecs = 0U;
   uint32_t utc_time = 0UL;
   uint32_t ref_time = 0UL;
 
   if ( Serial.available() ) {  // if there is data available
 
-    milliSecs = millis();
+    while( timer0_millis > 998 );
+    utc_milliSecs = timer0_millis;
     DateTime now = rtc.now();
 
     while ( Serial.available() && i < 32 ) {
@@ -136,9 +137,9 @@ void loop () {
         case 'v': // get version
           utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
           intToHex( byteBuffer, utc_time );
-          memcpy( byteBuffer + 4, &milliSecs, sizeof(milliSecs) );  // reading ms
+          memcpy( byteBuffer + 4, &utc_milliSecs, sizeof(utc_milliSecs) );  // reading ms
           byteBuffer[6] = readFromOffsetReg();  // reading offset value
-          drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, milliSecs );  // reading drift time
+          drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // reading drift time
           floatToHex( byteBuffer + 7, drift_in_ppm );
           Serial.write( byteBuffer, 11 );  // send buffer
           task = 'n';
