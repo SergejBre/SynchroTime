@@ -1,9 +1,9 @@
 # SynchroTime - Console client for setting the time and calibrating the RTC DS3231 module
 
-## Motivation.
+## Motivation
 The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/MisterBotBreak/how-to-use-a-real-time-clock-module-ds3231-bc90fe) chip has proven itself well in work with microcontrollers Arduino, Raspberry Pi, etc. According to the declared specification, it has thermal correction, so that the clock drift is within ±2 ppm (about 1 minute per year). But a large number of modules on the market do not meet the accuracy declared by the manufacturer, which is undoubtedly upsetting. Nevertheless, the manufacturer has provided for the possibility of correcting the clock drift, which is associated with the aging of the oscillator crystal in the range from -12.8 to +12.7 ppm. This correction value can be written to one of the registers on the DS3231 ([datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf)). In addition, the manufacturer has provided a non-volatile memory in the module, into which calibration parameters and correction factors can be placed. The tool below can automatically calibrate the DS3231 module.
 
-## About
+## About the app
 
 * Console application is used for fine tuning and calibration of the [RTC DS3231](https://create.arduino.cc/projecthub/MisterBotBreak/how-to-use-a-real-time-clock-module-ds3231-bc90fe) module.
 
@@ -30,7 +30,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 ![synchroTime -d](images/consoleApp_Discovery.png)
  
-2. To select a virtual Serial Port, enter its system name after the command -p <portName>. The app will automatically create a configuration file, and the next call will contact the selected port.
+2. To select a virtual Serial Port, enter its system name after the command -p 'portName'. The app will automatically create a configuration file, and the next call will contact the selected port.
 ```
 ~$ ./synchroTime -p ttyUSB0 
 ```
@@ -46,6 +46,6 @@ see [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) page 13
 
 ## System requirements
 
-## Installation
+## Installing the app
 
 ## TODO
