@@ -244,7 +244,7 @@ int handleVersionRequest( Session *const session )
 
     // Request for Version
 //    const QByteArray requestForVersion = session->getProtocol()->requestVersion();
-    QByteArray requestForVersion("@vbbbbmm");
+    QByteArray requestForVersion("@ibbbbmm");
 
     QDateTime local(QDateTime::currentDateTime());
     qint64 localTimeMSecs = local.toMSecsSinceEpoch();

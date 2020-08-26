@@ -41,25 +41,25 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 ~$ ./synchroTime -i 
 ```
-![synchroTime -p](images/consoleApp_Info.png)
+![synchroTime -i](images/consoleApp_Info.png)
 
 4. To set the exact time, use the -a (--adjust) command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
 ```
 ~$ ./synchroTime -a 
 ```
-![synchroTime -p](images/consoleApp_Adjust.png)
+![synchroTime -a](images/consoleApp_Adjust.png)
 
 5. To calibrate the clock of the DS3231 module, enter the -c (--calibration) command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (from several days to several weeks). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
 ```
 ~$ ./synchroTime -c 
 ```
-![synchroTime -p](images/consoleApp_Calibrate.png)
+![synchroTime -c](images/consoleApp_Calibrate.png)
 
-6. To reset the shift register to its default value and clear the module's memory of calibration data, enter the -l (--clean) command. The default value will be written to the register, and memory cells will be overwritten with bytes with 0xFF.
+6. To reset the shift register to its default value and clear the module's memory of calibration data, enter the -r (--reset) command. The default value will be written to the register, and memory cells will be overwritten with bytes with 0xFF.
 ```
-~$ ./synchroTime -l 
+~$ ./synchroTime -r 
 ```
-![synchroTime -p](images/consoleApp_Clean.png)
+![synchroTime -r](images/consoleApp_Reset.png)
 
 ## Specification
 
