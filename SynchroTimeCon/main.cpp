@@ -56,6 +56,8 @@
 //------------------------------------------------------------------------------
 QT_USE_NAMESPACE
 Q_LOGGING_CATEGORY(logMain, "main")
+// Output stream for all messages (not for error!)
+static QTextStream standardOutput( stdout );
 
 // Smart pointer an the log-file
 static QScopedPointer<QFile> m_logFile;
@@ -63,7 +65,6 @@ static QScopedPointer<QFile> m_logFile;
 //------------------------------------------------------------------------------
 // Function Prototypes
 //------------------------------------------------------------------------------
-//void logMessageOutput( QtMsgType type, const QMessageLogContext &context, const QString &msg );
 void logMessageOutput( const QtMsgType type, const QMessageLogContext &context, const QString &msg );
 
 /**
@@ -109,55 +110,25 @@ int main(int argc, char *argv[])
     // Set the UART port name
     const QString portName = settings->portName();
 
-    // Set IO communication
-//    IOHandler *ioHandler = new IOHandler( &app, configFile );
-
     // Set a new Session
-    Session *session;
+    Session *session = nullptr;
     {
         // Set Interface type
-        Interface *interface = NULL;
-/*        if ( ioHandler->getInterfaceFromDomDoc() == "InterfaceETH" )
+        Interface *interface = nullptr;
+        if ( !QSerialPortInfo( portName ).isNull() )
         {
-            interface = new InterfaceETH( &app );
-            qDebug() << "Set a new Interface for Ethernet";
+            interface = new InterfaceSP( &app, portName );
+            interface->setBlockSize( 528U );
+            qDebug() << "Set a new Interface for Serial Port" << portName;
         }
-        else */
+        else
         {
-            if ( !QSerialPortInfo( portName ).isNull() )
-            {
-                interface = new InterfaceSP( &app, portName );
-                interface->setBlockSize( 528U );
-                qDebug() << "Set a new Interface for Serial Port" << portName;
-            }
-            else
-            {
-                interface = new InterfaceSP( &app );
-                qCritical( QObject::tr( "Serial Port %1 does not exist in the system." ).arg( portName ).toLocal8Bit() );
-            }
+            interface = new InterfaceSP( &app );
+            qCritical( QObject::tr( "Serial Port %1 does not exist in the system." ).arg( portName ).toLocal8Bit() );
         }
 
-        //! \todo fehl die Auswahl vom Protocol
-        // Set Protocol type
-        Protocol *protocol = NULL;
-/*        if ( ioHandler->getProtocolFromDomDoc() == "ProtocolQSB" )
-        {
-            protocol = new ProtocolQSB( &app );
-            qDebug() << "Set a new Protocol of QSB type";
-        }
-        else if ( ioHandler->getProtocolFromDomDoc() == "ProtocolROMbootLoader" )
-        {
-            protocol = new ProtocolROMbootLoader( &app );
-            qDebug() << "Set a new Protocol of ROM BootLoader type";
-        }
-        else */
-        {
-            protocol = new ProtocolMFM( &app );
-            qDebug() << "Set a new Protocol of MFM type";
-        }
-        Q_ASSERT( interface != NULL );
-        Q_ASSERT( protocol != NULL );
-        session = new Session( &app, protocol, interface );
+        Q_ASSERT( interface != nullptr );
+        session = new Session( &app, interface );
     }
 
     QCommandLineParser parser;

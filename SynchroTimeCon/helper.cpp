@@ -30,6 +30,8 @@
 //------------------------------------------------------------------------------
 QT_USE_NAMESPACE
 Q_LOGGING_CATEGORY(logHelper, "Helper")
+// Output stream for all messages (not for error!)
+static QTextStream standardOutput( stdout );
 
 //------------------------------------------------------------------------------
 // Function Prototypes
@@ -243,7 +245,6 @@ int handleVersionRequest( Session *const session )
     }
 
     // Request for Version
-//    const QByteArray requestForVersion = session->getProtocol()->requestVersion();
     QByteArray requestForVersion("@ibbbbmm");
 
     QDateTime local(QDateTime::currentDateTime());
@@ -306,7 +307,7 @@ int handleResetRequest( Session *const session )
     Q_ASSERT( session != NULL );
 
     // Request for Reset
-    const QByteArray requestForReset = session->getProtocol()->requestReset();
+    QByteArray requestForReset("@r");
 
     // Open the interface for communication with the device
     session->getInterface()->openSocket();

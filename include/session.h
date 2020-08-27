@@ -17,7 +17,6 @@
 //------------------------------------------------------------------------------
 #include <QObject>
 #include "interface.h"
-#include "protocol.h"
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -45,17 +44,13 @@ class Session : virtual public QObject
 
 public:
     Session( QObject *parent = 0 );
-    Session( QObject *parent, Protocol *const protocol );
-    Session( QObject *parent, Protocol *const protocol, Interface *const interface );
+    Session( QObject *parent, Interface *const interface );
 
     Interface *getInterface( void );
-    Protocol *getProtocol( void );
 
     void setInterface( Interface *const interface );
-    void setProtocol( Protocol *const protocol );
 
 private:
-    Protocol *protocol;
     Interface *interface;
 };
 

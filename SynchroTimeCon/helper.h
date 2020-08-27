@@ -28,8 +28,6 @@
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
-// Output stream for all messages (not for error!)
-static QTextStream standardOutput( stdout );
 
 //! \brief
 //! This structure will hold context information for CMD command string

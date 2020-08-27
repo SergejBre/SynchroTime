@@ -29,33 +29,11 @@ Session::Session( QObject *parent )
 //!
 //! \details
 //!
-Session::Session( QObject *parent, Protocol * const protocol )
+Session::Session( QObject *parent, Interface *const interface )
     : QObject( parent )
-    , protocol( protocol )
-    , interface( NULL )
-{
-    Q_ASSERT( dynamic_cast<ProtocolMFM*> ( protocol) || dynamic_cast<ProtocolQSB*> ( protocol) || dynamic_cast<ProtocolROMbootLoader*> ( protocol) );
-    if ( this->protocol != NULL )
-    {
-        this->protocol->setParent( this );
-    }
-}
-
-//! \brief
-//!
-//! \details
-//!
-Session::Session( QObject *parent, Protocol *const protocol, Interface *const interface )
-    : QObject( parent )
-    , protocol( protocol )
     , interface( interface )
 {
-    Q_ASSERT( dynamic_cast<ProtocolMFM*> ( protocol) || dynamic_cast<ProtocolQSB*> ( protocol) || dynamic_cast<ProtocolROMbootLoader*> ( protocol) );
-    if ( this->protocol != NULL )
-    {
-        this->protocol->setParent( this );
-    }
-    if ( this->interface != NULL )
+    if ( this->interface != nullptr )
     {
         this->interface->setParent( this );
     }
@@ -74,25 +52,7 @@ Interface *Session::getInterface( void )
 //!
 //! \details
 //!
-Protocol *Session::getProtocol( void )
-{
-    return this->protocol;
-}
-
-//! \brief
-//!
-//! \details
-//!
 void Session::setInterface( Interface *const interface )
 {
     this->interface = interface;
-}
-
-//! \brief
-//!
-//! \details
-//!
-void Session::setProtocol( Protocol *const protocol )
-{
-    this->protocol = protocol;
 }

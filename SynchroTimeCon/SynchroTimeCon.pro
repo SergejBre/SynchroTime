@@ -36,7 +36,6 @@ INCLUDEPATH += ../include
 SOURCES += main.cpp \
     ../src/base.cpp \
     ../src/interface.cpp \
-    ../src/protocol.cpp \
     ../src/session.cpp \
     helper.cpp \
     settings.cpp
@@ -44,7 +43,6 @@ SOURCES += main.cpp \
 HEADERS += \
     ../include/base.h \
     ../include/interface.h \
-    ../include/protocol.h \
     ../include/session.h \
     helper.h \
     settings.h
