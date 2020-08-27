@@ -313,7 +313,7 @@ void InterfaceSP::searchAllSerialPort( void )
 
     if ( n > 0 )
     {
-        stdOutput() << QObject::tr( "A total of %1 Serial Ports have been found." ).arg( n ) << endl;
+        stdOutput() << QObject::tr( "A total of %1 serial ports were found." ).arg( n ) << endl;
     }
     else
     {

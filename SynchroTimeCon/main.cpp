@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
         if ( !QSerialPortInfo( portName ).isNull() )
         {
             settings->setPortName( portName );
-            standardOutput << QObject::tr( "New serial interface %1 was set up." ).arg( portName ).toLocal8Bit() << endl;
+            standardOutput << QObject::tr( "Added new serial interface %1." ).arg( portName ).toLocal8Bit() << endl;
         }
         else
         {
