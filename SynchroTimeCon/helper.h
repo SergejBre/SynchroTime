@@ -59,10 +59,14 @@ typedef struct
 #define CMDLIST    "l"
 #endif
 #define PORTNAME   "p"
+#define INFORM     "i"
+#define ADJUST     "a"
+#define CALIBR     "ca"
+#define RESET      "r"
 #define CONFIGURE  "c"
 #define CMDSTRING  "f"
 #define TEST       "t"
-#define INPUTFILE  "i"
+#define INPUTFILE  "inp"
 #define OUTPUTFILE "o"
 
 //------------------------------------------------------------------------------
@@ -71,6 +75,7 @@ typedef struct
 void setCommandLineParser( QCommandLineParser &parser );
 bool commandLineParser( CMDcommand *const cmdCom, const QString &str );
 inline bool parserHelper( CMDcommand *const cmdCom, const QString &str );
+int handleInformationRequest( Session *const session );
 int handleVersionRequest( Session *const session );
 int handleResetRequest( Session *const session );
 /*

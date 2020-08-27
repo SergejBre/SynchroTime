@@ -171,6 +171,7 @@ int main(int argc, char *argv[])
             qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
         }
 
+        Q_ASSERT( session != nullptr );
         if ( session != nullptr )
         {
             // Discovery available virtual Serial ports
@@ -182,7 +183,7 @@ int main(int argc, char *argv[])
     }
 
     // ------------------------------------------------------------------------
-    // command line option port: -p
+    // command line option port name: -p
     // ------------------------------------------------------------------------
     else if ( parser.isSet( PORTNAME ) )
     {
@@ -205,6 +206,58 @@ int main(int argc, char *argv[])
         {
             standardOutput << QObject::tr( "Serial Port %1 does not exist in the system. Command discard." ).arg( portName ).toLocal8Bit() << endl;
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // command line option information: -i
+    // ------------------------------------------------------------------------
+    else if ( parser.isSet( INFORM ) )
+    {
+
+        if ( args.count() > 0 )
+        {
+            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+        }
+        handleInformationRequest( session );
+    }
+
+    // ------------------------------------------------------------------------
+    // command line option ADJUST: -a
+    // ------------------------------------------------------------------------
+    else if ( parser.isSet( ADJUST ) )
+    {
+
+        if ( args.count() > 0 )
+        {
+            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+        }
+
+    }
+
+    // ------------------------------------------------------------------------
+    // command line option calibration: -c
+    // ------------------------------------------------------------------------
+    else if ( parser.isSet( CALIBR ) )
+    {
+
+        if ( args.count() > 0 )
+        {
+            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+        }
+
+    }
+
+    // ------------------------------------------------------------------------
+    // command line option reset: -r
+    // ------------------------------------------------------------------------
+    else if ( parser.isSet( RESET ) )
+    {
+
+        if ( args.count() > 0 )
+        {
+            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+        }
+
     }
 
     // ------------------------------------------------------------------------

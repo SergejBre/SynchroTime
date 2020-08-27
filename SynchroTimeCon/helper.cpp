@@ -187,10 +187,10 @@ void setCommandLineParser( QCommandLineParser &parser )
                                        QCoreApplication::translate( "main", "PortName" ), "1" );
     parser.addOption( portName );
 
-    QCommandLineOption configure( QStringList() << CONFIGURE << "config",
-                                       QCoreApplication::translate( "main", "Read configuration of accessible storage devices" ),
+    QCommandLineOption information( QStringList() << INFORM << "info",
+                                       QCoreApplication::translate( "main", "Read information about available RTC modules" ),
                                        QCoreApplication::translate( "main", "" ), "0" );
-    parser.addOption( configure );
+    parser.addOption( information );
 
     QCommandLineOption cmdCommand( QStringList() << CMDSTRING << "CMDstring",
                                        QCoreApplication::translate( "main", "String containing a storage command request" ),
@@ -330,6 +330,75 @@ int handleResetRequest( Session *const session )
     else
     {
         qCritical( logHelper ) << "Request for reset failed.";
+        return 1;
+    }
+    return 0;
+}
+
+// ------------------------------------------------------------------------
+//! \brief
+//! Request for the Information of the device.
+//!
+//! \details
+//!
+//! \param[in] parent Pointer to the parent object used for QObject.
+//!
+int handleInformationRequest(Session * const session)
+{
+    Q_ASSERT( session != nullptr );
+
+    // Open the interface for communication with the device
+    if ( !session->getInterface()->openSocket() )
+    {
+        qCritical( logHelper ) << "Request for return of the Information failed.";
+        return 1;
+    }
+
+    // Request for Information
+    QByteArray requestForVersion("@ibbbbmm");
+
+    QDateTime local(QDateTime::currentDateTime());
+    qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    quint32 localTimeSecs = localTimeMSecs/1000;
+    quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
+    memcpy( requestForVersion.data() + 2, &localTimeSecs, sizeof(localTimeSecs) );
+    memcpy( requestForVersion.data() + 6, &milliSecs, sizeof(milliSecs) );
+
+    // Send a command to the device
+    session->getInterface()->writeTheData( requestForVersion );
+    qDebug() << "Send command: " << requestForVersion;
+
+    session->getInterface()->readTheData( TIME_WAIT );
+    qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
+
+    session->getInterface()->closeSocket();
+
+    // Check of the Received request
+    if ( !session->getInterface()->getReceivedData().isEmpty() && session->getInterface()->getReceivedData().count() >= 8 )
+    {
+        qint64 numberOfMSec = 0LL;
+        quint16 numberOfSec = 0U;
+        memcpy( &numberOfMSec, session->getInterface()->getReceivedData().data(), 4 );
+        numberOfMSec *= 1000;
+        memcpy( &numberOfSec, session->getInterface()->getReceivedData().data() + 4, sizeof(numberOfSec) );
+        numberOfMSec += numberOfSec;
+        QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
+        standardOutput << "DS3231 clock time " << numberOfMSec << "ms: " << time.toString() << endl;
+        standardOutput << "System local time " << localTimeMSecs << "ms: " << local.toString() << endl;
+        standardOutput << "Difference between " << numberOfMSec - localTimeMSecs << "ms" << endl;
+        if ( session->getInterface()->getReceivedData().count() >= 6 ) {
+            qint8 offset_reg = session->getInterface()->getReceivedData().at(6);
+            standardOutput << "Offset register val " << offset_reg << endl;
+            if ( session->getInterface()->getReceivedData().count() >= 10 ) {
+                float drift_in_ppm = 0.0;
+                memcpy( &drift_in_ppm, session->getInterface()->getReceivedData().data() + 7, sizeof(drift_in_ppm) );
+                standardOutput << "Time drift in ppm: " << drift_in_ppm << endl;
+            }
+        }
+    }
+    else
+    {
+        qCritical( logHelper ) << "Request for return of the Information failed.";
         return 1;
     }
     return 0;
