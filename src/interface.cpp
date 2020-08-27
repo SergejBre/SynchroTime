@@ -307,7 +307,7 @@ void InterfaceSP::searchAllSerialPort( void )
         stdOutput() << "Vendor ID   : " << (info.hasVendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : QString()) << endl;
         stdOutput() << "Product ID  : " << (info.hasProductIdentifier() ? QString::number(info.productIdentifier(), 16) : QString()) << endl;
         stdOutput() << "System Locat: " << info.systemLocation() << endl;
-        stdOutput() << "Busy        : " << (info.isBusy() ? QObject::tr("Yes") : QObject::tr("No")) << endl;
+        stdOutput() << "Busy        : " << (info.isBusy() ? QObject::tr("Yes") : QObject::tr("No")) << endl << endl;
         n++;
     }
 
@@ -317,7 +317,7 @@ void InterfaceSP::searchAllSerialPort( void )
     }
     else
     {
-        stdOutput() << "The serial ports are not present in the system." << endl;
+        stdOutput() << QObject::tr( "The serial ports are not present in the system." ) << endl;
     }
 }
 

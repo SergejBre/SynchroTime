@@ -235,7 +235,7 @@ void setCommandLineParser( QCommandLineParser &parser )
 //!
 int handleVersionRequest( Session *const session )
 {
-    Q_ASSERT( session != NULL );
+    Q_ASSERT( session != nullptr );
 
     // Open the interface for communication with the device
     if ( !session->getInterface()->openSocket() )
@@ -304,7 +304,7 @@ int handleVersionRequest( Session *const session )
 // ------------------------------------------------------------------------
 int handleResetRequest( Session *const session )
 {
-    Q_ASSERT( session != NULL );
+    Q_ASSERT( session != nullptr );
 
     // Request for Reset
     QByteArray requestForReset("@r");

@@ -35,6 +35,7 @@
 #include "helper.h"
 #include "settings.h"
 #include <QCoreApplication>
+#include <QtSerialPort/QSerialPortInfo>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QLoggingCategory>
@@ -119,7 +120,6 @@ int main(int argc, char *argv[])
         {
             interface = new InterfaceSP( &app, portName );
             interface->setBlockSize( 528U );
-            qDebug() << "Set a new Interface for Serial Port" << portName;
         }
         else
         {
@@ -171,13 +171,14 @@ int main(int argc, char *argv[])
             qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
         }
 
-        // Discovery available virtual Serial ports
-        InterfaceSP *interfaceSP = new InterfaceSP( &app );
+        if ( session != nullptr )
+        {
+            // Discovery available virtual Serial ports
+            InterfaceSP *interfaceSP = static_cast< InterfaceSP* >( session->getInterface() );
 
-        // Info about all available in system serial ports.
-        interfaceSP->searchAllSerialPort();
-        // Release the memory
-        interfaceSP->deleteLater();
+            // Info about all available in system serial ports.
+            interfaceSP->searchAllSerialPort();
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -194,18 +195,16 @@ int main(int argc, char *argv[])
         // Read Serial Port Name
         QString portName = parser.value( PORTNAME );
 
-        // new object instance
-        InterfaceSP *interfaceSP = new InterfaceSP( &app );
-
         // Information about this serial port
-        if ( interfaceSP->searchSerialPort( portName ) )
+        if ( !QSerialPortInfo( portName ).isNull() )
         {
             settings->setPortName( portName );
-            standardOutput << "New serial interface was set up " << portName << endl;
+            standardOutput << QObject::tr( "New serial interface %1 was set up." ).arg( portName ).toLocal8Bit() << endl;
         }
-
-        // Release the memory
-        interfaceSP->deleteLater();
+        else
+        {
+            standardOutput << QObject::tr( "Serial Port %1 does not exist in the system. Command discard." ).arg( portName ).toLocal8Bit() << endl;
+        }
     }
 
     // ------------------------------------------------------------------------
