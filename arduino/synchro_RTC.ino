@@ -10,10 +10,10 @@
 #include <Wire.h>
 #include "RTClib.h"
 
-#define TIME_ZONE 2          // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
+#define TIME_ZONE 2           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define OFFSET_REGISTER 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
-#define EEPROM_ADDRESS 0x57  // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
+#define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 typedef enum task : uint8_t {TASK_IDLE = 0x0, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET} task_t;
 
 RTC_DS3231 rtc;
@@ -35,7 +35,7 @@ void printOk( const bool ok );
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
-  while (!Serial); // wait for serial port to connect. Needed for native USB
+  while ( !Serial );      // wait for serial port to connect. Needed for native USB
   Serial.setTimeout( 5 ); // timeout 5ms
 
   if ( !rtc.begin() ) {
@@ -106,19 +106,19 @@ void loop () {
         thisChar = Serial.read();      // read the request for..
         switch ( thisChar )
         {
-        case 'a': // time adjustment request
+        case 'a':                     // time adjustment request
           task = TASK_ADJUST;
           break;
-        case 'i': // information request
+        case 'i':                     // information request
           task = TASK_INFO;
           break;
-        case 'c': // calibrating request
+        case 'c':                     // calibrating request
           task = TASK_CALIBR;
           break;
-        case 'r': // reset request
+        case 'r':                     // reset request
           task = TASK_RESET;
           break;
-        default:  // unknown request
+        default:                      // unknown request
           task = TASK_IDLE;
           Serial.print( F("unknown request ") );
           Serial.println( thisChar );
@@ -131,12 +131,12 @@ void loop () {
 
         switch ( task )
         {
-          case TASK_ADJUST: // adjust time
+          case TASK_ADJUST:               // adjust time
             ok = adjustTime( ref_time );
             printOk( ok );
             task = TASK_IDLE;
             break;
-          case TASK_INFO: // information
+          case TASK_INFO:                 // information
             utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
             intToHex( byteBuffer, utc_time );
             memcpy( byteBuffer + 4, &utc_milliSecs, sizeof(utc_milliSecs) );  // write ms
@@ -146,7 +146,7 @@ void loop () {
             Serial.write( byteBuffer, 11 );  // send data
             task = TASK_IDLE;
             break;
-          case TASK_CALIBR: // calibrating
+          case TASK_CALIBR:               // calibrating
             utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
             intToHex( byteBuffer, utc_time );
             memcpy( byteBuffer, &utc_milliSecs, sizeof(utc_milliSecs) );  // write bytes
@@ -158,7 +158,7 @@ void loop () {
             printOk( ok );
             task = TASK_IDLE;
             break;
-          case TASK_RESET: // reset
+          case TASK_RESET:                // reset
             ok = writeToOffsetReg( 0x0 );
             if ( ok ) {
               uint8_t buff5b[5] = { 0xFF };
@@ -167,7 +167,7 @@ void loop () {
             printOk( ok );
             task = TASK_IDLE;
             break;
-          case TASK_IDLE: // idle task
+          case TASK_IDLE:                 // idle task
             break;
           default:
             Serial.print( F("unknown task ") );
@@ -242,12 +242,14 @@ bool adjustTimeDrift( float drift_in_ppm ) {
   return writeToOffsetReg( offset );
 }
 
-// "drift in ppm unit" - this is the ratio of the clock drift from the reference time,
-// which is expressed in terms of one million control seconds.
-// For example, reference_time = 1597590292 sec, clock_time = 1597590276 sec, last_set_time = 1596628800 sec,
-// time_drift = clock_time - reference_time = -16 sec
-// number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
-// drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
+/*
+ * "drift in ppm unit" - this is the ratio of the clock drift from the reference time,
+ * which is expressed in terms of one million control seconds.
+ * For example, reference_time = 1597590292 sec, clock_time = 1597590276 sec, last_set_time = 1596628800 sec,
+ * time_drift = clock_time - reference_time = -16 sec
+ * number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
+ * drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
+ */
 float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs ) {
   if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
     return 0;
@@ -306,8 +308,10 @@ bool i2c_eeprom_write_byte( int deviceAddress, unsigned int eeAddress, uint8_t d
   return ( Wire.endTransmission() == 0 );
 }
 
-// WARNING: address is a page address, 6-bit end will wrap around
-// also, data can be maximum of about 30 bytes, because the Wire library has a buffer of 32 bytes
+/*
+ * WARNING: address is a page address, 6-bit end will wrap around
+ * also, data can be maximum of about 30 bytes, because the Wire library has a buffer of 32 bytes
+ */
 bool i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, uint8_t* const data, uint8_t length ) {
   Wire.beginTransmission( deviceAddress );
   Wire.write( (int)( eeAddressPage >> 8 ) ); // MSB
