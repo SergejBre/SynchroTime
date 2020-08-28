@@ -51,23 +51,16 @@ typedef struct
 
 // Interval for a time-out in milliseconds
 #define TIME_WAIT 10U
-// Interval for a time relaxation after the erase of the blocks
-#define TIME_RELAX 300U
 // optins for the Command line parser
 #ifndef GUI_APP
 #define DISCOVERY  "d"
-#define CMDLIST    "l"
 #endif
-#define PORTNAME   "p"
-#define INFORM     "i"
+#define PORT       "p"
+#define INFO       "i"
 #define ADJUST     "a"
-#define CALIBR     "ca"
+#define CALIBR     "c"
 #define RESET      "r"
-#define CONFIGURE  "c"
-#define CMDSTRING  "f"
-#define TEST       "t"
-#define INPUTFILE  "inp"
-#define OUTPUTFILE "o"
+#define SETREG     "s"
 
 //------------------------------------------------------------------------------
 // Function Prototypes
@@ -76,8 +69,10 @@ void setCommandLineParser( QCommandLineParser &parser );
 bool commandLineParser( CMDcommand *const cmdCom, const QString &str );
 inline bool parserHelper( CMDcommand *const cmdCom, const QString &str );
 int handleInformationRequest( Session *const session );
-int handleVersionRequest( Session *const session );
+int handleAdjustmentRequest( Session *const session );
+int handleCalibrationRequest( Session *const session );
 int handleResetRequest( Session *const session );
+int handleVersionRequest( Session *const session );
 /*
 bool validateCommandLine( QCommandLineParser &parser, const QString &commandline, IOHandler *const ioHandler, const int line );
 int executeCommandLine( QCommandLineParser &parser, const QString &commandline, IOHandler *const ioHandler, Session *const session, const QUrl &configFile, const int line );

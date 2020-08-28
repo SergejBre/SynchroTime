@@ -37,11 +37,9 @@
 #include <QCoreApplication>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QCommandLineParser>
-#include <QCommandLineOption>
 #include <QLoggingCategory>
 #include <QDebug>
 #include <QFile>
-#include <QUrl>
 #include <QDateTime>
 
 //------------------------------------------------------------------------------
@@ -101,7 +99,7 @@ int main(int argc, char *argv[])
 
     if ( !m_logFile.data()->open( QFile::Append | QFile::Text ) )
     {
-        qCritical() << "To the log file " << m_logFile.data()->fileName() << "  can not be added.";
+        qCritical( QObject::tr( "To the log file '%s'  can not be added.").toLocal8Bit(), qPrintable( m_logFile.data()->fileName() ) );
     }
     else
     {
@@ -124,7 +122,7 @@ int main(int argc, char *argv[])
         else
         {
             interface = new InterfaceSP( &app );
-            qCritical( QObject::tr( "Serial Port %1 does not exist in the system." ).arg( portName ).toLocal8Bit() );
+            qCritical( QObject::tr( "Serial Port '%s' does not exist in the system.").toLocal8Bit(), qPrintable( portName ) );
         }
 
         Q_ASSERT( interface != nullptr );
@@ -168,7 +166,7 @@ int main(int argc, char *argv[])
 
         if ( args.count() > 0 )
         {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+            qFatal( QObject::tr( "Invalid arguments '%s'" ).toLocal8Bit(), qPrintable( args.at(0) ) );
         }
 
         Q_ASSERT( session != nullptr );
@@ -185,16 +183,16 @@ int main(int argc, char *argv[])
     // ------------------------------------------------------------------------
     // command line option port name: -p
     // ------------------------------------------------------------------------
-    else if ( parser.isSet( PORTNAME ) )
+    else if ( parser.isSet( PORT ) )
     {
 
         if ( args.count() > 0 )
         {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+            qFatal( QObject::tr( "Invalid arguments '%s'" ).toLocal8Bit(), qPrintable( args.at(0) ) );
         }
 
         // Read Serial Port Name
-        QString portName = parser.value( PORTNAME );
+        QString portName = parser.value( PORT );
 
         // Information about this serial port
         if ( !QSerialPortInfo( portName ).isNull() )
@@ -211,27 +209,32 @@ int main(int argc, char *argv[])
     // ------------------------------------------------------------------------
     // command line option information: -i
     // ------------------------------------------------------------------------
-    else if ( parser.isSet( INFORM ) )
+    else if ( parser.isSet( INFO ) )
     {
 
         if ( args.count() > 0 )
         {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+            qFatal( QObject::tr( "Invalid arguments '%s'" ).toLocal8Bit(), qPrintable( args.at(0) ) );
         }
         handleInformationRequest( session );
     }
 
     // ------------------------------------------------------------------------
-    // command line option ADJUST: -a
+    // command line option Adjustment: -a
     // ------------------------------------------------------------------------
     else if ( parser.isSet( ADJUST ) )
     {
 
         if ( args.count() > 0 )
         {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+            qFatal( QObject::tr( "Invalid arguments '%s'" ).toLocal8Bit(), qPrintable( args.at(0) ) );
         }
 
+        Q_ASSERT( session != nullptr );
+        if ( session != nullptr )
+        {
+            handleAdjustmentRequest( session );
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -242,9 +245,14 @@ int main(int argc, char *argv[])
 
         if ( args.count() > 0 )
         {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+            qFatal( QObject::tr( "Invalid arguments '%s'" ).toLocal8Bit(), qPrintable( args.at(0) ) );
         }
 
+        Q_ASSERT( session != nullptr );
+        if ( session != nullptr )
+        {
+            handleCalibrationRequest( session );
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -255,472 +263,15 @@ int main(int argc, char *argv[])
 
         if ( args.count() > 0 )
         {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
+            qFatal( QObject::tr( "Invalid arguments '%s'" ).toLocal8Bit(), qPrintable( args.at(0) ) );
         }
 
-    }
-
-    // ------------------------------------------------------------------------
-    // command line option configure: -c -i <configfile>
-    // ------------------------------------------------------------------------
-    else if ( parser.isSet( CONFIGURE ) )
-    {
-
-        if ( args.count() > 0 )
+        Q_ASSERT( session != nullptr );
+        if ( session != nullptr )
         {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-        }
-
-        if ( !parser.isSet( INPUTFILE ) )
-        {
-            qFatal( "Second parameter -i <BinarFile> missing" );
-        }
-
-        // Read a url of configuration file
-        QUrl urlBinaryFile( parser.value( INPUTFILE ) );
-
-//        handleConfiguration( ioHandler, session, configFile, urlBinaryFile );
-    }
-
-    // ------------------------------------------------------------------------
-    // command line option List of the command request: -l -i <listfile>
-    // ------------------------------------------------------------------------
-    else if ( parser.isSet( CMDLIST ) )
-    {
-
-        if ( args.count() > 0 )
-        {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-        }
-
-        if ( parser.isSet( INPUTFILE ) )
-        {
-            // Read a list as a binary file
-            QUrl urlBinaryFile( parser.value( INPUTFILE ) );
-
-            // Check for Exist the binary file
-/*            if ( !(ioHandler->isFileExists(urlBinaryFile)) )
-            {
-                qFatal( QObject::tr( "The binary file %1 not found" ).arg( urlBinaryFile.fileName() ).toLocal8Bit() );
-            }
-*/
-            if ( args.count() > 0 )
-            {
-                qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-            }
-/*
-            // Read a List command from the binary file
-            QByteArrayList cmdlist = ioHandler->readFileToList( urlBinaryFile );
-            if ( cmdlist.size() < 1 )
-            {
-                qFatal( "Reading from the binary file failed" );
-            }
-
-            QMutableListIterator<QByteArray> iterator( cmdlist );
-            while ( iterator.hasNext() )
-            {
-                int index = -1;
-                while ( (index = iterator.peekNext().indexOf( "  " )) > -1 )
-                {
-                    iterator.peekNext().remove( index, 1 );
-                }
-
-                if ( iterator.peekNext().at( 0 ) == ' ' )
-                {
-                    iterator.peekNext().remove( 0, 1 );
-                }
-                if ( iterator.next().at( 0 ) == '\n' )
-                {
-//                    iterator.remove();
-                }
-            }
-
-            int line = 0;
-            foreach ( const QString &commandline, cmdlist )
-            {
-                line++;
-                if ( commandline.at( 0 ) == '\n' || commandline.at( 0 ) == '#' )
-                {
-                    continue;
-                }
-
-                // ------------------------------------------------------------------------
-                // Parse a command line from the list
-                // ------------------------------------------------------------------------
-                if ( validateCommandLine( parser, commandline, ioHandler, line ) )
-                {
-                    qFatal( QObject::tr( "Fatal error in the line: %1" ).arg( line ).toLocal8Bit() );
-                }
-            }
-
-            //-------------------------------------------------------------
-            // Section to process all commands line
-            //-------------------------------------------------------------
-            line = 0;
-            foreach ( const QString &commandline, cmdlist )
-            {
-                line++;
-                int status = 0;
-                //-------------------------------------------------------------
-                // execute a commands line
-                //-------------------------------------------------------------
-                if ( (status = executeCommandLine( parser, commandline, ioHandler, session, configFile, line )) != 0 )
-                {
-                    qFatal( QObject::tr( "Fatal error in the line: %1, status: %2" ).arg( line ).arg( status ).toLocal8Bit() );
-                }
-//                qDebug() << QObject::tr( "Processing of the command line %1 was successful." ).arg( line ).toLocal8Bit();
-            }
-*/
-        }
-        else
-        {
-            qFatal( "Second parameter -i <InputFile> missing" );
+            handleResetRequest( session );
         }
     }
-
-    // ------------------------------------------------------------------------
-    // command line option CMD-String: -f c -o <configfile> or
-    //                                 -f s-command [-i <inputfile>] [-o <outfile>] or
-    //                                 -f i <-o <infofile> >
-    // where s-command: s:number:command:addressBegin:addressEnd
-    //
-    // ------------------------------------------------------------------------
-    //  Examples for CMD command and s-command:
-    // -f c -o configfile
-    //
-    // -f s:0:e:0:0
-    // -f s:0:w:0:3 -i partition_table.bin
-    // -f s:0:r:0:3 -o outfile1
-    // -t -i partition_table.bin -o outfile1
-    //
-    // -f s:0:e:16:16
-    // -f s:0:w:256:259 -i partition_table.bin
-    // -f s:0:r:256:259 -o outfile2
-    // -t -i partition_table.bin -o outfile2
-    //
-    // -f i -o infofile
-    // ------------------------------------------------------------------------
-    // Storage Access:
-    //
-    // Read:
-    // Instruction:	“@s”[<SNum>”r”<START><END>]<CRC>			(16 bytes)
-    // Result:		<STATUS>[<DATA>]<CRC>				(5 + X bytes / 1 byte)
-    //
-    // Write:
-    // Instruction:	“@s”[<SNum>”w”<START><END><DATA>]<CRC>		(16 + X bytes)
-    // Result:		<STATUS>								(1 byte)
-    //
-    // Erase:
-    // Instruction:	“@s”[<SNum>”e”<START><END>]<CRC>			(16 bytes)
-    // Result:		<STATUS>								(1 byte)
-    //
-    // Format:
-    // Instruction:	“@s”[<SNum>”f”]<CRC>						(8 bytes)
-    // Result:		<STATUS>								(1 byte)
-    //
-    // <SNum>:	Storage Number (1 byte, 0x00-0x0F)
-    // <START>: 	First block of storage device to be read/written/erased (4 bytes)
-    // <END>:	Last block of storage device  to be read/written/erased (4 bytes)
-    // <DATA>:	Data to be read/written (X = ((<END> - <START> + 1) * <BLOCKSIZE>) bytes)
-    // <CRC>:	CRC checksum, calculated over payload (4 bytes)
-    // <STATUS>:	Status for received request (1 byte). If status is different from 0x00 (“Success”),
-    //          no further data follows.
-    // ------------------------------------------------------------------------
-
-    else if ( parser.isSet( CMDSTRING ) )
-    {
-
-        if ( args.count() > 0 )
-        {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-        }
-
-        // Read CMD command
-        QString command = parser.value( CMDSTRING );
-        qDebug() << "command " << command;
-        CMDcommand cmdCom;
-        // Parse CMD command
-        if ( commandLineParser( &cmdCom, command ) )
-        {
-            qDebug() << "number " << cmdCom.number;
-            qDebug() << "task " << cmdCom.task;
-            qDebug() << "start " << cmdCom.addressStart;
-            qDebug() << "end " << cmdCom.addressEnd;
-
-            switch ( cmdCom.command )
-            {
-
-            // Read current configuraton from DLC-X device and save into the outfile.
-            // Requires option [-o <>] to be also specified.
-            case 'c':
-                if ( parser.isSet( OUTPUTFILE ) )
-                {
-                    // Set a url of the configfile
-                    QUrl urlBinaryFile( parser.value( OUTPUTFILE ) );
-
-                    if ( args.count() > 0 )
-                    {
-                        qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-                    }
-
-//                    handleConfigurationRequest( ioHandler, session, configFile, urlBinaryFile );
-                }
-                else
-                {
-                    qFatal( "Second option -o <OutputFile> missing." );
-                }
-                break;
-
-            // Read statistical information from DLC-X device and save into the outfile.
-            // Requires option [-o <>] to be also specified.
-            case 'i':
-                if ( parser.isSet( OUTPUTFILE ) )
-                {
-                    // Set a url of the outfile
-                    QUrl urlInfoFile( parser.value( OUTPUTFILE ) );
-
-                    if ( args.count() > 0 )
-                    {
-                        qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-                    }
-
-//                    handleInformationRequest( ioHandler, session, urlInfoFile );
-                }
-                else
-                {
-                    qFatal( "Second option -o <OutputFile> missing." );
-                }
-                break;
-
-            // Read Version from DLC-X device. Result: “DLC-30 MFM V0000” / “DLC-30 QSB V0000”
-            case 'v':
-
-                if ( args.count() > 0 )
-                {
-                    qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-                }
-
-                handleVersionRequest( session );
-                break;
-
-            // Reset ot the DLC-X device. Result: “RESET”
-            case 'r':
-
-                if ( args.count() > 0 )
-                {
-                    qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-                }
-
-                handleResetRequest( session );
-                break;
-
-            // Operations with a storage device
-            case 's':
-            {
-                // read configFile
-//                session->getProtocol()->readDomDocument( ioHandler->getDomDocument_p() );
-
-                // Open the interface for communication with the device
-                session->getInterface()->openSocket();
-
-                // Validation for the entered device: cmdCom
-/*                if ( cmdCom.number < session->getProtocol()->getDeviceList().count() )
-                {
-
-                    switch ( cmdCom.task )
-                    {
-                    // Format storage device <DEVICE>.
-                    case 'f':
-                    {
-                        // Access to the Format for a Device
-                        const QByteArray accessForFormat = session->getProtocol()->accessFormat( cmdCom.number );
-
-                        // Sendet einen Befehl an das Geräte
-                        session->getInterface()->writeTheData( accessForFormat );
-                        qDebug() << "Send command: " << accessForFormat;
-
-                        session->getInterface()->readTheData( TIME_WAIT );
-                        qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
-
-                        // Check of the Status for received request
-                        checkStatus( &session->getInterface()->getReceivedData() );
-                    }
-                        break;
-
-                    // Read blocks <START>...<END> from storage device <DEVICE>.
-                    // Requires option [-o <>] to be also specified.
-                    case 'r':
-                        if ( parser.isSet( OUTPUTFILE ) )
-                        {
-                            // Set a url of the output file
-                            QString outfile = parser.value( OUTPUTFILE );
-                            QUrl urlOutFile( outfile );
-
-                            if ( args.count() > 0 )
-                            {
-                                qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-                            }
-
-                            // Access for read from a storage device
-                            const QByteArray accessForRead = session->getProtocol()->accessRead( cmdCom.number, cmdCom.addressStart, cmdCom.addressEnd );
-
-                            // Sends a access to the device
-                            session->getInterface()->writeTheData( accessForRead );
-                            qDebug() << "Send command: " << accessForRead;
-
-                            session->getInterface()->readTheData( TIME_WAIT );
-                            qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
-
-                            // Check of the Status for received request
-                            if ( checkStatus( &session->getInterface()->getReceivedData() ) )
-                            {
-                                // Check CRC32 checksum
-                                if ( session->getProtocol()->checkData( session->getInterface()->getReceivedData() ) )
-                                {
-                                    int size = session->getInterface()->getReceivedData().size();
-                                    session->getInterface()->getReceivedData().remove( size-4, 4 );
-
-                                    // save read bytes as a binary file
-                                    if ( ioHandler->writeBinaryFile( session->getInterface()->getReceivedData(), urlOutFile ) )
-                                    {
-                                        standardOutput << QObject::tr( "Save binary file: %1 was successful." ).arg( urlOutFile.fileName() ).toLocal8Bit() << endl;
-                                    }
-                                    else
-                                    {
-                                        qFatal( QObject::tr( "Save binary file: %1 failed." ).arg( urlOutFile.fileName() ).toLocal8Bit() );
-                                    }
-                                }
-                                else
-                                {
-                                    qCritical( "The CRC32 verification of data failed." );
-                                }
-                            }
-                        }
-                        else
-                        {
-                            qFatal( "Second option -o <OutputFile> missing." );
-                        }
-                        break;
-
-                    // Erase blocks <START>...<END> from storage device <DEVICE>.
-                    case 'e':
-                    {
-                        // Access for erase blocks <START>...<END>
-                        const QByteArray accessForEraset = session->getProtocol()->accessErase( cmdCom.number, cmdCom.addressStart, cmdCom.addressEnd );
-
-                        // Sendet einen Befehl an das Geräte
-                        session->getInterface()->writeTheData( accessForEraset );
-                        qDebug() << "Send command: " << accessForEraset;
-
-                        session->getInterface()->readTheData( TIME_WAIT );
-                        qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
-
-                        // Check of the Status for received request
-                        checkStatus( &session->getInterface()->getReceivedData() );
-                    }
-                        break;
-
-                    // Write blocks <START>...<END> from storage device <DEVICE>.
-                    // Requires option [-i <>] to be also specified.
-                    case 'w':
-                    {
-                        if ( parser.isSet( INPUTFILE ) )
-                        {
-                            // Set a url of the input file
-                            QUrl urlInFile( parser.value( INPUTFILE ) );
-
-                            // Check for Exist the binary file 1
-                            if ( !(ioHandler->isFileExists( urlInFile )) )
-                            {
-                                qFatal( QObject::tr( "The binary file %1 not found" ).arg( urlInFile.fileName() ).toLocal8Bit() );
-                            }
-
-                            if ( args.count() > 0 )
-                            {
-                                qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-                            }
-
-                            QByteArray data = ioHandler->readBinaryFile( urlInFile );
-#if 0
-                            if ( dataList.count() > 1 )
-                            {
-                                qFatal( QObject::tr( "The contents of the file: %1 are not binary." ).arg( urlInFile.fileName() ).toLocal8Bit() );
-                            }
-#endif
-                            // Access for write to a storage device
-                            const QByteArray accessForWrite = session->getProtocol()->accessWrite( cmdCom.number, cmdCom.addressStart, cmdCom.addressEnd, data );
-
-                            // Sends a access to the device
-                            session->getInterface()->writeTheData( accessForWrite );
-                            qDebug() << "Send command: " << accessForWrite;
-
-                            session->getInterface()->readTheData( TIME_WAIT, 1U );
-                            qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
-
-                            // Check of the Status for received request
-                            checkStatus( &session->getInterface()->getReceivedData() );
-                        }
-                        else
-                        {
-                            qFatal( "Second option -i <InputFile> missing." );
-                        }
-                    }
-                        break;
-
-                    default:
-                        qFatal( "Unknown task" );
-                    }
-                }
-                else
-                {
-                    qDebug() << session->getProtocol()->getDeviceList().count();
-                    qFatal( QObject::tr( "The number entered by the device is invalid.").toLocal8Bit() );
-                }
-*/
-                session->getInterface()->closeSocket();
-            }
-                break;
-
-            default:
-                qFatal( "Unknown command" );
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // command line option test: -t -i file1.bin -o file2.bin
-    // ------------------------------------------------------------------------
-    else if ( parser.isSet( TEST ) )
-    {
-#if 0
-        if ( args.count() > 0 )
-        {
-            qFatal( QObject::tr( "Invalid arguments %1" ).arg( args.at(0) ).toLocal8Bit() );
-        }
-#endif
-        if ( !parser.isSet( INPUTFILE ) )
-        {
-            qFatal( "Second parameter -i <BinarFile> missing" );
-        }
-
-        if ( !parser.isSet( OUTPUTFILE ) )
-        {
-            qFatal( "Second parameter -o <BinarFile> missing" );
-        }
-/*
-        // Read a url of binary file 1
-        QUrl urlFile1( parser.value( INPUTFILE ) );
-
-        // Read a url of binary file 2
-        QUrl urlFile2( parser.value( OUTPUTFILE ) );
-
-        if ( handleComparation( ioHandler, urlFile1, urlFile2 ) > 0 )
-        {
-            qFatal( QObject::tr( "Processing of the command line failed." ).toLocal8Bit() );
-        }
-*/
-    }
-
     // Release the memory
     session->deleteLater();
     QTimer::singleShot( 0, &app, SLOT( quit() ) );

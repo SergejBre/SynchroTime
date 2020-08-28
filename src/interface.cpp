@@ -565,7 +565,7 @@ void InterfaceSP::handleTimeout()
     }
 #else
 //    QCoreApplication::exit( 1 );
-    qFatal( QObject::tr( "Timeout for port %1, error: %2" ).arg( this->serialPort->portName() ).arg( this->serialPort->errorString() ).toLocal8Bit() );
+    qFatal( QObject::tr( "Timeout for port '%s', error: '%s'" ).toLocal8Bit(), qPrintable( this->serialPort->portName() ), qPrintable( this->serialPort->errorString() ) );
 
 #endif
 }
@@ -639,7 +639,7 @@ bool InterfaceSP::openSocket( void )
         return false;
     }
 
-//    this->serialPort->setFlowControl(QSerialPort::HardwareControl);
+    this->serialPort->setFlowControl(QSerialPort::HardwareControl);
 
     // open the Serial Port for the read and the write
     if ( !this->serialPort->open( QIODevice::ReadWrite ) )

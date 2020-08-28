@@ -55,7 +55,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 ![synchroTime -c](images/consoleApp_Calibrate.png)
 
-6. To reset the shift register to its default value and clear the module's memory of calibration data, enter the -r (--reset) command. The default value will be written to the register, and memory cells will be overwritten with bytes with 0xFF.
+6. To reset the offset register to its default value and clear the module's memory of calibration data, enter the -r (--reset) command. The default value will be written to the register, and memory cells will be overwritten with bytes with 0xFF.
 ```
 ~$ ./synchroTime -r 
 ```
@@ -68,6 +68,20 @@ see [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) page 13
 ![circuit](images/Steckplatine_DS3231.png)
 
 ## System requirements
+```
+~$ sudo apt-get install ntp 
+```
+
+```
+~$ ntpq -p
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
++gromit.nocabal. 131.188.3.222    2 u   64   64  377   27.218   -3.906   5.643
+*www.kashra.com  .DCFa.           1 u    3   64  377   42.583   -5.584   4.940
++ext01.epiontis. 130.149.17.8     2 u    2   64  177   18.668   -7.450   5.801
++ntp1.hetzner.de 124.216.164.14   2 u   11   64  377   25.011   -5.987   6.489
++chilipepper.can 134.71.66.21     2 u   74   64  376   26.689   -5.881   4.974 
+```
 
 ## Installing the app
 
