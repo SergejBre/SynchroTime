@@ -56,13 +56,13 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 3. Use the -i (--information) command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the offset register and the calculated time drift value in ppm. If the offset register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
 ```
- ~/SynchroTime$ ./synchroTime -i
- Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
- DS3231 clock time 1598630596496ms: Fr. Aug. 28 18:03:16 2020
- System local time 1598630596450ms: Fr. Aug. 28 18:03:16 2020
- Difference between 46ms
- Offset register val 0
- Time drift in ppm: 3.16586 
+~/SynchroTime$ ./synchroTime -i
+Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
+DS3231 clock time	1598649465628ms: 28.08.2020 23:17:45.628
+System local time	1598649465500ms: 28.08.2020 23:17:45.500
+Difference between	128ms
+Offset reg. value	0
+Time drift in ppm	3.83245ppm 
 ```
 
 4. To set the exact time, use the -a (--adjust) command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
