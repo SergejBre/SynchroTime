@@ -57,7 +57,6 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 3. Use the -i (--information) command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the offset register and the calculated time drift value in ppm. If the offset register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
 ```
  ~/SynchroTime$ ./synchroTime -i
- ~/SynchroTime/build$ ./synchroTime -i
  Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
  DS3231 clock time 1598630596496ms: Fr. Aug. 28 18:03:16 2020
  System local time 1598630596450ms: Fr. Aug. 28 18:03:16 2020
@@ -83,7 +82,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 ## Specification
 
-see [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) page 13.
+* see [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) page 13.
 
 * Circuit
 ![circuit](images/Steckplatine_DS3231.png)
