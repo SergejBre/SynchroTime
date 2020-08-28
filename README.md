@@ -17,8 +17,9 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 * Command Help 
 `
-~/SynchroTime$ ./synchroTime -h
+ ~/SynchroTime$ ./synchroTime -h
 `
+
 ![synchroTime -h](images/consoleApp_About.png)
 
 ## Using the app
@@ -27,57 +28,57 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be /dev/ttyUSBx, under Windows - COMx).
  To find the name of this port, call the application with the -d (--discovery) switch:
 ```
-~/SynchroTime$ ./synchroTime -d
-Serial Port : ttyUSB1
-Description : USB2.0-Serial
-Manufacturer: 1a86
-Vendor ID   : 1a86
-Product ID  : 7523
-System Locat: /dev/ttyUSB1
-Busy        : No
-
-Serial Port : ttyUSB0
-Description : USB2.0-Serial
-Manufacturer: 1a86
-Vendor ID   : 1a86
-Product ID  : 7523
-System Locat: /dev/ttyUSB0
-Busy        : No
-
-A total of 2 serial ports were found. 
+ ~/SynchroTime$ ./synchroTime -d
+ Serial Port : ttyUSB1
+ Description : USB2.0-Serial
+ Manufacturer: 1a86
+ Vendor ID   : 1a86
+ Product ID  : 7523
+ System Locat: /dev/ttyUSB1
+ Busy        : No
+ 
+ Serial Port : ttyUSB0
+ Description : USB2.0-Serial
+ Manufacturer: 1a86
+ Vendor ID   : 1a86
+ Product ID  : 7523
+ System Locat: /dev/ttyUSB0
+ Busy        : No
+ 
+ A total of 2 serial ports were found. 
 ```
 
 2. To select a virtual Serial Port, enter its system name after the command -p \<portName\>. The app will automatically create a configuration file, and the next call will contact the selected port.
 ```
-~/SynchroTime$ ./synchroTime -p ttyUSB0
-Added new serial interface ttyUSB0. 
+ ~/SynchroTime$ ./synchroTime -p ttyUSB0
+ Added new serial interface ttyUSB0. 
 ```
 
 3. Use the -i (--information) command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the offset register and the calculated time drift value in ppm. If the offset register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
 ```
-~/SynchroTime$ ./synchroTime -i
-~/SynchroTime/build$ ./synchroTime -i
-Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
-DS3231 clock time 1598630596496ms: Fr. Aug. 28 18:03:16 2020
-System local time 1598630596450ms: Fr. Aug. 28 18:03:16 2020
-Difference between 46ms
-Offset register val 0
-Time drift in ppm: 3.16586
+ ~/SynchroTime$ ./synchroTime -i
+ ~/SynchroTime/build$ ./synchroTime -i
+ Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
+ DS3231 clock time 1598630596496ms: Fr. Aug. 28 18:03:16 2020
+ System local time 1598630596450ms: Fr. Aug. 28 18:03:16 2020
+ Difference between 46ms
+ Offset register val 0
+ Time drift in ppm: 3.16586 
 ```
 
 4. To set the exact time, use the -a (--adjust) command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
 ```
-~$ ./synchroTime -a 
+ ~/SynchroTime$ ./synchroTime -a 
 ```
 
 5. To calibrate the clock of the DS3231 module, enter the -c (--calibration) command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (from several days to several weeks). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
 ```
-~$ ./synchroTime -c 
+ ~/SynchroTime$ ./synchroTime -c 
 ```
 
 6. To reset the offset register to its default value and clear the module's memory of calibration data, enter the -r (--reset) command. The default value will be written to the register, and memory cells will be overwritten with bytes with 0xFF.
 ```
-~$ ./synchroTime -r 
+ ~/SynchroTime$ ./synchroTime -r 
 ```
 
 ## Specification
@@ -89,11 +90,11 @@ see [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) page 13
 
 ## System requirements
 ```
-~$ sudo apt-get install ntp 
+~/$ sudo apt-get install ntp 
 ```
 
 ```
-~$ ntpq -p
+~/$ ntpq -p
      remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
 +gromit.nocabal. 131.188.3.222    2 u   64   64  377   27.218   -3.906   5.643
