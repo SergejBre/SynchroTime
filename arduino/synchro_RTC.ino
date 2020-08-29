@@ -11,6 +11,7 @@
 #include "RTClib.h"
 
 #define TIME_ZONE 2           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
+#define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
 #define OFFSET_REGISTER 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
@@ -30,8 +31,8 @@ uint32_t hexToInt( uint8_t* const buff );
 uint32_t getUTCtime( const uint32_t localTimeSecs );
 bool adjustTime( const uint32_t utcTimeSecs );
 bool adjustTimeDrift( float drift_in_ppm );
-float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs );
-void printOk( const bool ok );
+float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs);
+void sendBytes( const uint8_t blength );
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
@@ -56,6 +57,7 @@ void setup () {
 
     // offset value from -128 to +127, default is 0
     int8_t offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+    // todo
     writeToOffsetReg( offset_val );
     Serial.print( F( "Set Offset Reg: " ) );
     Serial.println( offset_val );
@@ -71,21 +73,21 @@ void setup () {
   uint32_t value = hexToInt( buff );
   Serial.println( value, DEC );
 */
-  attachInterrupt( 0, oneHertz, FALLING );
+  pinMode( INTERRUPT_PIN, INPUT_PULLUP );
+  attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
 }
 
-//extern volatile unsigned long timer0_millis;
 volatile uint32_t tickCounter;
 
-void oneHertz( void ) {
-//  timer0_millis = 0;
+void oneHz( void ) {
   tickCounter = millis();
 }
 
 void loop () {
   task_t task = TASK_IDLE;
   bool ok;
-  uint8_t numberOfBytes = 0;
+  uint8_t set = 0U;
+  uint8_t numberOfBytes = 0U;
   uint16_t utc_milliSecs = 0U;
   uint16_t ref_milliSecs = 0U;
   uint32_t utc_time = 0UL;
@@ -94,8 +96,6 @@ void loop () {
 
   if ( Serial.available() ) {  // if there is data available
 
-//    while( timer0_millis > 998 );
-//    utc_milliSecs = timer0_millis;
     while( millis() - tickCounter > 998 );
     utc_milliSecs = millis() - tickCounter;
     DateTime now = rtc.now(); // read clock time + ms
@@ -123,9 +123,9 @@ void loop () {
         Serial.println( thisChar );
       }
 
-      numberOfBytes = Serial.readBytes( byteBuffer, 6 ); // reading reference time + ms
-      if ( numberOfBytes >= 4 ) ref_time = hexToInt( byteBuffer );
-      if ( numberOfBytes >= 6 ) {
+      numberOfBytes = Serial.readBytes( byteBuffer, 6 ); // reading reference [time|ms] = 4+2 bytes
+      if ( numberOfBytes > 3 ) ref_time = hexToInt( byteBuffer );
+      if ( numberOfBytes > 5 ) {
         uint16_t *y = (uint16_t *)( byteBuffer + 4 );
         ref_milliSecs = y[0];
       }
@@ -134,40 +134,53 @@ void loop () {
       {
         case TASK_ADJUST:               // adjust time
           ok = adjustTime( ref_time );
-          printOk( ok );
+          byteBuffer[set] = ok;
+          set++;
+          sendBytes( set );
           task = TASK_IDLE;
           break;
         case TASK_INFO:                 // information
           utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
           intToHex( byteBuffer, utc_time );
-          memcpy( byteBuffer + 4, &utc_milliSecs, sizeof(utc_milliSecs) );  // write ms
-          byteBuffer[6] = readFromOffsetReg();  // reading offset value
+          set = sizeof( utc_time );
+          memcpy( byteBuffer + set, &utc_milliSecs, sizeof(utc_milliSecs) );  // write ms
+          set += sizeof(utc_milliSecs);
+          byteBuffer[set] = readFromOffsetReg();  // reading offset value
+          set++;
           drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // calculate drift time
-          floatToHex( byteBuffer + 7, drift_in_ppm );
-          Serial.write( byteBuffer, 11 );  // send data
+          floatToHex( byteBuffer + set, drift_in_ppm );
+          set += sizeof(drift_in_ppm);
+          sendBytes( set );  // send data
           task = TASK_IDLE;
           break;
         case TASK_CALIBR:               // calibrating
-/*            utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
-          intToHex( byteBuffer, utc_time );
-          memcpy( byteBuffer, &utc_milliSecs, sizeof(utc_milliSecs) );  // write bytes
+          utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
+          byteBuffer[set] = readFromOffsetReg();  // read last value from the offset register
+          set++;
           drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // reading drift time
+          floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
+          set += sizeof(drift_in_ppm);
           ok = adjustTimeDrift( drift_in_ppm );
           if ( ok ) {
             ok &= adjustTime( ref_time ); // adjust time
+            byteBuffer[set] = readFromOffsetReg();  // read new value from the offset register
+            set++;
           }
-*/          ok = true;
-          printOk( ok );
+          byteBuffer[set] = ok;
+          set++;
+          sendBytes( set );  // send data
           task = TASK_IDLE;
           break;
         case TASK_RESET:                // reset
           ok = writeToOffsetReg( 0 );
           if ( ok ) {
             uint8_t buff5b[5];
-            for (numberOfBytes=0; numberOfBytes<5; numberOfBytes++ ) buff5b[numberOfBytes] = 0xFF;
+            for (numberOfBytes = 0; numberOfBytes < sizeof(buff5b); numberOfBytes++ ) buff5b[numberOfBytes] = 0xFF;
             ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff5b, sizeof( buff5b ) );
           }
-          printOk( ok );
+          byteBuffer[set] = ok;
+          set++;
+          sendBytes( set );
           task = TASK_IDLE;
           break;
         case TASK_IDLE:                 // idle task
@@ -239,8 +252,9 @@ bool adjustTimeDrift( float drift_in_ppm ) {
     drift_in_ppm += last_offset_reg;
     offset = (drift_in_ppm > 0) ? int8_t( drift_in_ppm + 0.5 ) : int8_t( drift_in_ppm - 0.5 );
   }
-  i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, offset );  // write offset value to EEPROM AT24C256
-  return writeToOffsetReg( offset );
+  bool ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, offset );  // write offset value to EEPROM of AT24C256
+  ok &= writeToOffsetReg( offset );  // write offset value to Offset Reg. of DS3231
+  return ok;
 }
 
 /*
@@ -257,7 +271,8 @@ float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, 
   }
   uint32_t last_set_timeSecs = hexToInt( buff );
   int32_t diff = referenceTimeSecs - last_set_timeSecs;
-  if ( diff < 10000 ) {
+  // verification is needed because the var. last_set_timeSecs can reach the overflow value
+  if ( referenceTimeSecs < last_set_timeSecs || diff < 10000 ) {
     return 0;
   }
   int32_t time_driftSecs = clockTimeSecs - referenceTimeSecs;
@@ -266,13 +281,10 @@ float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, 
   return time_drift * 1000 / diff;
 }
 
-void printOk( const bool ok ) {
-  if ( ok ) {
-    Serial.print( F("successful") );
+void sendBytes( const uint8_t blength ){
+  if ( blength <= sizeof(byteBuffer) ) {
+    Serial.write( byteBuffer, blength );
   }
-  else {
-    Serial.print( F("fail") );
-  }  
 }
 
 uint8_t i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
