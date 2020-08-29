@@ -49,6 +49,6 @@ int handleInformationRequest( Session *const session );
 int handleAdjustmentRequest( Session *const session );
 int handleCalibrationRequest( Session *const session );
 int handleResetRequest( Session *const session );
-int handleSetRegisterRequest( Session *const session );
+int handleSetRegisterRequest( Session * const session, const float value );
 
 #endif // HELPER_H

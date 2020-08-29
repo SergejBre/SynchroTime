@@ -107,8 +107,10 @@ void setCommandLineParser( QCommandLineParser &parser )
 //! Request for the Reset of the device.
 //!
 //! \details
+//! The function creates a connection to the device and sends a request for
+//! Reset using the Reset protocol of the form: {@r}, 2 bytes long.
 //!
-//! \param[in] parent Pointer to the parent object used for QObject.
+//! \param[in] Pointer to the current session.
 // ------------------------------------------------------------------------
 int handleResetRequest( Session *const session )
 {
@@ -129,14 +131,16 @@ int handleResetRequest( Session *const session )
     qDebug() << "Send command: " << requestForReset;
 
     session->getInterface()->readTheData( TIME_WAIT );
-    qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
+    const uint8_t blength = session->getInterface()->getReceivedData().size();
+    qDebug() << "Received bytes: " << blength;
 
     session->getInterface()->closeSocket();
 
     // Check of the Received request
     if ( !session->getInterface()->getReceivedData().isEmpty() )
     {
-        standardOutput << "Request for reset " << session->getInterface()->getReceivedData() << endl;
+        const uint8_t ret_value = session->getInterface()->getReceivedData().at( blength-1 );
+        standardOutput << "Request for reset " << ( ret_value ? "completed successfully." : "fail." ) << endl;
     }
     else
     {
@@ -151,8 +155,10 @@ int handleResetRequest( Session *const session )
 //! Request for the Information of the device.
 //!
 //! \details
+//! The function creates a connection to the device and sends a request for
+//! Information using the Information protocol of the form: {@i|time|ms}, 2+4+2 bytes long.
 //!
-//! \param[in] parent Pointer to the parent object used for QObject.
+//! \param[in] Pointer to the current session.
 //!
 int handleInformationRequest(Session * const session)
 {
@@ -180,29 +186,31 @@ int handleInformationRequest(Session * const session)
     qDebug() << "Send command: " << requestForVersion;
 
     session->getInterface()->readTheData( TIME_WAIT );
-    qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
+    const uint8_t blength = session->getInterface()->getReceivedData().size();
+    qDebug() << "Received bytes: " << blength;
 
     session->getInterface()->closeSocket();
 
     // Check of the Received request
-    if ( !session->getInterface()->getReceivedData().isEmpty() && session->getInterface()->getReceivedData().count() >= 8 )
+    if ( !session->getInterface()->getReceivedData().isEmpty() )
     {
         qint64 numberOfMSec = 0LL;
         quint16 numberOfSec = 0U;
-        memcpy( &numberOfMSec, session->getInterface()->getReceivedData().data(), 4 );
+        const char *byteBuffer = session->getInterface()->getReceivedData().constData();
+        memcpy( &numberOfMSec, byteBuffer, 4 );
         numberOfMSec *= 1000;
-        memcpy( &numberOfSec, session->getInterface()->getReceivedData().data() + 4, sizeof(numberOfSec) );
+        memcpy( &numberOfSec, byteBuffer + 4, sizeof(numberOfSec) );
         numberOfMSec += numberOfSec;
         QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
         standardOutput << "DS3231 clock time\t" << numberOfMSec << "ms: " << time.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
         standardOutput << "System local time\t" << localTimeMSecs << "ms: " << local.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
         standardOutput << "Difference between\t" << numberOfMSec - localTimeMSecs << "ms" << endl;
-        if ( session->getInterface()->getReceivedData().count() >= 6 ) {
-            qint8 offset_reg = session->getInterface()->getReceivedData().at(6);
+        if ( blength > 5 ) {
+            qint8 offset_reg = byteBuffer[6];
             standardOutput << "Offset reg. value\t" << offset_reg << endl;
-            if ( session->getInterface()->getReceivedData().count() >= 10 ) {
+            if ( blength > 9 ) {
                 float drift_in_ppm = 0;
-                memcpy( &drift_in_ppm, session->getInterface()->getReceivedData().data() + 7, sizeof(drift_in_ppm) );
+                memcpy( &drift_in_ppm, byteBuffer + 7, sizeof(drift_in_ppm) );
                 standardOutput << "Time drift in ppm\t" << drift_in_ppm << "ppm" << endl;
             }
         }
@@ -220,8 +228,10 @@ int handleInformationRequest(Session * const session)
 //! Request for the Adjustment of the device.
 //!
 //! \details
+//! The function creates a connection to the device and sends a request for
+//! Adjustment using the Adjustment protocol of the form: {@a|time|ms}, 2+4+2 bytes long.
 //!
-//! \param[in] parent Pointer to the parent object used for QObject.
+//! \param[in] Pointer to the current session.
 //!
 int handleAdjustmentRequest( Session * const session )
 {
@@ -255,15 +265,18 @@ int handleAdjustmentRequest( Session * const session )
     qDebug() << "Send command: " << requestForAdjustment;
 
     session->getInterface()->readTheData( TIME_WAIT );
-    qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
+    const uint8_t blength = session->getInterface()->getReceivedData().size();
+    qDebug() << "Received bytes: " << blength;
 
     session->getInterface()->closeSocket();
 
     // Check of the Received request
     if ( !session->getInterface()->getReceivedData().isEmpty() )
     {
-        standardOutput << "System local time " << localTimeMSecs << "ms: " << local.toString() << endl;
-        standardOutput << "Request for adjustment " << session->getInterface()->getReceivedData() << endl;
+        const uint8_t ret_value = session->getInterface()->getReceivedData().at( blength-1 );
+        local.setTime_t( localTimeSecs );
+        standardOutput << "System local time\t" << local.toString("ddd d MMM yyyy hh:mm:ss.zzz") << endl;
+        standardOutput << "Request for adjustment " << ( ret_value ? "completed successfully." : "fail." ) << endl;
     }
     else
     {
@@ -278,8 +291,10 @@ int handleAdjustmentRequest( Session * const session )
 //! Request for the Calibration of the device.
 //!
 //! \details
+//! The function creates a connection to the device and sends a request for
+//! Calibration using the Calibration protocol of the form: {@c|time|ms}, 2+4+2 bytes long.
 //!
-//! \param[in] parent Pointer to the parent object used for QObject.
+//! \param[in] Pointer to the current session.
 //!
 int handleCalibrationRequest( Session * const session )
 {
@@ -293,21 +308,49 @@ int handleCalibrationRequest( Session * const session )
     }
 
     // Request for Calibration
-    QByteArray requestForCalibration("@c");
+    QByteArray requestForCalibration("@cttttmm");
+
+    QDateTime local(QDateTime::currentDateTime());
+    qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    quint32 localTimeSecs = localTimeMSecs/1000;
+    quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
+    quint16 ms = 0U;
+    localTimeSecs++;
+    memcpy( requestForCalibration.data() + 2, &localTimeSecs, sizeof(localTimeSecs) );
+    memcpy( requestForCalibration.data() + 6, &ms, sizeof(ms) );
+
+    milliSecs = 1000 - milliSecs;
+    QTime time;
+    time.start();
+    while ( time.elapsed() < milliSecs );
 
     // Send a command to the device
     session->getInterface()->writeTheData( requestForCalibration );
     qDebug() << "Send command: " << requestForCalibration;
 
     session->getInterface()->readTheData( TIME_WAIT );
-    qDebug() << "Received bytes: " << session->getInterface()->getReceivedData().size();
+    const uint8_t blength = session->getInterface()->getReceivedData().size();
+    qDebug() << "Received bytes: " << blength;
 
     session->getInterface()->closeSocket();
 
     // Check of the Received request
     if ( !session->getInterface()->getReceivedData().isEmpty() )
     {
-        standardOutput << "Request for calibration " << session->getInterface()->getReceivedData() << endl;
+        const char *byteBuffer = session->getInterface()->getReceivedData().constData();
+        const uint8_t ret_value = byteBuffer[ blength-1 ];
+        local.setTime_t( localTimeSecs );
+        standardOutput << "System local time\t" << local.toString("ddd d MMM yyyy hh:mm:ss.zzz") << endl;
+        qint8 offset_reg = session->getInterface()->getReceivedData().at(0);
+        standardOutput << "Offset last value\t" << offset_reg << endl;
+        if ( blength > 5 ) {
+            float drift_in_ppm = 0;
+            memcpy( &drift_in_ppm, byteBuffer + 1, sizeof(drift_in_ppm) );
+            standardOutput << "Time drift in ppm\t" << drift_in_ppm << "ppm" << endl;
+            offset_reg = byteBuffer[5];
+            standardOutput << "Offset new value\t" << offset_reg << endl;
+        }
+        standardOutput << "Request for calibration " << ( ret_value ? "completed successfully." : "fail." ) << endl;
     }
     else
     {
@@ -322,10 +365,12 @@ int handleCalibrationRequest( Session * const session )
 //! Request to update the register value.
 //!
 //! \details
+//! The function creates a connection to the device and sends a request for
+//! SetRegister using the SetRegister protocol of the form: {@s|value}, 2+4 bytes long.
 //!
-//! \param[in] parent Pointer to the parent object used for QObject.
+//! \param[in] Pointer to the current session.
 //!
-int handleSetRegisterRequest(Session * const session)
+int handleSetRegisterRequest( Session * const session, const float value )
 {
     Q_ASSERT( session != nullptr );
 
@@ -333,6 +378,32 @@ int handleSetRegisterRequest(Session * const session)
     if ( !session->getInterface()->openSocket() )
     {
         qCritical( logHelper ) << "Request to update the offset register value failed.";
+        return 1;
+    }
+
+    // Request for SetRegister
+    QByteArray requestForSetRegister("@sfloat");
+    memcpy( requestForSetRegister.data() + 2, &value, sizeof(value) );
+
+    // Send a command to the device
+    session->getInterface()->writeTheData( requestForSetRegister );
+    qDebug() << "Send command: " << requestForSetRegister;
+
+    session->getInterface()->readTheData( TIME_WAIT );
+    const uint8_t blength = session->getInterface()->getReceivedData().size();
+    qDebug() << "Received bytes: " << blength;
+
+    session->getInterface()->closeSocket();
+
+    // Check of the Received request
+    if ( !session->getInterface()->getReceivedData().isEmpty() )
+    {
+        const uint8_t ret_value = session->getInterface()->getReceivedData().at( blength-1 );
+        standardOutput << "Request for SetRegister " << ( ret_value ? "completed successfully." : "fail." ) << endl;
+    }
+    else
+    {
+        qCritical( logHelper ) << "Request for SetRegister failed.";
         return 1;
     }
 
