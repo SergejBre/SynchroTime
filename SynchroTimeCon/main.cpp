@@ -272,6 +272,33 @@ int main(int argc, char *argv[])
             handleResetRequest( session );
         }
     }
+
+    // ------------------------------------------------------------------------
+    // command line option set register: -s
+    // ------------------------------------------------------------------------
+    else if ( parser.isSet( SETREG ) )
+    {
+
+        if ( args.count() > 0 )
+        {
+            qFatal( QObject::tr( "Invalid arguments '%s'" ).toLocal8Bit(), qPrintable( args.at(0) ) );
+        }
+
+        bool ok;
+        // Read new value for offset register
+        float value = parser.value( SETREG ).toFloat( &ok );
+        if ( !ok )
+        {
+            qFatal( QObject::tr( "Invalid argument '%s'" ).toLocal8Bit(), qPrintable( parser.value( SETREG ) ) );
+        }
+
+        Q_ASSERT( session != nullptr );
+        if ( session != nullptr )
+        {
+            handleSetRegisterRequest( session, value );
+        }
+    }
+
     // Release the memory
     session->deleteLater();
     QTimer::singleShot( 0, &app, SLOT( quit() ) );

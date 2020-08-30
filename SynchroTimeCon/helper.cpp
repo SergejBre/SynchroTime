@@ -51,21 +51,22 @@ void setCommandLineParser( QCommandLineParser &parser )
 {
 #ifndef GUI_APP
     parser.setApplicationDescription( "Description: Console app is used for adjustment of the RTC DS3231 module.\n"
-                                      "The console app can synchronize the time with a computer via Serial Port and \n"
-                                      "compensate for the time-drift of the DS3231 and save the parameters into flash." );
+                                      "The app can adjust the time using a computer via the serial port, adjust\n"
+                                      "clock drift and save parameters and calibration data to flash memory." );
 #endif
 
-    parser.addPositionalArgument( "value", QCoreApplication::translate( "main", "New value for offset reg. (from -12.8 to 12.7)" ) );
+    parser.addPositionalArgument( "<PortName>", QCoreApplication::translate( "main", "Name of serial port. Platform dependent ttyUSB or COM" ) );
+    parser.addPositionalArgument( "<Value>", QCoreApplication::translate( "main", "New value for offset reg. (from -12.8 to 12.7)" ) );
 
 #ifndef GUI_APP
     QCommandLineOption discovery( QStringList() << DISCOVERY << "discovery",
-                                       QCoreApplication::translate( "main", "Discover for existing Serial Ports in the System" ),
+                                       QCoreApplication::translate( "main", "Discover for existing serial ports in the System" ),
                                        QCoreApplication::translate( "main", "" ), "0" );
     parser.addOption( discovery );
 #endif
 
     QCommandLineOption portName( QStringList() << PORT << "port",
-                                       QCoreApplication::translate( "main", "Set up an available Serial Port (ttyUSBx or COMx)" ),
+                                       QCoreApplication::translate( "main", "Setting an available serial port, for example ttyUSB0" ),
                                        QCoreApplication::translate( "main", "PortName" ), "1" );
     parser.addOption( portName );
 
@@ -92,8 +93,8 @@ void setCommandLineParser( QCommandLineParser &parser )
     parser.addOption( reset );
 
     QCommandLineOption setregister( QStringList() << SETREG << "setreg",
-                                       QCoreApplication::translate( "main", "Set a new value in the offset register" ),
-                                       QCoreApplication::translate( "main", "value"), "1" );
+                                       QCoreApplication::translate( "main", "Set a new value in the offset register of DS3231" ),
+                                       QCoreApplication::translate( "main", "Value"), "1" );
     parser.addOption( setregister );
 
 #ifndef GUI_APP
@@ -111,6 +112,9 @@ void setCommandLineParser( QCommandLineParser &parser )
 //! Reset using the Reset protocol of the form: {@r}, 2 bytes long.
 //!
 //! \param[in] Pointer to the current session.
+//!
+//! \retval 0
+//! \retval 1
 // ------------------------------------------------------------------------
 int handleResetRequest( Session *const session )
 {
@@ -160,6 +164,9 @@ int handleResetRequest( Session *const session )
 //!
 //! \param[in] Pointer to the current session.
 //!
+//! \retval 0
+//! \retval 1
+// ------------------------------------------------------------------------
 int handleInformationRequest(Session * const session)
 {
     Q_ASSERT( session != nullptr );
@@ -192,7 +199,7 @@ int handleInformationRequest(Session * const session)
     session->getInterface()->closeSocket();
 
     // Check of the Received request
-    if ( !session->getInterface()->getReceivedData().isEmpty() )
+    if ( !session->getInterface()->getReceivedData().isEmpty() && blength > 4 )
     {
         qint64 numberOfMSec = 0LL;
         quint16 numberOfSec = 0U;
@@ -233,6 +240,9 @@ int handleInformationRequest(Session * const session)
 //!
 //! \param[in] Pointer to the current session.
 //!
+//! \retval 0
+//! \retval 1
+// ------------------------------------------------------------------------
 int handleAdjustmentRequest( Session * const session )
 {
     Q_ASSERT( session != nullptr );
@@ -296,6 +306,9 @@ int handleAdjustmentRequest( Session * const session )
 //!
 //! \param[in] Pointer to the current session.
 //!
+//! \retval 0
+//! \retval 1
+// ------------------------------------------------------------------------
 int handleCalibrationRequest( Session * const session )
 {
     Q_ASSERT( session != nullptr );
@@ -368,8 +381,12 @@ int handleCalibrationRequest( Session * const session )
 //! The function creates a connection to the device and sends a request for
 //! SetRegister using the SetRegister protocol of the form: {@s|value}, 2+4 bytes long.
 //!
-//! \param[in] Pointer to the current session.
+//! \param[in] session Pointer to the current session.
+//! \param[in] value
 //!
+//! \retval 0
+//! \retval 1
+// ------------------------------------------------------------------------
 int handleSetRegisterRequest( Session * const session, const float value )
 {
     Q_ASSERT( session != nullptr );
