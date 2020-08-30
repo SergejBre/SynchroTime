@@ -60,40 +60,40 @@ void setCommandLineParser( QCommandLineParser &parser )
 
 #ifndef GUI_APP
     QCommandLineOption discovery( QStringList() << DISCOVERY << "discovery",
-                                       QCoreApplication::translate( "main", "Discover for existing serial ports in the System" ),
+                                       QCoreApplication::translate( "main", "Detects for existing serial ports in the system." ),
                                        QCoreApplication::translate( "main", "" ), "0" );
     parser.addOption( discovery );
 #endif
 
     QCommandLineOption portName( QStringList() << PORT << "port",
-                                       QCoreApplication::translate( "main", "Setting an available serial port, for example ttyUSB0" ),
+                                       QCoreApplication::translate( "main", "Sets an available serial interface, e.g. ttyUSB0." ),
                                        QCoreApplication::translate( "main", "PortName" ), "1" );
     parser.addOption( portName );
 
     QCommandLineOption information( QStringList() << INFO << "info",
-                                       QCoreApplication::translate( "main", "Read information about available RTC module" ),
+                                       QCoreApplication::translate( "main", "Reads information about the available RTC module." ),
                                        QCoreApplication::translate( "main", "" ), "0" );
     parser.addOption( information );
 
     QCommandLineOption adjustment( QStringList() << ADJUST << "adjust",
-                                       QCoreApplication::translate( "main", "Adjust time from the computer" ),
+                                       QCoreApplication::translate( "main", "Adjusts the time from the computer." ),
                                        QCoreApplication::translate( "main", "" ), "0" );
     parser.addOption( adjustment );
 
 #ifndef GUI_APP
     QCommandLineOption calibration( QStringList() << CALIBR << "calibration",
-                                       QCoreApplication::translate( "main", "Calibrate the clock of the DS3231 module" ),
+                                       QCoreApplication::translate( "main", "Calibrates the clock of the DS3231 module." ),
                                        QCoreApplication::translate( "main", "" ), "0" );
     parser.addOption( calibration );
 #endif
 
     QCommandLineOption reset( QStringList() << RESET << "reset",
-                                       QCoreApplication::translate( "main", "Reset the offset register to its default value" ),
+                                       QCoreApplication::translate( "main", "Resets the offset register to its default value." ),
                                        QCoreApplication::translate( "main", "" ), "0" );
     parser.addOption( reset );
 
     QCommandLineOption setregister( QStringList() << SETREG << "setreg",
-                                       QCoreApplication::translate( "main", "Set a new value in the offset register of DS3231" ),
+                                       QCoreApplication::translate( "main", "Sets a new value in the offset register of DS3231." ),
                                        QCoreApplication::translate( "main", "Value"), "1" );
     parser.addOption( setregister );
 
