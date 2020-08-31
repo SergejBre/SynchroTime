@@ -44,8 +44,8 @@ static QTextStream standardOutput( stdout );
 //!
 //! \details
 //! \todo
-//! \param[in,out] parser of the type QCommandLineParser
 //!
+//! \param[in,out] parser of the type QCommandLineParser
 // ------------------------------------------------------------------------
 void setCommandLineParser( QCommandLineParser &parser )
 {
@@ -164,8 +164,8 @@ int handleResetRequest( Session *const session )
 //!
 //! \param[in] Pointer to the current session.
 //!
-//! \retval 0
-//! \retval 1
+//! \retval 0 if no error occurs,
+//! \retval 1 terminate with an error.
 // ------------------------------------------------------------------------
 int handleInformationRequest(Session * const session)
 {
@@ -199,26 +199,31 @@ int handleInformationRequest(Session * const session)
     session->getInterface()->closeSocket();
 
     // Check of the Received request
-    if ( !session->getInterface()->getReceivedData().isEmpty() && blength > 4 )
+    if ( !session->getInterface()->getReceivedData().isEmpty() && blength > 5 )
     {
         qint64 numberOfMSec = 0LL;
         quint16 numberOfSec = 0U;
         const char *byteBuffer = session->getInterface()->getReceivedData().constData();
-        memcpy( &numberOfMSec, byteBuffer, 4 );
+        memcpy( &numberOfMSec, byteBuffer, sizeof( quint32 ) );
         numberOfMSec *= 1000;
-        memcpy( &numberOfSec, byteBuffer + 4, sizeof(numberOfSec) );
+        memcpy( &numberOfSec, byteBuffer + 4, sizeof( numberOfSec ) );
         numberOfMSec += numberOfSec;
         QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
         standardOutput << "DS3231 clock time\t" << numberOfMSec << "ms: " << time.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
         standardOutput << "System local time\t" << localTimeMSecs << "ms: " << local.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
         standardOutput << "Difference between\t" << numberOfMSec - localTimeMSecs << "ms" << endl;
-        if ( blength > 5 ) {
+        if ( blength > 6 ) {
             qint8 offset_reg = byteBuffer[6];
             standardOutput << "Offset reg. value\t" << offset_reg << endl;
-            if ( blength > 9 ) {
+            if ( blength > 10 ) {
                 float drift_in_ppm = 0;
-                memcpy( &drift_in_ppm, byteBuffer + 7, sizeof(drift_in_ppm) );
+                memcpy( &drift_in_ppm, byteBuffer + 7, sizeof( drift_in_ppm ) );
                 standardOutput << "Time drift in ppm\t" << drift_in_ppm << "ppm" << endl;
+                if ( blength > 14 ) {
+                    float temperature = 0;
+                    memcpy( &temperature, byteBuffer + 11, sizeof( temperature ) );
+                    standardOutput << "Temperature DS3231\t" << temperature << " C" << endl;
+                }
             }
         }
     }
@@ -240,8 +245,8 @@ int handleInformationRequest(Session * const session)
 //!
 //! \param[in] Pointer to the current session.
 //!
-//! \retval 0
-//! \retval 1
+//! \retval 0 if no error occurs,
+//! \retval 1 terminate with an error.
 // ------------------------------------------------------------------------
 int handleAdjustmentRequest( Session * const session )
 {
@@ -306,8 +311,8 @@ int handleAdjustmentRequest( Session * const session )
 //!
 //! \param[in] Pointer to the current session.
 //!
-//! \retval 0
-//! \retval 1
+//! \retval 0 if no error occurs,
+//! \retval 1 terminate with an error.
 // ------------------------------------------------------------------------
 int handleCalibrationRequest( Session * const session )
 {
@@ -384,8 +389,8 @@ int handleCalibrationRequest( Session * const session )
 //! \param[in] session Pointer to the current session.
 //! \param[in] value
 //!
-//! \retval 0
-//! \retval 1
+//! \retval 0 if no error occurs,
+//! \retval 1 terminate with an error.
 // ------------------------------------------------------------------------
 int handleSetRegisterRequest( Session * const session, const float value )
 {
