@@ -209,20 +209,25 @@ int handleInformationRequest(Session * const session)
         memcpy( &numberOfSec, byteBuffer + 4, sizeof( numberOfSec ) );
         numberOfMSec += numberOfSec;
         QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
-        standardOutput << "DS3231 clock time\t" << numberOfMSec << "ms: " << time.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
-        standardOutput << "System local time\t" << localTimeMSecs << "ms: " << local.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
-        standardOutput << "Difference between\t" << numberOfMSec - localTimeMSecs << "ms" << endl;
+        standardOutput << "DS3231 clock time\t" << numberOfMSec << " ms: " << time.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
+        standardOutput << "System local time\t" << localTimeMSecs << " ms: " << local.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
+        standardOutput << "Difference between\t" << numberOfMSec - localTimeMSecs << " ms" << endl;
         if ( blength > 6 ) {
-            qint8 offset_reg = byteBuffer[6];
-            standardOutput << "Offset reg. value\t" << offset_reg << endl;
+            float offset_reg = float( byteBuffer[6] )/10;
+            standardOutput << "Offset reg. in ppm\t" << offset_reg << " ppm" << endl;
             if ( blength > 10 ) {
                 float drift_in_ppm = 0;
                 memcpy( &drift_in_ppm, byteBuffer + 7, sizeof( drift_in_ppm ) );
-                standardOutput << "Time drift in ppm\t" << drift_in_ppm << "ppm" << endl;
+                standardOutput << "Time drift in ppm\t" << drift_in_ppm << " ppm" << endl;
                 if ( blength > 14 ) {
-                    float temperature = 0;
-                    memcpy( &temperature, byteBuffer + 11, sizeof( temperature ) );
-                    standardOutput << "Temperature DS3231\t" << temperature << " C" << endl;
+                    qint64 lastAdjustOfTimeMSec = 0LL;
+                    memcpy( &lastAdjustOfTimeMSec, byteBuffer + 11, sizeof( quint32 ) );
+                    if ( lastAdjustOfTimeMSec < 0xFFFFFFFF ) {
+                        lastAdjustOfTimeMSec *= 1000;
+                        time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec );
+                        standardOutput << "last adjust of time\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
+//                        standardOutput << "Time drift in ppm\t" << float(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
+                    }
                 }
             }
         }

@@ -287,7 +287,7 @@ int main(int argc, char *argv[])
         bool ok;
         // Read new value for offset register
         float value = parser.value( SETREG ).toFloat( &ok );
-        if ( !ok )
+        if ( !ok || ( value < -12.81 ) || ( value > 12.7 ) )
         {
             qFatal( QObject::tr( "Invalid argument '%s'" ).toLocal8Bit(), qPrintable( parser.value( SETREG ) ) );
         }

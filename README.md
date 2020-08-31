@@ -58,26 +58,45 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 ~/SynchroTime$ ./synchroTime -i
 Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
-DS3231 clock time	1598649465628ms: 28.08.2020 23:17:45.628
-System local time	1598649465500ms: 28.08.2020 23:17:45.500
-Difference between	128ms
-Offset reg. value	0
-Time drift in ppm	3.83245ppm 
+DS3231 clock time	1598896552596 ms: 31.08.2020 19:55:52.596
+System local time	1598896589772 ms: 31.08.2020 19:56:29.772
+Difference between	-37176 ms
+Offset reg. in ppm	0 ppm
+Time drift in ppm	-8.78162 ppm
+last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000 
 ```
 
 4. To set the exact time, use the -a (--adjust) command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
 ```
- ~/SynchroTime$ ./synchroTime -a 
+ ~/SynchroTime$ ./synchroTime -a
+ Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
+ System local time	Mo. 31 Aug. 2020 20:02:52.000
+ Request for adjustment completed successfully. 
 ```
 
 5. To calibrate the clock of the DS3231 module, enter the -c (--calibration) command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (from several days to several weeks). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
 ```
- ~/SynchroTime$ ./synchroTime -c 
+ ~/SynchroTime$ ./synchroTime -c
+ Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
+ System local time	Mo. 31 Aug. 2020 20:04:14.000
+ Offset last value	0
+ Time drift in ppm	0ppm
+ Offset new value	0
+ Request for calibration completed successfully. 
 ```
 
 6. To reset the offset register to its default value and clear the module's memory of calibration data, enter the -r (--reset) command. The default value will be written to the register, and memory cells will be overwritten with bytes with 0xFF.
 ```
- ~/SynchroTime$ ./synchroTime -r 
+ ~/SynchroTime$ ./synchroTime -r
+ Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
+ Request for reset completed successfully. 
+```
+
+7. Use the -s (--setreg) command to write the new value to the offset register of the DS3231. Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6).
+```
+ ~/SynchroTime$ ./synchroTime -s
+ Serial port ttyUSB0 wait 10ms for Ready Read: Operation timed out.
+ Request for SetRegister fail. 
 ```
 
 ## Specification

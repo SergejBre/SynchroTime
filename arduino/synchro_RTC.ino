@@ -19,7 +19,7 @@ typedef enum task : uint8_t { TASK_IDLE = 0x00, TASK_ADJUST, TASK_INFO, TASK_CAL
 
 RTC_DS3231 rtc;
 uint8_t buff[4];
-uint8_t byteBuffer[11];
+uint8_t byteBuffer[16];
 
 // Function Prototypes
 int8_t readFromOffsetReg( void ); // read from offset register
@@ -53,14 +53,15 @@ void setup () {
   if ( rtc.lostPower() ) {
     Serial.println( F("RTC lost power, lets set the time!") );
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
-    rtc.adjust( DateTime( F(__DATE__), F(__TIME__) ) + TimeSpan( 0, 0, 0, 15 ) );
-
+    const uint32_t newtime = DateTime( F(__DATE__), F(__TIME__) ).unixtime();
+    adjustTime( newtime - TIME_ZONE*3600 );
+/*
     // offset value from -128 to +127, default is 0
     int8_t offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
-    // todo
     writeToOffsetReg( offset_val );
     Serial.print( F( "Set Offset Reg: " ) );
     Serial.println( offset_val );
+*/
   }
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
   attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
@@ -144,6 +145,9 @@ void loop () {
         drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // calculate drift time
         floatToHex( byteBuffer + set, drift_in_ppm );
         set += sizeof(drift_in_ppm);
+        if ( i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, byteBuffer + set, sizeof( uint32_t )) ) {
+          set += sizeof( uint32_t );
+        }
         sendBytes( set );  // send data
         task = TASK_IDLE;
         break;
