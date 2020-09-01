@@ -125,23 +125,18 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 ## Installing the app
 
 ## Compilation on Linux
-* 
-```
-~/$ sudo apt-get install g++ libssl-dev libglu1-mesa-dev qt5-qmake qtscript5-dev qtmultimedia5-dev git 
-```
-* 
-```
-~/$ git clone https://github.com/SergejBre/SynchroTime.git 
-```
-* 
-```
-~/$ cd ./SynchroTime 
-```
-* 
-```
-~/$ QT_SELECT=5 qmake SynchroTime.pro 
-```
-* 
-```
-~/$ make && make clean 
-```
+* ```
+  ~/$ sudo apt-get install g++ libssl-dev libglu1-mesa-dev qt5-qmake qtscript5-dev qtmultimedia5-dev git
+  ```
+* ```
+  ~/$ git clone https://github.com/SergejBre/SynchroTime.git
+  ```
+* ```
+  ~/$ cd ./SynchroTime
+  ```
+* ```
+  ~/$ QT_SELECT=5 qmake SynchroTime.pro
+  ```
+* ```
+  ~/$ make && make clean
+  ```
