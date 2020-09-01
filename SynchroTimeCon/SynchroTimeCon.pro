@@ -15,7 +15,7 @@ QT -= gui
 DESTDIR = ../build
 MOC_DIR = ../moc
 CONFIG += console
-CONFIG += c++11
+CONFIG += qt c++11
 CONFIG += debug_and_release
 CONFIG -= app_bundle
 
@@ -28,6 +28,7 @@ CONFIG(debug, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT
 }
 TEMPLATE = app
+LANGUAGE = C++
 # Define for the console application
 DEFINES += CONSOLE_APP
 
@@ -47,6 +48,10 @@ HEADERS += \
     helper.h \
     settings.h
 
+# For Linux, MacOS
+linux|macx {
+    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
+}
 # For Win32 release
 win32 {
     VERSION = 1.0.0.0

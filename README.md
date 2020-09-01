@@ -101,17 +101,17 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 ## Specification
 
-* see [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) page 13.
-
 * Circuit
 ![circuit](images/Steckplatine_DS3231.png)
 
 ## System requirements
-* For correct work your system time required to be synchronized with NTP.
+
+* For correct work your system time required to be synchronized with NTP. Under Linux, the ntp service is installed by the following command
 ```
 ~/$ sudo apt-get install ntp 
 ```
-Check the correct operation of the service ntp by running the command
+
+* Check the correct operation of the service ntp by running the command
 ```
 ~/$ ntpq -p
      remote           refid      st t when poll reach   delay   offset  jitter
@@ -124,6 +124,7 @@ Check the correct operation of the service ntp by running the command
 ```
 
 ## Installing the app
+
 
 ## Compilation on Linux
 
