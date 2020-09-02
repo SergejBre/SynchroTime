@@ -18,6 +18,8 @@ CONFIG += console
 CONFIG += qt c++11
 CONFIG += debug_and_release
 CONFIG -= app_bundle
+QMAKE_CFLAGS_RELEASE += -O3
+QMAKE_CXXFLAGS_RELEASE += -O3
 
 CONFIG(debug, debug|release) {
     TARGET = synchroTimed

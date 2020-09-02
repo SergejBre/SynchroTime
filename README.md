@@ -13,7 +13,11 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
   * Correct the time drift of the DS3231-RTC clock. The algorithm performs correction in the range from -12.8 to +12.7 ppm;
   * Automatically save parameters and calibration data to the energy-independent flash memory of the type AT24C256. In case there is a power failure to the module.
 
-* The client communicates with the Arduino server via the serial interface (UART). The Arduino is in turn connected to the Precision RTC DS3231 module via the I²C-interface. The application allows you to easily select a port for communication with the server and save the port number in the program settings. (The Baud Rate is assumed unchanged and equals 115200).
+* Developed in pure Qt, no third party libraries.
+
+* Cross-platform application implementation (Linux and Windows).
+
+* The client communicates with the Arduino server via the serial interface (UART). The application allows you to easily select a serial port for communication with the server and save the port number in the program settings.
 
 * Command Help 
 `
@@ -101,7 +105,13 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 ## Specification
 
-* Circuit
+* The application communicates with the Arduino server through any virtual serial interface (UART). The Baud Rate is assumed unchanged and equals 115200.
+
+* The Arduino is in turn connected to the Precision RTC DS3231 module via the I²C-interface: A4 (SDA), A5 (SCL) pins (SDA - data line and SCL - clock line).
+
+* The interrupt on the port D2 (or D3) serves to count milliseconds by the internal Arduino counter millis.
+
+* The suggested connection to the DS3231 module is according to the Circuit below.
 ![circuit](images/Steckplatine_DS3231.png)
 
 ## System requirements
@@ -125,6 +135,18 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 ## Installing the app
 
+* According to the working platform, download the appropriate archive with the console application from the project page.
+
+* Unpack it to your home directory with write access, as the application retains its settings.
+```
+ ~/$ tar -x -j -f synchroTime_v.1.0.0_i386.tar.bz2
+``` 
+
+* Run the application according to the instructions in the section: Using the app.
+```
+ ~/$ cd SynchroTime
+ ~/SynchroTime$ ./synchroTime -h
+``` 
 
 ## Compilation on Linux
 

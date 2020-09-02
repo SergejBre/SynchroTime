@@ -40,6 +40,10 @@
 #define CALIBR     "c"
 #define RESET      "r"
 #define SETREG     "s"
+// number of expected bytes
+#define RECEIVED_BYTES 1U
+#define RECEIVED_BYTES_INFO 15U
+#define RECEIVED_BYTES_CALIBR 7U
 
 //------------------------------------------------------------------------------
 // Function Prototypes

@@ -134,7 +134,7 @@ int handleResetRequest( Session *const session )
     session->getInterface()->writeTheData( requestForReset );
     qDebug() << "Send command: " << requestForReset;
 
-    session->getInterface()->readTheData( TIME_WAIT );
+    session->getInterface()->readTheData( TIME_WAIT, RECEIVED_BYTES );
     const uint8_t blength = session->getInterface()->getReceivedData().size();
     qDebug() << "Received bytes: " << blength;
 
@@ -192,7 +192,7 @@ int handleInformationRequest(Session * const session)
     session->getInterface()->writeTheData( requestForVersion );
     qDebug() << "Send command: " << requestForVersion;
 
-    session->getInterface()->readTheData( TIME_WAIT );
+    session->getInterface()->readTheData( TIME_WAIT, RECEIVED_BYTES_INFO );
     const uint8_t blength = session->getInterface()->getReceivedData().size();
     qDebug() << "Received bytes: " << blength;
 
@@ -209,8 +209,8 @@ int handleInformationRequest(Session * const session)
         memcpy( &numberOfSec, byteBuffer + 4, sizeof( numberOfSec ) );
         numberOfMSec += numberOfSec;
         QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
-        standardOutput << "DS3231 clock time\t" << numberOfMSec << " ms: " << time.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
-        standardOutput << "System local time\t" << localTimeMSecs << " ms: " << local.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
+        standardOutput << "DS3231 clock time\t" << numberOfMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
+        standardOutput << "System local time\t" << localTimeMSecs << " ms: " << local.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
         standardOutput << "Difference between\t" << numberOfMSec - localTimeMSecs << " ms" << endl;
         if ( blength > 6 ) {
             float offset_reg = float( byteBuffer[6] )/10;
@@ -225,7 +225,7 @@ int handleInformationRequest(Session * const session)
                     if ( lastAdjustOfTimeMSec < 0xFFFFFFFF ) {
                         lastAdjustOfTimeMSec *= 1000;
                         time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec );
-                        standardOutput << "last adjust of time\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("d.MM.yyyy hh:mm:ss.zzz") << endl;
+                        standardOutput << "last adjust of time\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
 //                        standardOutput << "Time drift in ppm\t" << float(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
                     }
                 }
@@ -284,7 +284,7 @@ int handleAdjustmentRequest( Session * const session )
     session->getInterface()->writeTheData( requestForAdjustment );
     qDebug() << "Send command: " << requestForAdjustment;
 
-    session->getInterface()->readTheData( TIME_WAIT );
+    session->getInterface()->readTheData( TIME_WAIT, RECEIVED_BYTES );
     const uint8_t blength = session->getInterface()->getReceivedData().size();
     qDebug() << "Received bytes: " << blength;
 
@@ -351,7 +351,7 @@ int handleCalibrationRequest( Session * const session )
     session->getInterface()->writeTheData( requestForCalibration );
     qDebug() << "Send command: " << requestForCalibration;
 
-    session->getInterface()->readTheData( TIME_WAIT );
+    session->getInterface()->readTheData( TIME_WAIT, RECEIVED_BYTES_CALIBR );
     const uint8_t blength = session->getInterface()->getReceivedData().size();
     qDebug() << "Received bytes: " << blength;
 
@@ -369,7 +369,7 @@ int handleCalibrationRequest( Session * const session )
         if ( blength > 5 ) {
             float drift_in_ppm = 0;
             memcpy( &drift_in_ppm, byteBuffer + 1, sizeof(drift_in_ppm) );
-            standardOutput << "Time drift in ppm\t" << drift_in_ppm << "ppm" << endl;
+            standardOutput << "Time drift in ppm\t" << drift_in_ppm << " ppm" << endl;
             offset_reg = byteBuffer[5];
             standardOutput << "Offset new value\t" << offset_reg << endl;
         }
@@ -416,7 +416,7 @@ int handleSetRegisterRequest( Session * const session, const float value )
     session->getInterface()->writeTheData( requestForSetRegister );
     qDebug() << "Send command: " << requestForSetRegister;
 
-    session->getInterface()->readTheData( TIME_WAIT );
+    session->getInterface()->readTheData( TIME_WAIT, RECEIVED_BYTES );
     const uint8_t blength = session->getInterface()->getReceivedData().size();
     qDebug() << "Received bytes: " << blength;
 
