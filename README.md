@@ -11,6 +11,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 * The application allows you to:
   * Synchronize the time of the RTC DS3231 with your computer time;
   * Correct the time drift of the DS3231-RTC clock. The algorithm performs correction in the range from -12.8 to +12.7 ppm;
+  * The application allows you to evaluate the accuracy and reliability of the RTC oscillator for a particular sample, as well as the chances of successful correction in case of significant time drift;
   * Automatically save parameters and calibration data to the energy-independent flash memory of the type AT24C256. In case there is a power failure to the module.
 
 * Developed in pure Qt, no third party libraries.
@@ -24,7 +25,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  ~/SynchroTime$ ./synchroTime -h
 `
 
-![synchroTime -h](images/consoleApp_About.png)
+![synchroTime -h](./images/consoleApp_About.png)
 
 ## Using the app
 
@@ -145,7 +146,7 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
  ~/$ tar -x -j -f synchroTime_v.1.0.0_i386.tar.bz2
 ``` 
 
-* Run the application according to the instructions in the section: Using the app.
+* Run the application according to the instructions in the section **Using the app**.
 ```
  ~/$ cd SynchroTime
 
@@ -169,3 +170,7 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 * `
  make && make clean
 `
+
+##### License: «Attribution-NonCommercial-ShareAlike»
+![license](./images/license.jpg)
+
