@@ -34,7 +34,6 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  To find the name of this port, call the application with the -d (--discovery) switch:
 ```
  ~/SynchroTime$ ./synchroTime -d
-
  Serial Port : ttyUSB1
  Description : USB2.0-Serial
  Manufacturer: 1a86
@@ -64,7 +63,6 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 3. Use the -i (--information) command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the offset register and the calculated time drift value in ppm. If the offset register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
 ```
 ~/SynchroTime$ ./synchroTime -i
-
 DS3231 clock time	1598896552596 ms: 31.08.2020 19:55:52.596
 System local time	1598896589772 ms: 31.08.2020 19:56:29.772
 Difference between	-37176 ms
@@ -76,15 +74,13 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 4. To set the exact time, use the -a (--adjust) command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
 ```
  ~/SynchroTime$ ./synchroTime -a
-
  System local time	Mo. 31 Aug. 2020 20:02:52.000
  Request for adjustment completed successfully. 
 ```
 
-5. To calibrate the clock of the DS3231 module, enter the -c (--calibration) command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (from several days to several weeks). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
+5. To calibrate the clock of the DS3231 module, enter the -c (--calibration) command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (ca 55 hours or 2.3 days, see part **Discussion**). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
 ```
  ~/SynchroTime$ ./synchroTime -c
-
  System local time	Mo. 31 Aug. 2020 20:04:14.000
  Offset last value	0
  Time drift in ppm	0ppm
@@ -103,12 +99,18 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 ```
  ~/SynchroTime$ ./synchroTime -s
 
- Request for SetRegister fail. 
+ Request for SetRegister completed successfully. 
 ```
 
 ## Specification
 
-* The application communicates with the Arduino server through any virtual serial interface (UART). The Baud Rate is assumed unchanged and equals 115200.
+* The application allows you to adjust the time with an accuracy of ±1 ms.
+
+* The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms.
+
+* The application allows you to calibrate the module clock within the range from -12.8 to +12.7 ppm.
+
+* The application communicates with the Arduino server through any virtual serial interface (UART). The Baud Rate is assumed unchanged and equals 115200 bps.
 
 * The Arduino is in turn connected to the Precision RTC DS3231 module via the I²C-interface: A4 (SDA), A5 (SCL) pins (SDA - data line and SCL - clock line).
 
@@ -117,9 +119,9 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 * The suggested connection to the DS3231 module is according to the Circuit below.
 ![circuit](images/Steckplatine_DS3231.png)
 
-## System requirements
+## Recommended System Requirements
 
-* For correct work your system time required to be synchronized with NTP. Under Linux, the ntp service is installed by the following command
+* For correct work your system time required to be synchronized with NTP. Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
 ```
 ~/$ sudo apt-get install ntp 
 ```
@@ -127,7 +129,6 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 * Check the correct operation of the service ntp by running the command
 ```
 ~/$ ntpq -p
-
      remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
 +gromit.nocabal. 131.188.3.222    2 u   64   64  377   27.218   -3.906   5.643
@@ -153,10 +154,21 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
  ~/SynchroTime$ ./synchroTime -h
 ``` 
 
+## Discussion
+
+## Dependencies
+
+* For creating or compiling
+| Name         | Version                          | Comment                                          |
+|--------------|----------------------------------|--------------------------------------------------|
+| Qt           | >= 5.5.1                         | didn't test with older versions, but it may work |
+| C++ compiler | supporting C++11 (i.e. gcc 4.6+) |                                                  |
+| Arduino IDE  | >= 1.8.13                        | didn't test with older versions, but it may work |
+
 ## Compilation on Linux
 
 * `
- sudo apt-get install g++ libssl-dev libglu1-mesa-dev qt5-qmake qtscript5-dev qtmultimedia5-dev git
+ sudo apt-get install build-essential qt5-default qt5-qmake gdb git
 `
 * `
  git clone https://github.com/SergejBre/SynchroTime.git
@@ -171,6 +183,7 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
  make && make clean
 `
 
-##### License: «Attribution-NonCommercial-ShareAlike»
+## License
+SynchroTime is licensed under [MIT](LICENSE).
 ![license](./images/license.jpg)
 
