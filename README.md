@@ -183,6 +183,6 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 `
 
 ## License
+
 SynchroTime is licensed under [MIT](LICENSE).
-![license](./images/license.jpg)
 
