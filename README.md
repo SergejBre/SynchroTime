@@ -158,7 +158,6 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 ## Dependencies
 
-* For creating or compiling
 | Name         | Version                          | Comment                                          |
 |--------------|----------------------------------|--------------------------------------------------|
 | Qt           | >= 5.5.1                         | didn't test with older versions, but it may work |
