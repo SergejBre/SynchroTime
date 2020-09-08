@@ -119,10 +119,17 @@ void loop () {
           Serial.print( F("unknown request ") );
           Serial.println( thisChar );
       }
-      // reading reference time if data is available. in the form [time|ms] = 4+2 bytes
-      numberOfBytes = Serial.readBytes( byteBuffer, 6 );
-      if ( numberOfBytes > 5 ) {
-        memcpy( &ref, byteBuffer, sizeof( ref ) );  // read ref time
+
+      if ( Serial.available() ) {
+        numberOfBytes = Serial.readBytes( byteBuffer, 6 );
+        if ( numberOfBytes > 5 ) {
+          // reading reference time if data is available. in the form [time|ms] = 4+2 bytes
+          memcpy( &ref, byteBuffer, sizeof( ref ) );
+        }
+        else if ( numberOfBytes > 3 ) {
+          // reading new value for the offset reg. [float] = 4 bytes
+          memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ) );
+        }
       }
     }
   }
@@ -154,10 +161,10 @@ void loop () {
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
       floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
       set += sizeof(drift_in_ppm);
-      //        ok = adjustTimeDrift( drift_in_ppm );
+      ok = adjustTimeDrift( drift_in_ppm );
       ok = true;
       if ( ok ) {
-        //          ok &= adjustTime( ref_time ); // adjust time
+        ok &= adjustTime( ref.utc ); // adjust time
         byteBuffer[set] = readFromOffsetReg();  // read new value from the offset register
         set++;
       }
@@ -177,7 +184,7 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_SETREG:               // set register
-      // todo
+      ok = adjustTimeDrift( drift_in_ppm );
       byteBuffer[set] = ok;
       set++;
       task = TASK_IDLE;
@@ -245,14 +252,15 @@ bool adjustTime( const uint32_t utcTimeSecs ) {
 // the result is rounded to the maximum possible values of type uint8_t
 bool adjustTimeDrift( float drift_in_ppm ) {
   drift_in_ppm *= 10;
-  int8_t offset = (drift_in_ppm > 0) ? int8_t( drift_in_ppm + 0.5 ) : int8_t( drift_in_ppm - 0.5 );
+  int offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
   if ( offset == 0 ) return true;  // if offset is 0, nothing needs to be done
-  int8_t last_offset_reg = readFromOffsetReg();
-  int8_t last_offset_ee = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+  const int8_t last_offset_reg = readFromOffsetReg();
+  const int8_t last_offset_ee = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
   if ( last_offset_reg == last_offset_ee ) {
     drift_in_ppm += last_offset_reg;
-    offset = (drift_in_ppm > 0) ? int8_t( drift_in_ppm + 0.5 ) : int8_t( drift_in_ppm - 0.5 );
+    offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
   }
+  offset = (offset > 127) ? 127 : (offset < -128) ? -128 : offset;
   bool ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, offset );  // write offset value to EEPROM of AT24C256
   ok &= writeToOffsetReg( offset );  // write offset value to Offset Reg. of DS3231
   return ok;
