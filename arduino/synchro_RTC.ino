@@ -16,7 +16,11 @@
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 #define MIN_TIME_SPAN 10000
-typedef enum task : uint8_t { TASK_IDLE = 0x00, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG } task_t;
+typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG } task_t;
+typedef struct {
+  uint32_t utc;
+  uint16_t milliSecs;
+} time_t;
 
 RTC_DS3231 rtc;
 uint8_t buff[4];
@@ -32,7 +36,7 @@ uint32_t hexToInt( uint8_t* const buff );
 uint32_t getUTCtime( const uint32_t localTimeSecs );
 bool adjustTime( const uint32_t utcTimeSecs );
 bool adjustTimeDrift( float drift_in_ppm );
-float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs);
+float calculateDrift_ppm( time_t* const ref, time_t* const t );
 void sendBytes( const uint8_t blength );
 
 void setup () {
@@ -55,14 +59,14 @@ void setup () {
     Serial.println( F("RTC lost power, lets set the time!") );
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
     const uint32_t newtime = DateTime( F(__DATE__), F(__TIME__) ).unixtime();
-    adjustTime( newtime - TIME_ZONE*3600 );
-/*
-    // offset value from -128 to +127, default is 0
-    int8_t offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
-    writeToOffsetReg( offset_val );
-    Serial.print( F( "Set Offset Reg: " ) );
-    Serial.println( offset_val );
-*/
+    adjustTime( newtime - TIME_ZONE * 3600 );
+    /*
+        // offset value from -128 to +127, default is 0
+        int8_t offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+        writeToOffsetReg( offset_val );
+        Serial.print( F( "Set Offset Reg: " ) );
+        Serial.println( offset_val );
+    */
   }
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
   attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
@@ -79,19 +83,18 @@ void loop () {
   bool ok = false;
   uint8_t set = 0;
   uint8_t numberOfBytes = 0U;
-  uint16_t utc_milliSecs = 0U;
-  uint16_t ref_milliSecs = 0U;
-  uint32_t utc_time = 0UL;
-  uint32_t ref_time = 0UL;
   float drift_in_ppm = 0;
+  time_t t;
+  time_t ref = {0, 0};
 
   if ( Serial.available() ) {       // if there is data available
 
     while ( millis() - tickCounter > 998 );
-    utc_milliSecs = millis() - tickCounter;
-    DateTime now = rtc.now();       // reading clock time + ms
+    t.milliSecs = millis() - tickCounter;
+    DateTime now = rtc.now();       // reading clock time
+    t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
 
-    char thisChar = Serial.read();  // read the first byte of command
+    char thisChar = Serial.read();  // read the first byte of request
     if ( thisChar == '@' && Serial.available() ) {
       thisChar = Serial.read();     // read request for..
       switch ( thisChar )
@@ -118,84 +121,77 @@ void loop () {
       }
       // reading reference time if data is available. in the form [time|ms] = 4+2 bytes
       numberOfBytes = Serial.readBytes( byteBuffer, 6 );
-      if ( numberOfBytes > 3 ) {
-        ref_time = hexToInt( byteBuffer );
-      }
       if ( numberOfBytes > 5 ) {
-        uint16_t *y = (uint16_t *)( byteBuffer + 4 );
-        ref_milliSecs = y[0];
+        memcpy( &ref, byteBuffer, sizeof( ref ) );  // read ref time
       }
     }
-    switch ( task )
-    {
-      case TASK_ADJUST:               // adjust time
-        ok = adjustTime( ref_time );
-        byteBuffer[set] = ok;
+  }
+
+  switch ( task )
+  {
+    case TASK_ADJUST:               // adjust time
+      ok = adjustTime( ref.utc );
+      byteBuffer[set] = ok;
+      set++;
+      task = TASK_IDLE;
+      break;
+    case TASK_INFO:                 // information
+      memcpy( byteBuffer + set, &t, sizeof( t ) );  // write time
+      set = sizeof( t );
+      byteBuffer[set] = readFromOffsetReg();  // reading offset value
+      set++;
+      drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
+      floatToHex( byteBuffer + set, drift_in_ppm );
+      set += sizeof( drift_in_ppm );
+      if ( i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, byteBuffer + set, sizeof( uint32_t )) ) {
+        set += sizeof( uint32_t );
+      }
+      task = TASK_IDLE;
+      break;
+    case TASK_CALIBR:               // calibrating
+      byteBuffer[set] = readFromOffsetReg();  // read last value from the offset register
+      set++;
+      drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
+      floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
+      set += sizeof(drift_in_ppm);
+      //        ok = adjustTimeDrift( drift_in_ppm );
+      ok = true;
+      if ( ok ) {
+        //          ok &= adjustTime( ref_time ); // adjust time
+        byteBuffer[set] = readFromOffsetReg();  // read new value from the offset register
         set++;
-        sendBytes( set );
-        task = TASK_IDLE;
-        break;
-      case TASK_INFO:                 // information
-        utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
-        intToHex( byteBuffer, utc_time );
-        set = sizeof( utc_time );
-        memcpy( byteBuffer + set, &utc_milliSecs, sizeof(utc_milliSecs) );  // write ms
-        set += sizeof(utc_milliSecs);
-        byteBuffer[set] = readFromOffsetReg();  // reading offset value
-        set++;
-        drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // calculate drift time
-        floatToHex( byteBuffer + set, drift_in_ppm );
-        set += sizeof(drift_in_ppm);
-        if ( i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, byteBuffer + set, sizeof( uint32_t )) ) {
-          set += sizeof( uint32_t );
-        }
-        sendBytes( set );  // send data
-        task = TASK_IDLE;
-        break;
-      case TASK_CALIBR:               // calibrating
-        utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
-        byteBuffer[set] = readFromOffsetReg();  // read last value from the offset register
-        set++;
-        drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // calculate drift time
-        floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
-        set += sizeof(drift_in_ppm);
-        ok = adjustTimeDrift( drift_in_ppm );
-        if ( ok ) {
-          ok &= adjustTime( ref_time ); // adjust time
-          byteBuffer[set] = readFromOffsetReg();  // read new value from the offset register
-          set++;
-        }
-        byteBuffer[set] = ok;
-        set++;
-        sendBytes( set );  // send data
-        task = TASK_IDLE;
-        break;
-      case TASK_RESET:                // reset
-        ok = writeToOffsetReg( 0 );
-        if ( ok ) {
-          uint8_t buff5b[5];
-          for (numberOfBytes = 0; numberOfBytes < sizeof(buff5b); numberOfBytes++ ) buff5b[numberOfBytes] = 0xFF;
-          ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff5b, sizeof( buff5b ) );
-        }
-        byteBuffer[set] = ok;
-        set++;
-        sendBytes( set );
-        task = TASK_IDLE;
-        break;
-      case TASK_SETREG:               // set register
-        // todo
-        byteBuffer[set] = ok;
-        set++;
-        sendBytes( set );
-        task = TASK_IDLE;
-        break;
-      case TASK_IDLE:                 // idle task
-        break;
-      default:
-        Serial.print( F("unknown task ") );
-        Serial.println( task, HEX );
-        task = TASK_IDLE;
-    }
+      }
+      byteBuffer[set] = ok;
+      set++;
+      task = TASK_IDLE;
+      break;
+    case TASK_RESET:                // reset
+      ok = writeToOffsetReg( 0 );
+      if ( ok ) {
+        uint8_t buff5b[5];
+        for (numberOfBytes = 0; numberOfBytes < sizeof(buff5b); numberOfBytes++ ) buff5b[numberOfBytes] = 0xFF;
+        ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff5b, sizeof( buff5b ) );
+      }
+      byteBuffer[set] = ok;
+      set++;
+      task = TASK_IDLE;
+      break;
+    case TASK_SETREG:               // set register
+      // todo
+      byteBuffer[set] = ok;
+      set++;
+      task = TASK_IDLE;
+      break;
+    case TASK_IDLE:                 // idle task
+      break;
+    default:
+      Serial.print( F("unknown task ") );
+      Serial.println( task, HEX );
+      task = TASK_IDLE;
+  }
+
+  if ( set > 0 ) {
+    sendBytes( set );
   }
 }
 
@@ -270,18 +266,18 @@ bool adjustTimeDrift( float drift_in_ppm ) {
    number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
    drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
 */
-float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, uint32_t clockTimeSecs, uint16_t clockTimeMs ) {
+float calculateDrift_ppm( time_t* const referenceTime, time_t* const clockTime ) {
   if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
     return 0;
   }
-  uint32_t last_set_timeSecs = hexToInt( buff );
-  int32_t diff = referenceTimeSecs - last_set_timeSecs;
+  uint32_t last_set_timeUTC = hexToInt( buff );
+  int32_t diff = referenceTime->utc - last_set_timeUTC;
   // verification is needed because the var. last_set_timeSecs can reach the overflow value
-  if ( referenceTimeSecs < last_set_timeSecs || diff < MIN_TIME_SPAN ) {
+  if ( referenceTime->utc < last_set_timeUTC || diff < MIN_TIME_SPAN ) {
     return 0;
   }
-  int32_t time_driftSecs = clockTimeSecs - referenceTimeSecs;
-  int16_t time_driftMs = clockTimeMs - referenceTimeMs;
+  int32_t time_driftSecs = clockTime->utc - referenceTime->utc;
+  int16_t time_driftMs = clockTime->milliSecs - referenceTime->milliSecs;
   float time_drift = time_driftSecs * 1000 + time_driftMs;
   return time_drift * 1000 / diff;
 }
