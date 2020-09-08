@@ -15,6 +15,7 @@
 #define OFFSET_REGISTER 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
+#define MIN_TIME_SPAN 10000
 typedef enum task : uint8_t { TASK_IDLE = 0x00, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG } task_t;
 
 RTC_DS3231 rtc;
@@ -155,7 +156,7 @@ void loop () {
         utc_time = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
         byteBuffer[set] = readFromOffsetReg();  // read last value from the offset register
         set++;
-        drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // reading drift time
+        drift_in_ppm = calculateDrift_ppm( ref_time, ref_milliSecs, utc_time, utc_milliSecs );  // calculate drift time
         floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
         set += sizeof(drift_in_ppm);
         ok = adjustTimeDrift( drift_in_ppm );
@@ -276,7 +277,7 @@ float calculateDrift_ppm( uint32_t referenceTimeSecs, uint16_t referenceTimeMs, 
   uint32_t last_set_timeSecs = hexToInt( buff );
   int32_t diff = referenceTimeSecs - last_set_timeSecs;
   // verification is needed because the var. last_set_timeSecs can reach the overflow value
-  if ( referenceTimeSecs < last_set_timeSecs || diff < 10000 ) {
+  if ( referenceTimeSecs < last_set_timeSecs || diff < MIN_TIME_SPAN ) {
     return 0;
   }
   int32_t time_driftSecs = clockTimeSecs - referenceTimeSecs;

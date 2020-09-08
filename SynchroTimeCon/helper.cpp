@@ -128,7 +128,7 @@ int handleResetRequest( Session *const session )
     }
 
     // Request for Reset
-    QByteArray requestForReset("@r");
+    const QByteArray requestForReset("@r");
 
     // Send a command to the device
     session->getInterface()->writeTheData( requestForReset );
@@ -179,18 +179,18 @@ int handleInformationRequest(Session * const session)
     }
 
     // Request for Information
-    QByteArray requestForVersion("@ittttmm");
+    QByteArray requestForInformation("@issssmm");
 
-    QDateTime local(QDateTime::currentDateTime());
-    qint64 localTimeMSecs = local.toMSecsSinceEpoch();
-    quint32 localTimeSecs = localTimeMSecs/1000;
-    quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
-    memcpy( requestForVersion.data() + 2, &localTimeSecs, sizeof(localTimeSecs) );
-    memcpy( requestForVersion.data() + 6, &milliSecs, sizeof(milliSecs) );
+    const QDateTime local(QDateTime::currentDateTime());
+    const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    const quint32 localTimeSecs = localTimeMSecs/1000;
+    const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
+    memcpy( requestForInformation.data() + 2, &localTimeSecs, sizeof(localTimeSecs) );
+    memcpy( requestForInformation.data() + 6, &milliSecs, sizeof(milliSecs) );
 
     // Send a command to the device
-    session->getInterface()->writeTheData( requestForVersion );
-    qDebug() << "Send command: " << requestForVersion;
+    session->getInterface()->writeTheData( requestForInformation );
+    qDebug() << "Send command: " << requestForInformation;
 
     session->getInterface()->readTheData( TIME_WAIT, RECEIVED_BYTES_INFO );
     const uint8_t blength = session->getInterface()->getReceivedData().size();
@@ -213,7 +213,7 @@ int handleInformationRequest(Session * const session)
         standardOutput << "System local time\t" << localTimeMSecs << " ms: " << local.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
         standardOutput << "Difference between\t" << numberOfMSec - localTimeMSecs << " ms" << endl;
         if ( blength > 6 ) {
-            float offset_reg = float( byteBuffer[6] )/10;
+            const float offset_reg = float( byteBuffer[6] )/10;
             standardOutput << "Offset reg. in ppm\t" << offset_reg << " ppm" << endl;
             if ( blength > 10 ) {
                 float drift_in_ppm = 0;
@@ -265,10 +265,10 @@ int handleAdjustmentRequest( Session * const session )
     }
 
     // Request for Adjustment
-    QByteArray requestForAdjustment("@attttmm");
+    QByteArray requestForAdjustment("@assssmm");
 
     QDateTime local(QDateTime::currentDateTime());
-    qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
     quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
     localTimeSecs++;
@@ -331,13 +331,13 @@ int handleCalibrationRequest( Session * const session )
     }
 
     // Request for Calibration
-    QByteArray requestForCalibration("@cttttmm");
+    QByteArray requestForCalibration("@cssssmm");
 
     QDateTime local(QDateTime::currentDateTime());
-    qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
     quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
-    quint16 ms = 0U;
+    const quint16 ms = 0U;
     localTimeSecs++;
     memcpy( requestForCalibration.data() + 2, &localTimeSecs, sizeof(localTimeSecs) );
     memcpy( requestForCalibration.data() + 6, &ms, sizeof(ms) );
@@ -364,7 +364,7 @@ int handleCalibrationRequest( Session * const session )
         const uint8_t ret_value = byteBuffer[ blength-1 ];
         local.setTime_t( localTimeSecs );
         standardOutput << "System local time\t" << local.toString("ddd d MMM yyyy hh:mm:ss.zzz") << endl;
-        qint8 offset_reg = session->getInterface()->getReceivedData().at(0);
+        qint8 offset_reg = byteBuffer[0];
         standardOutput << "Offset last value\t" << offset_reg << endl;
         if ( blength > 5 ) {
             float drift_in_ppm = 0;

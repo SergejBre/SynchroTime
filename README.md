@@ -83,8 +83,8 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
  ~/SynchroTime$ ./synchroTime -c
  System local time	Mo. 31 Aug. 2020 20:04:14.000
  Offset last value	0
- Time drift in ppm	0ppm
- Offset new value	0
+ Time drift in ppm	-2.11938 ppm
+ Offset new value	-21
  Request for calibration completed successfully. 
 ```
 
@@ -138,6 +138,8 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 +chilipepper.can 134.71.66.21     2 u   74   64  376   26.689   -5.881   4.974 
 ```
 
+* Note the `(*)` table values offset and jitter (ms), they should be as minimal as possible `max[offset ± jitter] <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
+
 ## Installing the app
 
 * According to the working platform, download the appropriate archive with the console application from the project page.
@@ -158,11 +160,11 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 ## Dependencies
 
-| Name         | Version                          | Comment                                          |
-|--------------|----------------------------------|--------------------------------------------------|
-| Qt           | >= 5.5.1                         | didn't test with older versions, but it may work |
-| C++ compiler | supporting C++11 (i.e. gcc 4.6+) |                                                  |
-| Arduino IDE  | >= 1.8.13                        | didn't test with older versions, but it may work |
+| Name         | Version                          | Comment                                         |
+|--------------|----------------------------------|-------------------------------------------------|
+| Qt           | >= 5.0.1                         | Didn't test with older versions, but it may work|
+| C++ compiler | supporting C++11 (i.e. gcc 4.6+) |                                                 |
+| Arduino IDE  | >= 1.8.13                        | !Replace compilation flags from -Os to -O2      |
 
 ## Compilation on Linux
 
