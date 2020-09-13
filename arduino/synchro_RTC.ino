@@ -1,11 +1,26 @@
+//------------------------------------------------------------------------------
+//  Home Office
+//  Nürnberg, Germany
+//  E-Mail: sergej1@email.ua
+//
+//  Copyright (C) 2020 free Project SynchroTime. All rights reserved.
+//------------------------------------------------------------------------------
 /*
-   The time synchronization via Serial Port with a DS3231 Precision RTC module.
-   - read from offset register,
-   - write to offset register,
-   - etc.
-   Einstellungen sind: Die Zeitzone, die als lokale Ortszeit auf dem Arbeitscomputer bestimmt ist.
-   time_zone = Differenz UTC-time, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 } +1/+2 für Europa, je nachdem,
-   welche Jahreszeit Winter- (+1) oder Sommerzeit (+2) ist.
+This sketch performs as a server on an arduino controller for connecting a computer
+  with an RTC DS3231 module via a serial port.Built-in server functions allow you to:
+  - adjust the RTC DS3231 time in accordance with the reference time of your computer;
+  - correct the time shift of the RTC DS3231 clock;
+  - evaluate the accuracy and reliability of the RTC oscillator for a specific sample,
+    as well as the chances of a successful correction in the event of a significant time drift;
+  - save parameters and calibration data to the energy-independent flash memory;
+  - read from the offset register;
+  - write to the offset register;
+  - etc.
+The settings are:
+  - The selection of the time zone, which is determined as the local local time on the worker computer.
+    time_zone = Difference of the UTC-time. A value from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
+    +1/+2 for Europe, depending on which season is winter (+1) or summer time (+2).
+  - MIN_TIME_SPAN the minimum time required for a stable calculation of the time drift.
 */
 #include <Wire.h>
 #include "RTClib.h"
