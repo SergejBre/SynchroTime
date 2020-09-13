@@ -61,5 +61,5 @@ win32 {
     QMAKE_TARGET_PRODUCT = SynchroTime
     QMAKE_TARGET_DESCRIPTION = Time synchronization for RTC DS3231
     QMAKE_TARGET_COPYRIGHT = (c) 2020 sergej1@email.ua
-    RC_ICONS = images/icon.ico
+#   RC_ICONS = images/icon.ico
 }

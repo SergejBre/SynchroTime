@@ -203,7 +203,7 @@ int handleInformationRequest(Session * const session)
     {
         qint64 numberOfMSec = 0LL;
         quint16 numberOfSec = 0U;
-        const char *byteBuffer = session->getInterface()->getReceivedData().constData();
+        auto byteBuffer = session->getInterface()->getReceivedData().constData();
         memcpy( &numberOfMSec, byteBuffer, sizeof( quint32 ) );
         numberOfMSec *= 1000;
         memcpy( &numberOfSec, byteBuffer + 4, sizeof( numberOfSec ) );
@@ -360,7 +360,7 @@ int handleCalibrationRequest( Session * const session )
     // Check of the Received request
     if ( !session->getInterface()->getReceivedData().isEmpty() )
     {
-        const char *byteBuffer = session->getInterface()->getReceivedData().constData();
+        auto byteBuffer = session->getInterface()->getReceivedData().constData();
         const uint8_t ret_value = byteBuffer[ blength-1 ];
         local.setTime_t( localTimeSecs );
         standardOutput << "System local time\t" << local.toString("ddd d MMM yyyy hh:mm:ss.zzz") << endl;

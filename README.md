@@ -20,10 +20,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 * The client communicates with the Arduino server via the serial interface (UART). The application allows you to easily select a serial port for communication with the server and save the port number in the program settings.
 
-* Command Help 
-`
- ~/SynchroTime$ ./synchroTime -h
-`
+* Command Help `~/SynchroTime$ ./synchroTime -h`
 
 ![synchroTime -h](./images/consoleApp_About.png)
 
@@ -52,13 +49,38 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  
  A total of 2 serial ports were found. 
 ```
+ And under the Windows OS
+```
+ C:\SynchroTime\build>synchroTime -d
+ Serial Port : COM5
+ Description : USB-SERIAL CH340
+ Manufacturer: wch.cn
+ Vendor ID   : 1a86
+ Product ID  : 7523
+ System Locat: \\.\COM5
+ Busy        : No
+
+ Serial Port : COM3
+ Description : Agere Systems HDA Modem
+ Manufacturer: Agere
+ Vendor ID   : 11c1
+ Product ID  : 1040
+ System Locat: \\.\COM3
+ Busy        : No
+
+ A total of 2 serial ports were found.
+``` 
 
 2. To select a virtual Serial Port, enter its system name after the command -p \<portName\>. The app will automatically create a configuration file, and the next call will contact the selected port.
 ```
  ~/SynchroTime$ ./synchroTime -p ttyUSB0
-
  Added new serial interface ttyUSB0. 
 ```
+ And under the Windows OS
+```
+ C:\SynchroTime\build>synchroTime -p COM5
+ Added new serial interface COM5.
+``` 
 
 3. Use the -i (--information) command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the offset register and the calculated time drift value in ppm. If the offset register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
 ```
@@ -138,7 +160,9 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 +chilipepper.can 134.71.66.21     2 u   74   64  376   26.689   -5.881   4.974 
 ```
 
-* Note the `(*)` table values offset and jitter (ms), they should be as minimal as possible `max[offset ± jitter] <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
+* Look for a table entry `*`: table values offset and jitter (ms), they should be as minimal as possible `max[offset ± jitter] <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
+
+* Windows OS has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. Therefore, it is necessary to adjust the computer time manually before setting up and calibrating, or using the subtleties of the settings in the system registry.
 
 ## Installing the app
 
@@ -162,29 +186,33 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 | Name         | Version                          | Comment                                         |
 |--------------|----------------------------------|-------------------------------------------------|
-| Qt           | >= 5.0.1                         | Didn't test with older versions, but it may work|
+| Qt lib 32bit | >= 5.5.1                         | Didn't test with older versions, but it may work|
+| Qt lib 64bit | >= 5.6                           | Didn't test with older versions, but it may work|
 | C++ compiler | supporting C++11 (i.e. gcc 4.6+) |                                                 |
 | Arduino IDE  | >= 1.8.13                        | !Replace compilation flags from -Os to -O2      |
 
+```
+:~/SynchroTime/build$ ldd synchroTime
+	libQt5SerialPort.so.5 => ./lib/libQt5SerialPort.so.5
+	libQt5Core.so.5 => ./lib/libQt5Core.so.5
+	...
+	libicui18n.so.54 => ./lib/libicui18n.so.54
+	libicuuc.so.54 => ./lib/libicuuc.so.54
+	libicudata.so.54 => ./lib/libicudata.so.54
+``` 
+
 ## Compilation on Linux
 
-* `
- sudo apt-get install build-essential qt5-default qt5-qmake gdb git
-`
-* `
- git clone https://github.com/SergejBre/SynchroTime.git
-`
-* `
- cd ./SynchroTime
-`
-* `
- QT_SELECT=5 qmake SynchroTime.pro
-`
-* `
- make && make clean
-`
+* `sudo apt-get install build-essential qt5-default qt5-qmake gdb git`
+
+* `git clone https://github.com/SergejBre/SynchroTime.git`
+
+* `cd ./SynchroTime`
+
+* `QT_SELECT=5 qmake SynchroTime.pro`
+
+* `make && make clean`
 
 ## License
 
 SynchroTime is licensed under [MIT](LICENSE).
-

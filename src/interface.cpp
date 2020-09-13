@@ -372,7 +372,6 @@ qint64 InterfaceSP::writeTheData( const QByteArray & data )
 {
     Q_ASSERT( this->serialPort != NULL );
     Q_ASSERT( this->serialPort->isOpen() && this->serialPort->isWritable() );
-    qDebug() << "block size" << this->getBlockSize() << "data size" << data.size();
     Q_ASSERT( ( this->getBlockSize() == 0U ) || ( this->getBlockSize() >= data.size() ) );
 
     qint64 bytesWritten = -1;
@@ -639,7 +638,7 @@ bool InterfaceSP::openSocket( void )
         return false;
     }
 
-    this->serialPort->setFlowControl(QSerialPort::HardwareControl);
+//    this->serialPort->setFlowControl(QSerialPort::HardwareControl);
 
     // open the Serial Port for the read and the write
     if ( !this->serialPort->open( QIODevice::ReadWrite ) )

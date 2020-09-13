@@ -142,22 +142,22 @@ int main(int argc, char *argv[])
     {
         parser.showHelp( 1 );
     }
-
+/*
     foreach ( const QString & names, options )
     {
         qDebug() << "Option: " << names;
     }
-
+*/
     // ------------------------------------------------------------------------
     // Process the actual command line arguments
     // ------------------------------------------------------------------------
     const QStringList args = parser.positionalArguments();
-
+/*
     foreach ( const QString & argument, args )
     {
         qDebug() << "Argument: " << argument;
     }
-
+*/
     // ------------------------------------------------------------------------
     // command line option discovery: -d
     // ------------------------------------------------------------------------
@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
 
         bool ok;
         // Read new value for offset register
-        float value = parser.value( SETREG ).toFloat( &ok );
+        auto value = parser.value( SETREG ).toFloat( &ok );
         if ( !ok || ( value < -12.81 ) || ( value > 12.7 ) )
         {
             qFatal( QObject::tr( "Invalid argument '%s'" ).toLocal8Bit(), qPrintable( parser.value( SETREG ) ) );
