@@ -5,9 +5,8 @@
 #
 #  Copyright (C) 2020 free Project SynchroTime RTC DS3231. All rights reserved.
 #------------------------------------------------------------------------------
-#  Project SynchroTime: Time synchronization of the Precision RTC module DS3231
-#  with the system time via the serial interface (UART).
-#
+#  Project SynchroTime: Command-line client for adjust the exact time and
+#  calibrating the RTC DS3231 module via the serial interface (UART).
 #------------------------------------------------------------------------------
 QT += core serialport
 QT -= gui

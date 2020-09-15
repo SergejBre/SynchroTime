@@ -1,4 +1,4 @@
-# SynchroTime - Console client for setting the exact time and calibrating the RTC DS3231 module
+# SynchroTime - Command-line client for adjust the exact time and calibrating the RTC DS3231 module
 
 ## Motivation
 
@@ -6,7 +6,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 ## About the app
 
-* Console application is used for fine tuning and calibration of the RTC DS3231 module.
+* Command-line application is used for fine tuning and calibration of the RTC DS3231 module.
 
 * The application allows you to:
   * Synchronize the time of the RTC DS3231 with your computer time;
@@ -166,7 +166,7 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 ## Installing the app
 
-* According to the working platform, download the appropriate archive with the console application from the project page.
+* According to the working platform, download the appropriate archive with the command-line application from the project page.
 
 * Unpack it to your home directory with write access, as the application retains its settings.
 ```

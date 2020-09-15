@@ -5,9 +5,8 @@
 //
 //  Copyright (C) 2020 free Project SynchroTime. All rights reserved.
 //------------------------------------------------------------------------------
-//  Project SynchroTime: Time synchronization via Serial Port (UART)
-//
-//
+//  Project SynchroTime: Command-line client for adjust the exact time and
+//  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
 #ifndef BASE_H
 #define BASE_H
