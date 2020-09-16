@@ -98,7 +98,7 @@ quint32 Interface::getReceivedBytes( void ) const
 //! \details
 //! Set the Pointer of new object Timer.
 //!
-//! \param *timer of the type QTimer*.
+//! \param timer of the type QTimer*.
 //!
 void Interface::setTimer( QTimer *timer )
 {
@@ -205,9 +205,9 @@ InterfaceSP::InterfaceSP( QObject *parent, const QString & portName )
 //!  -# InterfaceSP::init()
 //!  .
 //!
-//! \param[in] parent Pointer to the parent object used for QObject.
+//! \param[in] parent a pointer an the parent object used for QObject.
 //!
-//! \param[in] *port a pointer an the Serial Port Name of the type QSerialPort*.
+//! \param[in] port a pointer an the Serial Port Name of the type QSerialPort*.
 //!
 InterfaceSP::InterfaceSP(QObject *parent, QSerialPort * port ) :
     Interface(parent)
@@ -447,8 +447,9 @@ qint64 InterfaceSP::writeTheData( const QByteArray & data )
 //! \details
 //! Set a time-out for the read the data from a device.
 //!
-//! \param timewait of the type quint32.
+//! \param[in] timewait of the type quint32.
 //!
+//! \param[in] bytes the number of bytes to read from the UART.
 bool InterfaceSP::readTheData( const quint32 timewait, const quint32 bytes )
 {
     Q_ASSERT( this->serialPort->isOpen() && this->serialPort->isReadable() );

@@ -10,10 +10,10 @@
 //------------------------------------------------------------------------------
 
 /**
-* @mainpage SynchroTime - client console application
+* @mainpage SynchroTime - Command-line application (CLI-app)
 *
-* SynchroTime - Time synchronization of the Precision RTC module DS3231
-* with the UTC System Time via the Serial Interface (UART).
+* SynchroTime: Command-line client for adjust the exact time and
+* calibrating the RTC DS3231 module via the serial interface (UART).
 *
 * @author SergejBre sergej1@email.ua
 */
@@ -67,13 +67,13 @@ static QScopedPointer<QFile> m_logFile;
 void logMessageOutput( const QtMsgType type, const QMessageLogContext &context, const QString &msg );
 
 /**
- * @brief main function
+ * @brief main function of SynchroTime
  *
  * In this function, an instance of a Qt-console application app is executed and
  * set up with the parameters entered.
  *
- * @param argc this parameter \todo
- * @param argv this parameter \todo
+ * @param[in] argc the number of parameter.
+ * @param[in] argv the command line options.
  *
  * @return value of the function QApplication::exec()
  * Enters the main event loop and waits until exit() is called.

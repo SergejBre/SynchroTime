@@ -109,9 +109,9 @@ void setCommandLineParser( QCommandLineParser &parser )
 //!
 //! \details
 //! The function creates a connection to the device and sends a request for
-//! Reset using the Reset protocol of the form: {@r}, 2 bytes long.
+//! Reset using the Reset protocol of the form: {\@r}, 2 bytes long.
 //!
-//! \param[in] Pointer to the current session.
+//! \param[in] session Pointer to the current session.
 //!
 //! \retval 0
 //! \retval 1
@@ -160,9 +160,9 @@ int handleResetRequest( Session *const session )
 //!
 //! \details
 //! The function creates a connection to the device and sends a request for
-//! Information using the Information protocol of the form: {@i|time|ms}, 2+4+2 bytes long.
+//! Information using the Information protocol of the form: {\@i|time|ms}, 2+4+2 bytes long.
 //!
-//! \param[in] Pointer to the current session.
+//! \param[in] session Pointer to the current session.
 //!
 //! \retval 0 if no error occurs,
 //! \retval 1 terminate with an error.
@@ -246,9 +246,9 @@ int handleInformationRequest(Session * const session)
 //!
 //! \details
 //! The function creates a connection to the device and sends a request for
-//! Adjustment using the Adjustment protocol of the form: {@a|time|ms}, 2+4+2 bytes long.
+//! Adjustment using the Adjustment protocol of the form: {\@a|time|ms}, 2+4+2 bytes long.
 //!
-//! \param[in] Pointer to the current session.
+//! \param[in] session Pointer to the current session.
 //!
 //! \retval 0 if no error occurs,
 //! \retval 1 terminate with an error.
@@ -312,9 +312,9 @@ int handleAdjustmentRequest( Session * const session )
 //!
 //! \details
 //! The function creates a connection to the device and sends a request for
-//! Calibration using the Calibration protocol of the form: {@c|time|ms}, 2+4+2 bytes long.
+//! Calibration using the Calibration protocol of the form: {\@c|time|ms}, 2+4+2 bytes long.
 //!
-//! \param[in] Pointer to the current session.
+//! \param[in] session Pointer to the current session.
 //!
 //! \retval 0 if no error occurs,
 //! \retval 1 terminate with an error.
@@ -389,7 +389,7 @@ int handleCalibrationRequest( Session * const session )
 //!
 //! \details
 //! The function creates a connection to the device and sends a request for
-//! SetRegister using the SetRegister protocol of the form: {@s|value}, 2+4 bytes long.
+//! SetRegister using the SetRegister protocol of the form: {\@s|value}, 2+4 bytes long.
 //!
 //! \param[in] session Pointer to the current session.
 //! \param[in] value
