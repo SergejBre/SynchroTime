@@ -166,7 +166,7 @@ last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000
 
 ## Installing the app
 
-* According to the working platform, download the appropriate archive with the command-line application from the project page.
+* According to the working platform, download the appropriate archive with the command-line application from the [releases page](https://github.com/SergejBre/SynchroTime/releases).
 
 * Unpack it to your home directory with write access, as the application retains its settings.
 ```
