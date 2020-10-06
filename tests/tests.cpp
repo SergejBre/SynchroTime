@@ -11,9 +11,28 @@
 
 #include <QString>
 #include <QtTest>
-#include <QCoreApplication>
+#include <QThread>
 #include "../include/interface.h"
 #include "../include/session.h"
+
+class SerialThread : public QThread
+{
+    Q_OBJECT
+    void run() Q_DECL_OVERRIDE {
+        int number = 0;
+        InterfaceSP *interfaceSP = new InterfaceSP;
+
+        // Info about all available in system serial ports.
+        interfaceSP->searchAllSerialPort();
+        number = interfaceSP->availableSerialPorts().count();
+        emit resultReady( number );
+    }
+public:
+    explicit SerialThread( QObject * parent = 0 ) : QThread( parent ) {}
+
+signals:
+    void resultReady( const int );
+};
 
 class Tests : public QObject
 {
@@ -21,6 +40,9 @@ class Tests : public QObject
 
 public:
     Tests();
+
+public slots:
+    void handleResults( const int value );
 
 private Q_SLOTS:
     void initTestCase();
@@ -31,9 +53,12 @@ private Q_SLOTS:
     void Case15();
     void Case16();
     void Case17();
+private:
+    int numberOfPorts;
 };
 
 Tests::Tests()
+    : numberOfPorts(0)
 {
 }
 
@@ -43,6 +68,11 @@ void Tests::initTestCase()
 
 void Tests::cleanupTestCase()
 {
+}
+
+void Tests::handleResults(const int value)
+{
+    this->numberOfPorts = value;
 }
 
 void Tests::Case1_data()
@@ -58,28 +88,27 @@ void Tests::Case1()
 }
 
 //!
-//! \brief Tests::testCase14
+//! \brief Tests::Case14
 //! Info about all available in system serial ports.
 //!
 //! \details
 //!
 void Tests::Case14()
 {
-    int argc = 1;
-    char *argv[] = { 0 };
-    QCoreApplication app( argc, argv );
+    SerialThread *serialThread = new SerialThread( this );
+    QObject::connect( serialThread, &SerialThread::resultReady, this, &Tests::handleResults );
+    QObject::connect( serialThread, &SerialThread::finished, serialThread, &QObject::deleteLater );
 
-    InterfaceSP *interfaceSP = new InterfaceSP( &app );
+    serialThread->start();
+    QVERIFY2( serialThread->isRunning(), "Failure" );
 
-    // Info about all available in system serial ports.
-    interfaceSP->searchAllSerialPort();
-
-    QTimer::singleShot(0, &app, SLOT(quit()));
-    QCOMPARE( app.exec(), 0 );
+    serialThread->quit();
+    serialThread->wait( 200 );
+    QVERIFY2( serialThread->isFinished(), "Failure" );
 }
 
 //!
-//! \brief Tests::testCase15
+//! \brief Tests::Case15
 //! Prepare a new object Serial Port
 //!
 //! \details
@@ -96,6 +125,9 @@ void Tests::Case15()
         QSerialPort* serialPort = interfaceSP->getSerialPort();
         qDebug() << "Port Name: " << serialPort->portName();
         qDebug() << "Baud Rate: " << serialPort->baudRate();
+        qDebug() << "Parity   : " << serialPort->parity();
+        qDebug() << "Stop Bits: " << serialPort->stopBits();
+        qDebug() << "FlowContr: " << serialPort->flowControl();
         qDebug() << "Read Buffer Size: " << serialPort->readBufferSize();
     }
 
@@ -104,7 +136,7 @@ void Tests::Case15()
 }
 
 //!
-//! \brief Tests::testCase16
+//! \brief Tests::Case16
 //!
 //! \details
 //!
@@ -127,14 +159,13 @@ void Tests::Case16()
             qDebug( "close Serial Port" );
             interfaceSP->getSerialPort()->close();
         }
-#if 0
         interfaceSP->getSerialPort()->setBaudRate( QSerialPort::Baud115200, QSerialPort::AllDirections );
         interfaceSP->getSerialPort()->setDataBits( QSerialPort::Data8 );
         interfaceSP->getSerialPort()->setParity( QSerialPort::NoParity );
         interfaceSP->getSerialPort()->setStopBits( QSerialPort::OneStop );
         interfaceSP->getSerialPort()->setFlowControl( QSerialPort::NoFlowControl );
         interfaceSP->getSerialPort()->setReadBufferSize( 1024 );
-#endif
+
         // open the Serial Port for the read and the write
         if ( interfaceSP->getSerialPort()->open( QIODevice::ReadWrite ) )
         {
