@@ -14,8 +14,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = ../build
 MOC_DIR = ../moc
-CONFIG += c++11
+CONFIG += qt c++11
 CONFIG += debug_and_release
+QMAKE_CFLAGS_RELEASE += -O3
+QMAKE_CXXFLAGS_RELEASE += -O3
 
 CONFIG(debug, debug|release) {
     TARGET = synchroTimeAppd
@@ -29,6 +31,7 @@ CONFIG(debug, debug|release) {
 # Define for the GUI application
 DEFINES += GUI_APP
 TEMPLATE = app
+LANGUAGE = C++
 
 INCLUDEPATH += ../include
 
@@ -38,3 +41,20 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    synchrotime.qrc
+
+# For Linux, MacOS
+linux|macx {
+    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
+}
+# For Win32 release
+win32 {
+    VERSION = 1.0.0.0
+    QMAKE_TARGET_COMPANY = Free Project
+    QMAKE_TARGET_PRODUCT = SynchroTime
+    QMAKE_TARGET_DESCRIPTION = Time adjust and calibration for RTC DS3231
+    QMAKE_TARGET_COPYRIGHT = (c) 2020 sergej1@email.ua
+    RC_ICONS = images/icon.png
+}
