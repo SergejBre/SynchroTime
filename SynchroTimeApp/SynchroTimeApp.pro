@@ -36,9 +36,11 @@ LANGUAGE = C++
 INCLUDEPATH += ../include
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    rtc.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    rtc.h
 
 FORMS    += mainwindow.ui
 
