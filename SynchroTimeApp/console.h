@@ -8,13 +8,13 @@
 //  Project SynchroTime: Command-line client for adjust the exact time and
 //  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CONSOLE_H
+#define CONSOLE_H
 
 //------------------------------------------------------------------------------
 // Includes
 //------------------------------------------------------------------------------
-#include <QMainWindow>
+#include <QPlainTextEdit>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -27,50 +27,34 @@
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
-class QLabel;
-class Console;
-class QThread;
-class QTimer;
-class RTC;
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+//!
+//! \brief The Console class
+//!
+class Console : public QPlainTextEdit
 {
     Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
 signals:
+    void getData( const QByteArray &data );
+
+public:
+    explicit Console( QWidget *parent = 0 );
+    ~Console();
+
+    void putData( const QByteArray &data );
+
+    void setLocalEchoEnabled( bool set );
 
 protected:
-    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
-
-private slots:
-    void about();
-    void connectRTC();
-    void disconnectRTC();
-    void tickClock();
+    virtual void keyPressEvent( QKeyEvent *e );
+    virtual void mousePressEvent( QMouseEvent *e );
+    virtual void mouseDoubleClickEvent( QMouseEvent *e );
+    virtual void contextMenuEvent( QContextMenuEvent *e );
 
 private:
-    Ui::MainWindow *ui;
-    QLabel *status;
-    QLabel *clock;
-    Console *m_pConsole;
-    // RTC and a separate thread in which it will work.
-    QThread *m_pThread;
-    RTC *m_pRTC;
-    QTimer *m_pTimer;
-
-    void readSettings( void );
-    void writeSettings( void ) const;
-    void initActionsConnections( void );
-    void actionsTrigger( bool value ) const;
-    void showStatusMessage(const QString &message) const;
+    bool localEchoEnabled;
+    QByteArray *buffer;
 };
 
-#endif // MAINWINDOW_H
+#endif // CONSOLE_H

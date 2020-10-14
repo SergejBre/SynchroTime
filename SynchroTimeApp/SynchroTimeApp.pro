@@ -37,10 +37,12 @@ INCLUDEPATH += ../include
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    rtc.cpp
+    rtc.cpp \
+    console.cpp
 
 HEADERS  += mainwindow.h \
-    rtc.h
+    rtc.h \
+    console.h
 
 FORMS    += mainwindow.ui
 

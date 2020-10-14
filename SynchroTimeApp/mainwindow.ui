@@ -36,7 +36,6 @@
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
-    <addaction name="actionSelect_Port"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -56,20 +55,18 @@
      <string>Tools</string>
     </property>
     <addaction name="actionPort_Setting"/>
-    <addaction name="separator"/>
-    <addaction name="actionSettings"/>
+    <addaction name="actionClear"/>
     <addaction name="actionSelect_Font"/>
     <addaction name="separator"/>
-    <addaction name="actionClear"/>
+    <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_App"/>
-    <addaction name="actionAbout_Qt"/>
-    <addaction name="separator"/>
     <addaction name="actionContents"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_App"/>
    </widget>
    <addaction name="menuConnect"/>
    <addaction name="menuRequest"/>
@@ -85,103 +82,177 @@
    </attribute>
    <addaction name="actionConnect"/>
    <addaction name="actionDisconnect"/>
-   <addaction name="actionSelect_Port"/>
+   <addaction name="separator"/>
+   <addaction name="actionInformation"/>
+   <addaction name="actionAdjustment"/>
+   <addaction name="actionCalibration"/>
+   <addaction name="actionReset"/>
+   <addaction name="separator"/>
+   <addaction name="actionPort_Setting"/>
+   <addaction name="separator"/>
    <addaction name="actionClear"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConnect">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
+   </property>
    <property name="text">
-    <string>Connect</string>
+    <string>C&amp;onnect</string>
+   </property>
+   <property name="toolTip">
+    <string>Connect to serial port</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionDisconnect">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
+   </property>
    <property name="text">
-    <string>Disconnect</string>
+    <string>&amp;Disconnect</string>
+   </property>
+   <property name="toolTip">
+    <string>Disconnect from serial port</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/exit.png</normaloff>:/images/exit.png</iconset>
+   </property>
    <property name="text">
-    <string>Quit</string>
+    <string>&amp;Quit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionInformation">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/info.png</normaloff>:/images/info.png</iconset>
+   </property>
    <property name="text">
-    <string>Information</string>
+    <string>&amp;Information</string>
+   </property>
+   <property name="toolTip">
+    <string>Read information from RTC</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionAdjustment">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+   </property>
    <property name="text">
-    <string>Adjustment</string>
+    <string>&amp;Adjustment</string>
+   </property>
+   <property name="toolTip">
+    <string>Adjust the time</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionCalibration">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/run.png</normaloff>:/images/run.png</iconset>
+   </property>
    <property name="text">
-    <string>Calibration</string>
+    <string>&amp;Calibration</string>
+   </property>
+   <property name="toolTip">
+    <string>Calibrate the RTC</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionReset">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
+   </property>
    <property name="text">
-    <string>Reset</string>
+    <string>&amp;Reset</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset the RTC to the default setting</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actionSetRegister">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
+   </property>
    <property name="text">
-    <string>Set Register</string>
+    <string>&amp;Set Register</string>
    </property>
    <property name="toolTip">
-    <string>Set Register</string>
+    <string>Set a new value to the RTC offset register</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionSelect_Port">
+  <action name="actionPort_Setting">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
+   </property>
    <property name="text">
-    <string>Select Port</string>
+    <string>&amp;Port Setting</string>
+   </property>
+   <property name="toolTip">
+    <string>Configure serial port</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="actionPort_Setting">
-   <property name="text">
-    <string>Port Setting</string>
-   </property>
-  </action>
   <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
+   </property>
    <property name="text">
     <string>Settings</string>
    </property>
   </action>
   <action name="actionSelect_Font">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/font.png</normaloff>:/images/font.png</iconset>
+   </property>
    <property name="text">
     <string>Select Font</string>
    </property>
   </action>
   <action name="actionClear">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
+   </property>
    <property name="text">
-    <string>Clear</string>
+    <string>C&amp;lear</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear data</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -191,13 +262,15 @@
    <property name="text">
     <string>About App</string>
    </property>
-  </action>
-  <action name="actionAbout_Qt">
-   <property name="text">
-    <string>About Qt</string>
+   <property name="toolTip">
+    <string>About program</string>
    </property>
   </action>
   <action name="actionContents">
+   <property name="icon">
+    <iconset resource="synchrotime.qrc">
+     <normaloff>:/images/help.png</normaloff>:/images/help.png</iconset>
+   </property>
    <property name="text">
     <string>Contents</string>
    </property>

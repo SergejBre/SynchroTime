@@ -26,6 +26,8 @@
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
+#define STARTBYTE '@';  //!< Start byte of the protocol.
+#define DEVICE_ID 0x00; //!< ID of the RTC device.
 
 //------------------------------------------------------------------------------
 // Function Prototypes
@@ -33,36 +35,9 @@
 
 //!
 //! \brief RTC::RTC
+//! \param portName
 //! \param parent
 //!
-RTC::RTC( QObject *parent )
-    : QObject( parent )
-{
-    // Initialization of the serial interface.
-    m_pSerialPort = new QSerialPort( this );
-    m_pSerialPort->setPortName("ttyUSB0");
-    // Data transfer rate: 115200 бит/с.
-    m_pSerialPort->setBaudRate(QSerialPort::Baud115200);
-    m_pSerialPort->setDataBits(QSerialPort::Data8);
-    m_pSerialPort->setParity(QSerialPort::NoParity);
-    m_pSerialPort->setStopBits(QSerialPort::OneStop);
-    m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
-
-    // Create a timer with 1 second intervals.
-    m_pTimerCheckConnection = new QTimer( this );
-    m_pTimerCheckConnection->setInterval( 1000 );
-
-    // After a time of 1 s, the statusRequest() command is called.
-    // This is where the lambda function is used to avoid creating a slot.
-    QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
-        statusRequest();
-    });
-
-    // Connect the serial port.
-    connectToRTC();
-    m_pTimerCheckConnection->start();
-}
-
 RTC::RTC( const QString & portName, QObject *parent )
     : QObject( parent )
 {
@@ -193,10 +168,46 @@ void RTC::connectToRTC()
 }
 
 //!
+//! \brief RTC::setProtocol
+//! \param protocolData
+//! \param request
+//! \param size
+//! \param data
+//!
+void RTC::setProtocol( QByteArray &protocolData, Request request, quint8 size, quint8 const* data )
+{
+    // Data that are sent to the serial interface.
+    protocolData.resize(size + 4);
+    protocolData[0] = STARTBYTE;
+//    protocolData[1] = DEVICE_ID;
+
+    // Checksum = the sum of all bytes starting from the request command.
+    quint8 crc = 0;
+    crc += protocolData[1] = static_cast<quint8>( request );
+    crc += protocolData[2] = size;
+
+    // If there are data bytes, then they are also added to the checksum.
+    if ( size > 0 && data != nullptr )
+    {
+        int i;
+        for ( i = 0; i < size; ++i)
+        {
+            crc += protocolData[i + 3] = data[i];
+        }
+    }
+
+    // The last byte is the checksum.
+    protocolData[size + 3] = crc;
+}
+
+//!
 //! \brief RTC::informationRequest
 //!
 void RTC::informationRequest()
 {
+    QByteArray requestForInformation;
+    setProtocol( requestForInformation, Request::INFO );
+    emit getData( requestForInformation );
     //! \todo
 }
 
@@ -205,6 +216,9 @@ void RTC::informationRequest()
 //!
 void RTC::adjustmentRequest()
 {
+    QByteArray requestForAdjustment;
+    setProtocol( requestForAdjustment, Request::ADJUST );
+    emit getData( requestForAdjustment );
     //! \todo
 }
 
@@ -213,6 +227,9 @@ void RTC::adjustmentRequest()
 //!
 void RTC::calibrationRequest()
 {
+    QByteArray requestForCalibration;
+    setProtocol( requestForCalibration, Request::CALIBR );
+    emit getData( requestForCalibration );
     //! \todo
 }
 
@@ -221,6 +238,9 @@ void RTC::calibrationRequest()
 //!
 void RTC::resetRequest()
 {
+    QByteArray requestForReset;
+    setProtocol( requestForReset, Request::RESET );
+    emit getData( requestForReset );
     //! \todo
 }
 
@@ -229,6 +249,9 @@ void RTC::resetRequest()
 //!
 void RTC::setRegisterRequest()
 {
+    QByteArray requestForSetRegister;
+    setProtocol( requestForSetRegister, Request::SETREG );
+    emit getData( requestForSetRegister );
     //! \todo
 }
 
@@ -238,6 +261,8 @@ void RTC::setRegisterRequest()
 //!
 bool RTC::statusRequest()
 {
+    QByteArray requestForStatus;
+    setProtocol( requestForStatus, Request::STATUS );
     qDebug() << "status request";
     //! \todo
 

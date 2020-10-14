@@ -1,5 +1,16 @@
 <RCC>
     <qresource prefix="/">
         <file>../images/icon.png</file>
+        <file>../images/connect.png</file>
+        <file>../images/disconnect.png</file>
+        <file>../images/exit.png</file>
+        <file>../images/settings.png</file>
+        <file>../images/font.png</file>
+        <file>../images/clear.png</file>
+        <file>../images/info.png</file>
+        <file>../images/edit.png</file>
+        <file>../images/run.png</file>
+        <file>../images/remove.png</file>
+        <file>../images/help.png</file>
     </qresource>
 </RCC>
