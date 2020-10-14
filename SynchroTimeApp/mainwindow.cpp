@@ -34,14 +34,16 @@
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
-#define SETTINGS_FILE "synchroTimeApp.ini"
+#define WAIT_FOR_STREAM 1000 //!< Wait 1s for the stream
+#define SETTINGS_FILE "synchroTimeApp.ini" //!< The name of the settings file.
 //------------------------------------------------------------------------------
 // Function Prototypes
 //------------------------------------------------------------------------------
 
 MainWindow::MainWindow( QWidget *parent ) :
     QMainWindow( parent ),
-    ui(new Ui::MainWindow)
+    ui( new Ui::MainWindow ),
+    m_pThread( nullptr )
 {
     ui->setupUi( this );
     m_pConsole = new Console;
@@ -66,46 +68,21 @@ MainWindow::MainWindow( QWidget *parent ) :
     QObject::connect( m_pTimer, &QTimer::timeout, this, &MainWindow::tickClock );
     m_pTimer->start();
 
-    initActionsConnections();
-
-    m_pThread = new QThread(this);
-
-    // There is no need to specify the parent. The parent will be a thread when we move our RTC object into it.
-    m_pRTC = new RTC( "ttyUSB0" );
-    // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
-    // Create a connection: Delete the RTC object when the stream ends. start the thread.
-    m_pRTC->moveToThread( m_pThread );
-    QObject::connect(m_pThread, SIGNAL( finished()), m_pRTC, SLOT( deleteLater() ) );
-    m_pThread->start();
-
-    // Checking the connection.
-    if ( m_pRTC->isConnected() )
-    {
-//        ui->pushButtonTurnOff->setEnabled(false);
-    }
-    else
-    {
-//        ui->pushButtonSet->setEnabled(false);
-//        ui->pushButtonTurnOn->setEnabled(false);
-//        ui->pushButtonTurnOff->setEnabled(false);
-        QMessageBox::critical(this, "Connection error", "Connect the RTC device to the correct serial port"
-                              "and restart the program.", QMessageBox::Ok);
-    }
-
-    QObject::connect(ui->actionInformation, &QAction::triggered, m_pRTC, &RTC::informationRequestSlot);
-    QObject::connect(ui->actionAdjustment, &QAction::triggered, m_pRTC, &RTC::adjustmentRequestSlot);
-    QObject::connect(ui->actionCalibration, &QAction::triggered, m_pRTC, &RTC::calibrationRequestSlot);
-    QObject::connect(ui->actionReset, &QAction::triggered, m_pRTC, &RTC::resetRequestSlot);
-    QObject::connect(ui->actionSetRegister, &QAction::triggered, m_pRTC, &RTC::setRegisterRequestSlot);
-
-    QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
+    // Initialize action connections
+    QObject::connect(ui->actionConnect, &QAction::triggered, this, &MainWindow::connectRTC);
+    QObject::connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnectRTC);
+    QObject::connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
+    QObject::connect(ui->actionClear, &QAction::triggered, m_pConsole, &Console::clear);
+    QObject::connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
 }
 
 MainWindow::~MainWindow()
 {
     // Wait 1s for the stream to complete before deleting the main window.
-    m_pThread->quit();
-    m_pThread->wait( 1000 );
+    if ( m_pThread != nullptr ) {
+        m_pThread->quit();
+        m_pThread->wait( WAIT_FOR_STREAM );
+    }
 
     delete ui;
 }
@@ -200,10 +177,39 @@ void MainWindow::about()
 //!
 void MainWindow::connectRTC()
 {
-    m_pConsole->setEnabled( true );
-    actionsTrigger( true );
+    m_pThread = new QThread(this);
+    // There is no need to specify the parent. The parent will be a thread when we move our RTC object into it.
+    m_pRTC = new RTC( "ttyUSB0" );
+    // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
+    // Create a connection: Delete the RTC object when the stream ends. start the thread.
+    m_pRTC->moveToThread( m_pThread );
+    QObject::connect(m_pThread, SIGNAL( finished()), m_pRTC, SLOT( deleteLater() ) );
+    m_pThread->start();
 
-    showStatusMessage( QObject::tr( "Connected to %1 : %2, %3, %4, %5, %6" ) );
+    // Checking the connection.
+    if ( m_pRTC->isConnected() )
+    {
+        m_pConsole->setEnabled( true );
+        actionsTrigger( true );
+
+        QObject::connect(ui->actionInformation, &QAction::triggered, m_pRTC, &RTC::informationRequestSlot);
+        QObject::connect(ui->actionAdjustment, &QAction::triggered, m_pRTC, &RTC::adjustmentRequestSlot);
+        QObject::connect(ui->actionCalibration, &QAction::triggered, m_pRTC, &RTC::calibrationRequestSlot);
+        QObject::connect(ui->actionReset, &QAction::triggered, m_pRTC, &RTC::resetRequestSlot);
+        QObject::connect(ui->actionSetRegister, &QAction::triggered, m_pRTC, &RTC::setRegisterRequestSlot);
+
+        QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
+
+        showStatusMessage( QObject::tr( "Connected to %1 : %2, %3, %4, %5, %6" ) );
+    }
+    else
+    {
+        m_pThread->quit();
+        m_pThread->wait( WAIT_FOR_STREAM );
+
+        QMessageBox::critical(this, "Connection error", "Connect the RTC device to the correct serial port.",
+                              QMessageBox::Ok);
+    }
 }
 
 //!
@@ -214,19 +220,12 @@ void MainWindow::disconnectRTC()
     m_pConsole->setEnabled( false );
     actionsTrigger( false );
 
-    showStatusMessage( QObject::tr( "Disconnected" ) );
-}
+    if ( m_pThread != nullptr ) {
+        m_pThread->quit();
+        m_pThread->wait( WAIT_FOR_STREAM );
+    }
 
-//!
-//! \brief MainWindow::initActionsConnections
-//!
-void MainWindow::initActionsConnections()
-{
-    QObject::connect(ui->actionConnect, &QAction::triggered, this, &MainWindow::connectRTC);
-    QObject::connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnectRTC);
-    QObject::connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
-    QObject::connect(ui->actionClear, &QAction::triggered, m_pConsole, &Console::clear);
-    QObject::connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
+    showStatusMessage( QObject::tr( "Disconnected" ) );
 }
 
 //!

@@ -68,7 +68,6 @@ private:
 
     void readSettings( void );
     void writeSettings( void ) const;
-    void initActionsConnections( void );
     void actionsTrigger( bool value ) const;
     void showStatusMessage(const QString &message) const;
 };
