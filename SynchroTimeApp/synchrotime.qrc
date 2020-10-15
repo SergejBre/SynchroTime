@@ -9,8 +9,9 @@
         <file>../images/clear.png</file>
         <file>../images/info.png</file>
         <file>../images/edit.png</file>
-        <file>../images/run.png</file>
         <file>../images/remove.png</file>
         <file>../images/help.png</file>
+        <file>../images/clock.png</file>
+        <file>../images/stopwatch.png</file>
     </qresource>
 </RCC>

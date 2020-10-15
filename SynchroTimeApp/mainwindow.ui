@@ -153,31 +153,25 @@
   <action name="actionAdjustment">
    <property name="icon">
     <iconset resource="synchrotime.qrc">
-     <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+     <normaloff>:/images/clock.png</normaloff>:/images/clock.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Adjustment</string>
+    <string>Adjustment</string>
    </property>
    <property name="toolTip">
     <string>Adjust the time</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionCalibration">
    <property name="icon">
     <iconset resource="synchrotime.qrc">
-     <normaloff>:/images/run.png</normaloff>:/images/run.png</iconset>
+     <normaloff>:/images/stopwatch.png</normaloff>:/images/stopwatch.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Calibration</string>
+    <string>Calibration</string>
    </property>
    <property name="toolTip">
     <string>Calibrate the RTC</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionReset">
@@ -186,13 +180,10 @@
      <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Reset</string>
+    <string>Reset</string>
    </property>
    <property name="toolTip">
     <string>Reset the RTC to the default setting</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actionSetRegister">
@@ -201,13 +192,10 @@
      <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Set Register</string>
+    <string>Set Register</string>
    </property>
    <property name="toolTip">
     <string>Set a new value to the RTC offset register</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionPort_Setting">
