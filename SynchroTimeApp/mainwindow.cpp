@@ -15,6 +15,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "console.h"
+#include "settingsdialog.h"
 #include "rtc.h"
 #include <QMessageBox>
 #include <QLabel>
@@ -22,6 +23,7 @@
 #include <QTimer>
 #include <QSettings>
 #include <QThread>
+#include <QFontDialog>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -46,12 +48,16 @@ MainWindow::MainWindow( QWidget *parent ) :
     m_pThread( nullptr )
 {
     ui->setupUi( this );
+    actionsTrigger( false );
+    ui->actionSettings->setEnabled( false );
+    ui->actionQuit->setEnabled( true );
+
     m_pConsole = new Console;
     m_pConsole->setEnabled( false );
     setCentralWidget( m_pConsole );
-
-    actionsTrigger( false );
-    ui->actionQuit->setEnabled( true );
+    m_pSettingsDialog = new SettingsDialog( this );
+    this->readSettings();
+    m_pSettingsDialog->fillSettingsUi();
 
     clock = new QLabel;
     clock->setStyleSheet( QString("color: blue") );
@@ -60,7 +66,6 @@ MainWindow::MainWindow( QWidget *parent ) :
     ui->statusBar->addPermanentWidget( clock );
     status = new QLabel;
     ui->statusBar->addWidget( status );
-    this->readSettings();
 
     // Create a timer with 1 second intervals.
     m_pTimer = new QTimer( this );
@@ -73,6 +78,8 @@ MainWindow::MainWindow( QWidget *parent ) :
     QObject::connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnectRTC);
     QObject::connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
     QObject::connect(ui->actionClear, &QAction::triggered, m_pConsole, &Console::clear);
+    QObject::connect(ui->actionPort_Setting, &QAction::triggered, m_pSettingsDialog, &SettingsDialog::show);
+    QObject::connect(ui->actionSelect_Font, &QAction::triggered, this, &MainWindow::selectConsoleFont);
     QObject::connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
 }
 
@@ -95,7 +102,7 @@ MainWindow::~MainWindow()
 //! - the position of the window on the screen and window size,
 //! - interface font and its size,
 //! - the user interface settings (overwrite of the data, recurse of dir's, etc.)
-//! - error and event logging options.
+//! - and the serial port options.
 //!
 void MainWindow::readSettings()
 {
@@ -110,21 +117,23 @@ void MainWindow::readSettings()
 
     settings.beginGroup( "Font" );
     QFont font;
-    font.fromString(settings.value( "font", QFont()).toString() );
-//    this->setFont(font);
-    qApp->setFont(font);
+    font.fromString( settings.value( "font", QFont("Monospace", 10) ).toString() );
+    m_pConsole->setFont( font );
     settings.endGroup();
 
     settings.beginGroup( "ULayout" );
     settings.endGroup();
-/*
+
+    SettingsDialog::Settings *p = m_pSettingsDialog->serialPortSettings();
     settings.beginGroup( "SerialPort" );
-    QString portName = settings.value( "portName", "ttyUSB0" ).toString();
-    this->m_portName = portName;
-    qint32 baudRate = settings.value( "baudRate", 115200 ).toUInt();
-    this->m_baudRate = baudRate;
+    p->name = settings.value( "portName", "ttyUSB0" ).toString();
+    p->baudRate = settings.value( "baudRate", 115200 ).toUInt();
+    p->stringBaudRate = settings.value( "baudRate", 115200 ).toString();
+    p->stringDataBits = settings.value( "dataBits", 8 ).toString();
+    p->stringParity = settings.value( "parity", "None" ).toString();
+    p->stringStopBits = settings.value( "stopBits", 1 ).toString();
+    p->stringFlowControl = settings.value( "flowControl", "None" ).toString();
     settings.endGroup();
-*/
 }
 
 //!
@@ -135,7 +144,7 @@ void MainWindow::readSettings()
 //! - the position of the window on the screen and window size,
 //! - interface font and its size,
 //! - the user interface settings (overwrite of the data, recurse of dir's, etc.)
-//! - error and event logging options.
+//! - and the serial port options.
 //!
 void MainWindow::writeSettings() const
 {
@@ -147,17 +156,23 @@ void MainWindow::writeSettings() const
     settings.endGroup();
 
     settings.beginGroup( "Font" );
-    settings.setValue( "font", this->font().toString() );
+    settings.setValue( "font", m_pConsole->font().toString() );
     settings.endGroup();
 
     settings.beginGroup( "ULayot" );
     settings.endGroup();
-/*
+
+    SettingsDialog::Settings p = m_pSettingsDialog->settings();
     settings.beginGroup( "SerialPort" );
-    settings.setValue( "portName", this->m_portName );
-    settings.setValue( "baudRate", this->m_baudRate );
+    if ( p.isChanged ) {
+        settings.setValue( "PortName", p.name );
+        settings.setValue( "baudRate", p.baudRate );
+        settings.setValue( "dataBits", p.stringDataBits );
+        settings.setValue( "parity", p.stringParity );
+        settings.setValue( "stopBits", p.stringStopBits );
+        settings.setValue( "flowControl", p.stringFlowControl );
+    }
     settings.endGroup();
-*/
 }
 
 //!
@@ -177,9 +192,10 @@ void MainWindow::about()
 //!
 void MainWindow::connectRTC()
 {
+    SettingsDialog::Settings p = m_pSettingsDialog->settings();
     m_pThread = new QThread(this);
     // There is no need to specify the parent. The parent will be a thread when we move our RTC object into it.
-    m_pRTC = new RTC( "ttyUSB0" );
+    m_pRTC = new RTC( p.name );
     // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
     // Create a connection: Delete the RTC object when the stream ends. start the thread.
     m_pRTC->moveToThread( m_pThread );
@@ -200,14 +216,17 @@ void MainWindow::connectRTC()
 
         QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
 
-        showStatusMessage( QObject::tr( "Connected to %1 : %2, %3, %4, %5, %6" ) );
+        showStatusMessage( QObject::tr( "Connected to %1 : %2, %3, %4, %5, %6" )
+                           .arg( p.name ).arg( p.stringBaudRate ).arg( p.stringDataBits )
+                           .arg( p.stringParity ).arg( p.stringStopBits ).arg( p.stringFlowControl ) );
     }
     else
     {
         m_pThread->quit();
         m_pThread->wait( WAIT_FOR_STREAM );
 
-        QMessageBox::critical(this, "Connection error", "Connect the RTC device to the correct serial port.",
+        QMessageBox::critical(this, "Connection error", "Connect the RTC device to the correct serial port, "
+                                                        "or set the serial port name in the port settings.",
                               QMessageBox::Ok);
     }
 }
@@ -273,4 +292,22 @@ void MainWindow::closeEvent( QCloseEvent *event )
 {
     this->writeSettings();
     event->accept();
+}
+
+//!
+//! \brief MainWindow::selectConsoleFont Slot for the font selection dialog.
+//!
+//! Selection of the console font. The default font is Monospace, 10 points.
+//!
+//! \note The font is installed only for the console window, i.s. not for all graphic forms!
+//!
+void MainWindow::selectConsoleFont( void )
+{
+    bool selected;
+    QFont font = QFontDialog::getFont( &selected, m_pConsole->font(), this );
+
+    if ( selected )
+    {
+        m_pConsole->setFont( font );
+    }
 }

@@ -38,13 +38,16 @@ INCLUDEPATH += ../include
 SOURCES += main.cpp\
         mainwindow.cpp \
     rtc.cpp \
-    console.cpp
+    console.cpp \
+    settingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     rtc.h \
-    console.h
+    console.h \
+    settingsdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    settingsdialog.ui
 
 RESOURCES += \
     synchrotime.qrc
@@ -62,3 +65,5 @@ win32 {
     QMAKE_TARGET_COPYRIGHT = (c) 2020 sergej1@email.ua
     RC_ICONS = images/icon.png
 }
+
+DISTFILES +=

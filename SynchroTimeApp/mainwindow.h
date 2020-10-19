@@ -27,8 +27,9 @@
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
-class QLabel;
 class Console;
+class SettingsDialog;
+class QLabel;
 class QThread;
 class QTimer;
 class RTC;
@@ -51,20 +52,22 @@ protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
-    void about();
     void connectRTC();
     void disconnectRTC();
+    void selectConsoleFont();
     void tickClock();
+    void about();
 
 private:
     Ui::MainWindow *ui;
     QLabel *status;
     QLabel *clock;
+    QTimer *m_pTimer;
     Console *m_pConsole;
+    SettingsDialog *m_pSettingsDialog;
     // RTC and a separate thread in which it will work.
     QThread *m_pThread;
     RTC *m_pRTC;
-    QTimer *m_pTimer;
 
     void readSettings( void );
     void writeSettings( void ) const;
