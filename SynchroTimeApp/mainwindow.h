@@ -29,6 +29,7 @@
 //------------------------------------------------------------------------------
 class Console;
 class SettingsDialog;
+class QLCDNumber;
 class QLabel;
 class QThread;
 class QTimer;
@@ -58,10 +59,12 @@ private slots:
     void tickClock();
     void about();
 
+    void handleError( const QString &error );
+
 private:
     Ui::MainWindow *ui;
     QLabel *status;
-    QLabel *clock;
+    QLCDNumber *clock;
     QTimer *m_pTimer;
     Console *m_pConsole;
     SettingsDialog *m_pSettingsDialog;

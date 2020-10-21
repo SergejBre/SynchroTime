@@ -18,6 +18,7 @@
 #include "settingsdialog.h"
 #include "rtc.h"
 #include <QMessageBox>
+#include <QLCDNumber>
 #include <QLabel>
 #include <QDateTime>
 #include <QTimer>
@@ -45,7 +46,10 @@
 MainWindow::MainWindow( QWidget *parent ) :
     QMainWindow( parent ),
     ui( new Ui::MainWindow ),
-    m_pThread( nullptr )
+    m_pConsole( nullptr ),
+    m_pSettingsDialog( nullptr ),
+    m_pThread( nullptr ),
+    m_pRTC( nullptr )
 {
     ui->setupUi( this );
     actionsTrigger( false );
@@ -59,15 +63,16 @@ MainWindow::MainWindow( QWidget *parent ) :
     this->readSettings();
     m_pSettingsDialog->fillSettingsUi();
 
-    clock = new QLabel;
-    clock->setStyleSheet( QString("color: blue") );
-    clock->setAlignment( Qt::AlignBottom | Qt::AlignRight );
-    clock->setText( QDateTime::currentDateTime().toString("hh:mm:ss") );
-    ui->statusBar->addPermanentWidget( clock );
+    clock = new QLCDNumber;
+    clock->setDigitCount(8);
+    clock->setPalette( Qt::green );
+    clock->setStyleSheet( QStringLiteral( "background: black" ));
+    clock->display( QDateTime::currentDateTime().toString("hh:mm:ss") );
+    ui->statusBar->addPermanentWidget( clock, 0 );
     status = new QLabel;
     ui->statusBar->addWidget( status );
 
-    // Create a timer with 1 second intervals.
+    // Create a timer with 1 second intervals for the clock.
     m_pTimer = new QTimer( this );
     m_pTimer->setInterval( 1000 );
     QObject::connect( m_pTimer, &QTimer::timeout, this, &MainWindow::tickClock );
@@ -118,12 +123,14 @@ void MainWindow::readSettings()
     settings.beginGroup( "Font" );
     QFont font;
     font.fromString( settings.value( "font", QFont("Monospace", 10) ).toString() );
+    Q_ASSERT( m_pConsole != nullptr );
     m_pConsole->setFont( font );
     settings.endGroup();
 
     settings.beginGroup( "ULayout" );
     settings.endGroup();
 
+    Q_ASSERT( m_pSettingsDialog != nullptr );
     SettingsDialog::Settings *p = m_pSettingsDialog->serialPortSettings();
     settings.beginGroup( "SerialPort" );
     p->name = settings.value( "portName", "ttyUSB0" ).toString();
@@ -156,12 +163,14 @@ void MainWindow::writeSettings() const
     settings.endGroup();
 
     settings.beginGroup( "Font" );
+    Q_ASSERT( m_pConsole != nullptr );
     settings.setValue( "font", m_pConsole->font().toString() );
     settings.endGroup();
 
     settings.beginGroup( "ULayot" );
     settings.endGroup();
 
+    Q_ASSERT( m_pSettingsDialog != nullptr );
     SettingsDialog::Settings p = m_pSettingsDialog->settings();
     settings.beginGroup( "SerialPort" );
     if ( p.isChanged ) {
@@ -185,6 +194,17 @@ void MainWindow::about()
                                    "and calibration of the <b>RTC DS3231</b> module."
                                    "<br /><b>Version</b> %1"
                                    "<br /><b>Copyright</b> © 2020 sergej1@email.ua").arg(qApp->applicationVersion()));
+}
+
+//!
+//! \brief MainWindow::handleError
+//! \param error
+//!
+void MainWindow::handleError( const QString &error )
+{
+    //! \todo
+    disconnectRTC();
+    QMessageBox::critical( this, QObject::tr( "Critical Error" ), error );
 }
 
 //!
@@ -215,6 +235,7 @@ void MainWindow::connectRTC()
         QObject::connect(ui->actionSetRegister, &QAction::triggered, m_pRTC, &RTC::setRegisterRequestSlot);
 
         QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
+        QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
         showStatusMessage( QObject::tr( "Connected to %1 : %2, %3, %4, %5, %6" )
                            .arg( p.name ).arg( p.stringBaudRate ).arg( p.stringDataBits )
@@ -225,6 +246,7 @@ void MainWindow::connectRTC()
         m_pThread->quit();
         m_pThread->wait( WAIT_FOR_STREAM );
 
+        showStatusMessage( QObject::tr( "Connection error" ));
         QMessageBox::critical(this, "Connection error", "Connect the RTC device to the correct serial port, "
                                                         "or set the serial port name in the port settings.",
                               QMessageBox::Ok);
@@ -236,9 +258,11 @@ void MainWindow::connectRTC()
 //!
 void MainWindow::disconnectRTC()
 {
+    Q_ASSERT( m_pConsole != nullptr );
     m_pConsole->setEnabled( false );
     actionsTrigger( false );
 
+    Q_ASSERT( m_pThread != nullptr );
     if ( m_pThread != nullptr ) {
         m_pThread->quit();
         m_pThread->wait( WAIT_FOR_STREAM );
@@ -270,6 +294,7 @@ void MainWindow::actionsTrigger( bool value ) const
 //!
 void MainWindow::showStatusMessage(const QString &message) const
 {
+    Q_ASSERT( status != nullptr );
     status->setText(message);
 }
 
@@ -278,7 +303,8 @@ void MainWindow::showStatusMessage(const QString &message) const
 //!
 void MainWindow::tickClock()
 {
-    clock->setText( QDateTime::currentDateTime().toString("hh:mm:ss") );
+    Q_ASSERT( clock != nullptr );
+    clock->display( QDateTime::currentDateTime().toString("hh:mm:ss") );
 }
 
 //!
@@ -303,6 +329,7 @@ void MainWindow::closeEvent( QCloseEvent *event )
 //!
 void MainWindow::selectConsoleFont( void )
 {
+    Q_ASSERT( m_pConsole != nullptr );
     bool selected;
     QFont font = QFontDialog::getFont( &selected, m_pConsole->font(), this );
 
