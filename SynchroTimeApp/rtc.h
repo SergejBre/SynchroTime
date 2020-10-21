@@ -59,6 +59,7 @@ public:
 
 signals:
     void getData( const QByteArray &data );
+    void portError( const QString &error );
 
 public slots:
     // Information request slot.
@@ -73,6 +74,9 @@ public slots:
     void setRegisterRequestSlot();
     // Status request slot.
     void statusRequestSlot();
+
+private slots:
+    void handleError( QSerialPort::SerialPortError error );
 
 private:
     enum class StatusMessages: quint8;

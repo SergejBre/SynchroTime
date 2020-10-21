@@ -60,6 +60,8 @@ RTC::RTC( const QString & portName, QObject *parent )
     QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
         statusRequest();
     });
+    QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
+                      this, &RTC::handleError );
 
     // Connect the serial port.
     connectToRTC();
@@ -142,10 +144,23 @@ void RTC::statusRequestSlot()
 }
 
 //!
+//! \brief RTC::handleError
+//! \param error
+//!
+void RTC::handleError( QSerialPort::SerialPortError error )
+{
+    if ( error == QSerialPort::ResourceError ) {
+        Q_ASSERT( m_pSerialPort != nullptr );
+        emit portError( m_pSerialPort->errorString() );
+    }
+}
+
+//!
 //! \brief RTC::connectToRTC
 //!
 void RTC::connectToRTC()
 {
+    Q_ASSERT( m_pSerialPort != nullptr );
     if ( m_pSerialPort->open( QSerialPort::ReadWrite ) )
     {
         // Make sure that the RTC device is connected to the serial port.
@@ -205,9 +220,16 @@ void RTC::setProtocol( QByteArray &protocolData, Request request, quint8 size, q
 //!
 void RTC::informationRequest()
 {
+    QString output;
+    QTextStream out( &output );
     QByteArray requestForInformation;
     setProtocol( requestForInformation, Request::INFO );
-    emit getData( requestForInformation );
+    out << requestForInformation << endl;
+//    emit getData( requestForInformation );
+    emit getData( output.toLocal8Bit() );
+    output.clear();
+    out << endl;
+    emit getData( output.toLocal8Bit() );
     //! \todo
 }
 
