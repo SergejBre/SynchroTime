@@ -17,7 +17,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QSerialPort>
-//#include "../include/interface.h"
+#include "serialportsettings.h"
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -27,10 +27,13 @@
 // Enums
 //------------------------------------------------------------------------------
 //!
+//! \enum Request
+//!
 //! \brief The Request enum
 //!
 //! \details
 //! Requests available to us sent by RTC. Sent as the third byte in the protocol.
+//!
 enum class Request : quint8
 {
     INFO   = 'i', //!< Information request.
@@ -46,13 +49,18 @@ enum class Request : quint8
 //------------------------------------------------------------------------------
 
 //!
+//! \class RTC
+//!
 //! \brief The RTC class
 //!
 class RTC : public QObject
 {
     Q_OBJECT
+
 public:
     explicit RTC( const QString & portName, QObject *parent = 0 );
+    explicit RTC( const Settings_t &portSettings, QObject *parent = 0 );
+    ~RTC();
 
     // Connection check function.
     bool isConnected() const;

@@ -22,7 +22,8 @@ Console::Console(QWidget *parent)
     document()->setMaximumBlockCount(100);
     QPalette p = palette();
     p.setColor(QPalette::Base, Qt::black);
-    p.setColor(QPalette::Text, 0xAAAAAA);
+    p.setColor(QPalette::Text, Qt::green);
+//    p.setColor(QPalette::Text, 0xAAAAAA);
     setPalette(p);
 
     buffer = new QByteArray();

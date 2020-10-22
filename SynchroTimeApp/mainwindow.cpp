@@ -15,6 +15,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "console.h"
+#include "serialportsettings.h"
 #include "settingsdialog.h"
 #include "rtc.h"
 #include <QMessageBox>
@@ -90,7 +91,7 @@ MainWindow::MainWindow( QWidget *parent ) :
 
 MainWindow::~MainWindow()
 {
-    // Wait 1s for the stream to complete before deleting the main window.
+    // Wait 1s for the stream to complete before destroy the main window.
     if ( m_pThread != nullptr ) {
         m_pThread->quit();
         m_pThread->wait( WAIT_FOR_STREAM );
@@ -131,7 +132,7 @@ void MainWindow::readSettings()
     settings.endGroup();
 
     Q_ASSERT( m_pSettingsDialog != nullptr );
-    SettingsDialog::Settings *p = m_pSettingsDialog->serialPortSettings();
+    Settings_t *p = m_pSettingsDialog->serialPortSettings();
     settings.beginGroup( "SerialPort" );
     p->name = settings.value( "portName", "ttyUSB0" ).toString();
     p->baudRate = settings.value( "baudRate", 115200 ).toUInt();
@@ -171,7 +172,7 @@ void MainWindow::writeSettings() const
     settings.endGroup();
 
     Q_ASSERT( m_pSettingsDialog != nullptr );
-    SettingsDialog::Settings p = m_pSettingsDialog->settings();
+    Settings p = m_pSettingsDialog->settings();
     settings.beginGroup( "SerialPort" );
     if ( p.isChanged ) {
         settings.setValue( "PortName", p.name );
@@ -203,8 +204,9 @@ void MainWindow::about()
 void MainWindow::handleError( const QString &error )
 {
     //! \todo
+    QObject::disconnect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
     disconnectRTC();
-    QMessageBox::critical( this, QObject::tr( "Critical Error" ), error );
+    QMessageBox::critical( this, QObject::tr( "Serial Port Error" ), error, QMessageBox::Ok );
 }
 
 //!
@@ -212,14 +214,14 @@ void MainWindow::handleError( const QString &error )
 //!
 void MainWindow::connectRTC()
 {
-    SettingsDialog::Settings p = m_pSettingsDialog->settings();
-    m_pThread = new QThread(this);
+    Settings p = m_pSettingsDialog->settings();
+    m_pThread = new QThread( this );
     // There is no need to specify the parent. The parent will be a thread when we move our RTC object into it.
-    m_pRTC = new RTC( p.name );
+    m_pRTC = new RTC( p );
     // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
     // Create a connection: Delete the RTC object when the stream ends. start the thread.
     m_pRTC->moveToThread( m_pThread );
-    QObject::connect(m_pThread, SIGNAL( finished()), m_pRTC, SLOT( deleteLater() ) );
+    QObject::connect( m_pThread, SIGNAL( finished() ), m_pRTC, SLOT( deleteLater() ) );
     m_pThread->start();
 
     // Checking the connection.
@@ -237,7 +239,7 @@ void MainWindow::connectRTC()
         QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
         QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
-        showStatusMessage( QObject::tr( "Connected to %1 : %2, %3, %4, %5, %6" )
+        showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2, %3, %4, %5, %6" )
                            .arg( p.name ).arg( p.stringBaudRate ).arg( p.stringDataBits )
                            .arg( p.stringParity ).arg( p.stringStopBits ).arg( p.stringFlowControl ) );
     }

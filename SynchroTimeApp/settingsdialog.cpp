@@ -69,12 +69,12 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
-SettingsDialog::Settings SettingsDialog::settings() const
+Settings_t SettingsDialog::settings() const
 {
     return currentSettings;
 }
 
-SettingsDialog::Settings *SettingsDialog::serialPortSettings()
+Settings_t *SettingsDialog::serialPortSettings()
 {
     return &currentSettings;
 }
@@ -191,11 +191,11 @@ void SettingsDialog::fillPortsParameters()
     ui->dataBitsBox->addItem( QStringLiteral( "8" ), QSerialPort::Data8 );
     ui->dataBitsBox->setCurrentIndex(3);
 
-    ui->parityBox->addItem( QObject::tr( "None" ), QSerialPort::NoParity );
-    ui->parityBox->addItem( QObject::tr( "Even" ), QSerialPort::EvenParity );
-    ui->parityBox->addItem( QObject::tr( "Odd" ), QSerialPort::OddParity );
-    ui->parityBox->addItem( QObject::tr( "Mark" ), QSerialPort::MarkParity );
-    ui->parityBox->addItem( QObject::tr( "Space" ), QSerialPort::SpaceParity );
+    ui->parityBox->addItem( QObject::tr( "NoParity" ), QSerialPort::NoParity );
+    ui->parityBox->addItem( QObject::tr( "EvenParity" ), QSerialPort::EvenParity );
+    ui->parityBox->addItem( QObject::tr( "OddParity" ), QSerialPort::OddParity );
+    ui->parityBox->addItem( QObject::tr( "MarkParity" ), QSerialPort::MarkParity );
+    ui->parityBox->addItem( QObject::tr( "SpaceParity" ), QSerialPort::SpaceParity );
 
     ui->stopBitsBox->addItem( QStringLiteral( "1" ), QSerialPort::OneStop );
 #ifdef Q_OS_WIN

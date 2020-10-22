@@ -15,7 +15,7 @@
 // Includes
 //------------------------------------------------------------------------------
 #include <QDialog>
-#include <QtSerialPort/QSerialPort>
+#include "serialportsettings.h"
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -42,22 +42,6 @@ class SettingsDialog : public QDialog
     Q_OBJECT
 
 public:
-    struct Settings {
-        QString name;
-        qint32 baudRate;
-        QString stringBaudRate;
-        QSerialPort::DataBits dataBits;
-        QString stringDataBits;
-        QSerialPort::Parity parity;
-        QString stringParity;
-        QSerialPort::StopBits stopBits;
-        QString stringStopBits;
-        QSerialPort::FlowControl flowControl;
-        QString stringFlowControl;
-        bool localEchoEnabled;
-        bool isChanged = false;
-    };
-
     explicit SettingsDialog( QWidget *parent = 0 );
     ~SettingsDialog();
 

@@ -44,7 +44,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     rtc.h \
     console.h \
-    settingsdialog.h
+    settingsdialog.h \
+    serialportsettings.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui

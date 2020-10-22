@@ -8,7 +8,11 @@
 //  Project SynchroTime: Command-line client for adjust the exact time and
 //  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
-
+//!
+//! \file rtc.cpp
+//!
+//! \brief This file contains the implementations of the methods of the RTC class.
+//!
 //------------------------------------------------------------------------------
 // Includes
 //------------------------------------------------------------------------------
@@ -39,7 +43,9 @@
 //! \param parent
 //!
 RTC::RTC( const QString & portName, QObject *parent )
-    : QObject( parent )
+    : QObject( parent ),
+      m_pSerialPort( nullptr ),
+      m_pTimerCheckConnection( nullptr )
 {
     // Initialization of the serial interface.
     m_pSerialPort = new QSerialPort( this );
@@ -66,6 +72,56 @@ RTC::RTC( const QString & portName, QObject *parent )
     // Connect the serial port.
     connectToRTC();
     m_pTimerCheckConnection->start();
+}
+
+//!
+//! \brief RTC::RTC
+//! \param portSettings
+//! \param parent
+//!
+RTC::RTC( const Settings_t &portSettings, QObject *parent )
+    : QObject( parent ),
+      m_pSerialPort( nullptr ),
+      m_pTimerCheckConnection( nullptr )
+{
+    // Initialization of the serial interface.
+    m_pSerialPort = new QSerialPort( this );
+    m_pSerialPort->setPortName( portSettings.name );
+    m_pSerialPort->setBaudRate( portSettings.baudRate );
+    m_pSerialPort->setDataBits( portSettings.dataBits );
+    m_pSerialPort->setParity( portSettings.parity );
+    m_pSerialPort->setStopBits( portSettings.stopBits );
+    m_pSerialPort->setFlowControl( portSettings.flowControl );
+
+    // Create a timer with 1 second intervals.
+    m_pTimerCheckConnection = new QTimer( this );
+    m_pTimerCheckConnection->setInterval( 1000 );
+
+    // After a time of 1 s, the statusRequest() command is called.
+    // This is where the lambda function is used to avoid creating a slot.
+    QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
+        statusRequest();
+    });
+    QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
+                      this, &RTC::handleError );
+
+    // Connect the serial port.
+    connectToRTC();
+    m_pTimerCheckConnection->start();
+}
+
+//!
+//! \brief RTC::~RTC
+//!
+RTC::~RTC()
+{
+    if ( m_pTimerCheckConnection != nullptr ) {
+        delete m_pTimerCheckConnection;
+    }
+    if ( m_pSerialPort != nullptr ) {
+        delete m_pSerialPort;
+    }
+    qDebug() << "Obj RTC destroyed.";
 }
 
 //!
