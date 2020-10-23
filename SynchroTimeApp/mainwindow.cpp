@@ -196,7 +196,9 @@ void MainWindow::about()
                        QObject::tr("The <b>SynchroTime</b> application is used for fine tuning "
                                    "and calibration of the <b>RTC DS3231</b> module."
                                    "<br /><b>Version</b> %1"
-                                   "<br /><b>Copyright</b> © 2020 sergej1@email.ua").arg(qApp->applicationVersion()));
+                                   "<br /><b>Copyright</b> © 2020 sergej1@email.ua"
+                                   "<br /><br />For more information follow the link to the "
+                                   "<a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.").arg(qApp->applicationVersion()));
 }
 
 //!
@@ -350,8 +352,8 @@ void MainWindow::selectConsoleFont( void )
 void MainWindow::setRegisterSlot()
 {
     bool ok;
-    float value = QInputDialog::getDouble( this, tr( "Offset register modification" ),
-                                         tr( "Enter a new value in the register" ),
+    float value = QInputDialog::getDouble( this, QObject::tr( "Offset register modification" ),
+                                         QObject::tr( "Enter a new value new value in the Offset Register:" ),
                                          0, -12.8, 12.7, 1, &ok );
     Q_ASSERT( m_pRTC != nullptr );
     if ( ok )
