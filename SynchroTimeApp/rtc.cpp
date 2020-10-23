@@ -180,11 +180,11 @@ void RTC::resetRequestSlot()
 //!
 //! \brief RTC::setRegisterRequestSlot
 //!
-void RTC::setRegisterRequestSlot()
+void RTC::setRegisterRequestSlot( const float newValue )
 {
     if ( isConnected() )
     {
-        setRegisterRequest();
+        setRegisterRequest( newValue );
     }
 }
 
@@ -325,11 +325,12 @@ void RTC::resetRequest()
 //!
 //! \brief RTC::setRegisterRequest
 //!
-void RTC::setRegisterRequest()
+void RTC::setRegisterRequest( const float newValue )
 {
     QByteArray requestForSetRegister;
     setProtocol( requestForSetRegister, Request::SETREG );
     emit getData( requestForSetRegister );
+    qDebug() << newValue;
     //! \todo
 }
 

@@ -48,6 +48,7 @@ public:
     ~MainWindow();
 
 signals:
+    void setRegister( float value );
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
@@ -56,6 +57,7 @@ private slots:
     void connectRTC();
     void disconnectRTC();
     void selectConsoleFont();
+    void setRegisterSlot();
     void tickClock();
     void about();
 

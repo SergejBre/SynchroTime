@@ -79,7 +79,7 @@ public slots:
     // Reset request slot.
     void resetRequestSlot();
     // Set register request slot.
-    void setRegisterRequestSlot();
+    void setRegisterRequestSlot( const float newValue );
     // Status request slot.
     void statusRequestSlot();
 
@@ -101,7 +101,7 @@ private:
     // Reset request.
     void resetRequest();
     // Set register request.
-    void setRegisterRequest();
+    void setRegisterRequest( const float newValue );
     // Status request.
     bool statusRequest();
 

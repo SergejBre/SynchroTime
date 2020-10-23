@@ -25,6 +25,7 @@
 #include <QTimer>
 #include <QSettings>
 #include <QThread>
+#include <QInputDialog>
 #include <QFontDialog>
 
 //------------------------------------------------------------------------------
@@ -87,6 +88,7 @@ MainWindow::MainWindow( QWidget *parent ) :
     QObject::connect(ui->actionPort_Setting, &QAction::triggered, m_pSettingsDialog, &SettingsDialog::show);
     QObject::connect(ui->actionSelect_Font, &QAction::triggered, this, &MainWindow::selectConsoleFont);
     QObject::connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
+    QObject::connect(ui->actionSetRegister, &QAction::triggered, this, &MainWindow::setRegisterSlot );
 }
 
 MainWindow::~MainWindow()
@@ -220,6 +222,7 @@ void MainWindow::connectRTC()
     m_pRTC = new RTC( p );
     // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
     // Create a connection: Delete the RTC object when the stream ends. start the thread.
+    Q_ASSERT( m_pThread != nullptr && m_pRTC != nullptr );
     m_pRTC->moveToThread( m_pThread );
     QObject::connect( m_pThread, SIGNAL( finished() ), m_pRTC, SLOT( deleteLater() ) );
     m_pThread->start();
@@ -234,7 +237,7 @@ void MainWindow::connectRTC()
         QObject::connect(ui->actionAdjustment, &QAction::triggered, m_pRTC, &RTC::adjustmentRequestSlot);
         QObject::connect(ui->actionCalibration, &QAction::triggered, m_pRTC, &RTC::calibrationRequestSlot);
         QObject::connect(ui->actionReset, &QAction::triggered, m_pRTC, &RTC::resetRequestSlot);
-        QObject::connect(ui->actionSetRegister, &QAction::triggered, m_pRTC, &RTC::setRegisterRequestSlot);
+        QObject::connect(this, &MainWindow::setRegister, m_pRTC, &RTC::setRegisterRequestSlot);
 
         QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
         QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
@@ -338,5 +341,21 @@ void MainWindow::selectConsoleFont( void )
     if ( selected )
     {
         m_pConsole->setFont( font );
+    }
+}
+
+//!
+//! \brief MainWindow::setRegisterSlot
+//!
+void MainWindow::setRegisterSlot()
+{
+    bool ok;
+    float value = QInputDialog::getDouble( this, tr( "Offset register modification" ),
+                                         tr( "Enter a new value in the register" ),
+                                         0, -12.8, 12.7, 1, &ok );
+    Q_ASSERT( m_pRTC != nullptr );
+    if ( ok )
+    {
+        emit this->setRegister( value );
     }
 }
