@@ -1,4 +1,5 @@
 # SynchroTime - Command-line client for adjust the exact time and calibrating the RTC DS3231 module
+![PROJECT_IMAGE](./images/guiApp_About.png)
 
 ## Motivation
 
