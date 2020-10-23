@@ -59,6 +59,7 @@ private slots:
     void selectConsoleFont();
     void setRegisterSlot();
     void tickClock();
+    void help();
     void about();
 
     void handleError( const QString &error );

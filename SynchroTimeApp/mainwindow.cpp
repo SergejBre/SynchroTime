@@ -88,6 +88,7 @@ MainWindow::MainWindow( QWidget *parent ) :
     QObject::connect(ui->actionPort_Setting, &QAction::triggered, m_pSettingsDialog, &SettingsDialog::show);
     QObject::connect(ui->actionSelect_Font, &QAction::triggered, this, &MainWindow::selectConsoleFont);
     QObject::connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
+    QObject::connect(ui->actionContents, &QAction::triggered, this, &MainWindow::help);
     QObject::connect(ui->actionSetRegister, &QAction::triggered, this, &MainWindow::setRegisterSlot );
 }
 
@@ -232,6 +233,7 @@ void MainWindow::connectRTC()
     // Checking the connection.
     if ( m_pRTC->isConnected() )
     {
+        Q_ASSERT( m_pConsole != nullptr );
         m_pConsole->setEnabled( true );
         actionsTrigger( true );
 
@@ -244,9 +246,8 @@ void MainWindow::connectRTC()
         QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
         QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
-        showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2, %3, %4, %5, %6" )
-                           .arg( p.name ).arg( p.stringBaudRate ).arg( p.stringDataBits )
-                           .arg( p.stringParity ).arg( p.stringStopBits ).arg( p.stringFlowControl ) );
+        showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 bps" )
+                           .arg( p.name ).arg( p.stringBaudRate ) );
     }
     else
     {
@@ -312,6 +313,44 @@ void MainWindow::tickClock()
 {
     Q_ASSERT( clock != nullptr );
     clock->display( QDateTime::currentDateTime().toString("hh:mm:ss") );
+}
+
+//!
+//! \brief MainWindow::help slot
+//!
+void MainWindow::help()
+{
+    QMessageBox::information( this, QObject::tr( "Help" ),
+                              QObject::tr("<h4>The Application is used for fine tuning "
+                                          "and calibration of the RTC DS3231 module</h4>"
+                                          "<ol><li>To select the correct <b>serial port</b>, "
+                                          "you need to go to the Port Settings and select its name and parameters.</li>"
+                                          "<li>Use the <b>information request</b> to get the information from DS3231 module. "
+                                          "If everything is connected correctly, "
+                                          "then you will get the current time of both clocks, "
+                                          "the difference between the clocks in milliseconds "
+                                          "(with an accuracy of ±2 ms), the value written in the offset register "
+                                          "and the calculated time drift value in ppm. "
+                                          "If the offset register and time drift are zero, "
+                                          "then the DS3231 module has not yet been calibrated (see step 4).</li>"
+                                          "<li>To set the exact time, use the <b>adjustment request</b>. "
+                                          "The module clock will be synchronized with the computer time "
+                                          "with an accuracy of ±1 ms. After updating the time, "
+                                          "the date of the time setting will be recorded in the module's memory, "
+                                          "which will allow later to determine the exact drift of the clock time.</li>"
+                                          "<li>To calibrate the clock of the DS3231 module, "
+                                          "use the <b>calibration request</b>. "
+                                          "For the successful execution of this procedure, "
+                                          "the module must be activated (see step 3) and "
+                                          "it is necessary that enough time has passed so that the calculated value "
+                                          "of the clock drift is well distinguishable from the rounding error. "
+                                          "The algorithm of the program will calculate the amount of drift of the clock time "
+                                          "and the correction factor, which will be written into the offset register. "
+                                          "The clock time will also be updated. If the calibration is successful, "
+                                          "the current time, drift and correction factor will be displayed.</li>"
+                                          "<li>To reset the offset register to its default value and "
+                                          "clear the module's memory of calibration data, use the <b>reset request</b>.</li></ol>"
+                                          "For more information follow the link to the <a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.") );
 }
 
 //!
