@@ -29,7 +29,7 @@ CONFIG(debug, debug|release) {
 }
 
 # Define for the GUI application
-DEFINES += GUI_APP
+DEFINES += GUI_APP QT_NO_TRANSLATION
 TEMPLATE = app
 LANGUAGE = C++
 
