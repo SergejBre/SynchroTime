@@ -8,7 +8,11 @@
 //  Project SynchroTime: Command-line client for adjust the exact time and
 //  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
-
+//!
+//! \file mainwindow.cpp
+//!
+//! \brief The file contains the definition of the constructor and methods of the MainWindow class.
+//!
 //------------------------------------------------------------------------------
 // Includes
 //------------------------------------------------------------------------------
@@ -40,11 +44,15 @@
 // Types
 //------------------------------------------------------------------------------
 #define WAIT_FOR_STREAM 1000 //!< Wait 1s for the stream
-#define SETTINGS_FILE "synchroTimeApp.ini" //!< The name of the settings file.
+#define SETTINGS_FILE QStringLiteral( "synchroTimeApp.ini" ) //!< The name of the settings file.
 //------------------------------------------------------------------------------
 // Function Prototypes
 //------------------------------------------------------------------------------
 
+//!
+//! \brief MainWindow::MainWindow
+//! \param parent
+//!
 MainWindow::MainWindow( QWidget *parent ) :
     QMainWindow( parent ),
     ui( new Ui::MainWindow ),
@@ -63,13 +71,14 @@ MainWindow::MainWindow( QWidget *parent ) :
     setCentralWidget( m_pConsole );
     m_pSettingsDialog = new SettingsDialog( this );
     this->readSettings();
+    // Here, the settings of the serial interface is retrieved from the configuration file.
     m_pSettingsDialog->fillSettingsUi();
 
     clock = new QLCDNumber;
     clock->setDigitCount(8);
     clock->setPalette( Qt::green );
     clock->setStyleSheet( QStringLiteral( "background: black" ));
-    clock->display( QDateTime::currentDateTime().toString("hh:mm:ss") );
+    clock->display( QDateTime::currentDateTime().toString( QStringLiteral( "hh:mm:ss") ));
     ui->statusBar->addPermanentWidget( clock, 0 );
     status = new QLabel;
     ui->statusBar->addWidget( status );
@@ -92,6 +101,9 @@ MainWindow::MainWindow( QWidget *parent ) :
     QObject::connect(ui->actionSetRegister, &QAction::triggered, this, &MainWindow::setRegisterSlot );
 }
 
+//!
+//! \brief MainWindow::~MainWindow
+//!
 MainWindow::~MainWindow()
 {
     // Wait 1s for the stream to complete before destroy the main window.
@@ -117,33 +129,33 @@ void MainWindow::readSettings()
 {
     QSettings settings( SETTINGS_FILE, QSettings::IniFormat );
 
-    settings.beginGroup( "Geometry" );
-    QPoint pos = settings.value( "pos", QPoint(200, 200) ).toPoint();
-    QSize size = settings.value( "size", QSize(640, 400) ).toSize();
+    settings.beginGroup( QStringLiteral( "Geometry" ));
+    QPoint pos = settings.value( QStringLiteral( "pos" ), QPoint(200, 200) ).toPoint();
+    QSize size = settings.value( QStringLiteral( "size"), QSize(640, 400) ).toSize();
     this->resize( size );
     this->move( pos );
     settings.endGroup();
 
-    settings.beginGroup( "Font" );
+    settings.beginGroup( QStringLiteral( "Font" ));
     QFont font;
-    font.fromString( settings.value( "font", QFont("Monospace", 10) ).toString() );
+    font.fromString( settings.value( QStringLiteral( "font" ), QFont( QStringLiteral( "Monospace" ), 10) ).toString() );
     Q_ASSERT( m_pConsole != nullptr );
     m_pConsole->setFont( font );
     settings.endGroup();
 
-    settings.beginGroup( "ULayout" );
+    settings.beginGroup( QStringLiteral( "ULayout" ));
     settings.endGroup();
 
     Q_ASSERT( m_pSettingsDialog != nullptr );
     Settings_t *p = m_pSettingsDialog->serialPortSettings();
-    settings.beginGroup( "SerialPort" );
-    p->name = settings.value( "portName", "ttyUSB0" ).toString();
-    p->baudRate = settings.value( "baudRate", 115200 ).toUInt();
-    p->stringBaudRate = settings.value( "baudRate", 115200 ).toString();
-    p->stringDataBits = settings.value( "dataBits", 8 ).toString();
-    p->stringParity = settings.value( "parity", "None" ).toString();
-    p->stringStopBits = settings.value( "stopBits", 1 ).toString();
-    p->stringFlowControl = settings.value( "flowControl", "None" ).toString();
+    settings.beginGroup( QStringLiteral( "SerialPort" ));
+    p->name = settings.value( QStringLiteral( "portName" ), QStringLiteral( "ttyUSB0" )).toString();
+    p->baudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toUInt();
+    p->stringBaudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toString();
+    p->stringDataBits = settings.value( QStringLiteral( "dataBits" ), 8 ).toString();
+    p->stringParity = settings.value( QStringLiteral( "parity" ), QStringLiteral( "NoParity" )).toString();
+    p->stringStopBits = settings.value( QStringLiteral( "stopBits" ), 1 ).toString();
+    p->stringFlowControl = settings.value( QStringLiteral( "flowControl" ), QStringLiteral( "None" )).toString();
     settings.endGroup();
 }
 
@@ -161,29 +173,29 @@ void MainWindow::writeSettings() const
 {
     QSettings settings( SETTINGS_FILE, QSettings::IniFormat );
 
-    settings.beginGroup( "Geometry" );
-    settings.setValue( "pos", pos() );
-    settings.setValue( "size", size() );
+    settings.beginGroup( QStringLiteral( "Geometry" ));
+    settings.setValue( QStringLiteral( "pos" ), pos() );
+    settings.setValue( QStringLiteral( "size" ), size() );
     settings.endGroup();
 
-    settings.beginGroup( "Font" );
+    settings.beginGroup( QStringLiteral( "Font" ));
     Q_ASSERT( m_pConsole != nullptr );
-    settings.setValue( "font", m_pConsole->font().toString() );
+    settings.setValue( QStringLiteral( "font" ), m_pConsole->font().toString() );
     settings.endGroup();
 
-    settings.beginGroup( "ULayot" );
+    settings.beginGroup( QStringLiteral( "ULayot" ));
     settings.endGroup();
 
     Q_ASSERT( m_pSettingsDialog != nullptr );
     Settings p = m_pSettingsDialog->settings();
-    settings.beginGroup( "SerialPort" );
+    settings.beginGroup( QStringLiteral( "SerialPort" ));
     if ( p.isChanged ) {
-        settings.setValue( "PortName", p.name );
-        settings.setValue( "baudRate", p.baudRate );
-        settings.setValue( "dataBits", p.stringDataBits );
-        settings.setValue( "parity", p.stringParity );
-        settings.setValue( "stopBits", p.stringStopBits );
-        settings.setValue( "flowControl", p.stringFlowControl );
+        settings.setValue( QStringLiteral( "PortName" ), p.name );
+        settings.setValue( QStringLiteral( "baudRate" ), p.baudRate );
+        settings.setValue( QStringLiteral( "dataBits" ), p.stringDataBits );
+        settings.setValue( QStringLiteral( "parity" ), p.stringParity );
+        settings.setValue( QStringLiteral( "stopBits" ), p.stringStopBits );
+        settings.setValue( QStringLiteral( "flowControl" ), p.stringFlowControl );
     }
     settings.endGroup();
 }
@@ -255,8 +267,8 @@ void MainWindow::connectRTC()
         m_pThread->wait( WAIT_FOR_STREAM );
 
         showStatusMessage( QObject::tr( "Connection error" ));
-        QMessageBox::critical(this, "Connection error", "Connect the RTC device to the correct serial port, "
-                                                        "or set the serial port name in the port settings.",
+        QMessageBox::critical(this, QObject::tr( "Connection error" ), QObject::tr( "Connect the RTC device to the correct serial port, "
+                                                                                    "or set the serial port name in the port settings." ),
                               QMessageBox::Ok);
     }
 }
@@ -312,7 +324,7 @@ void MainWindow::showStatusMessage(const QString &message) const
 void MainWindow::tickClock()
 {
     Q_ASSERT( clock != nullptr );
-    clock->display( QDateTime::currentDateTime().toString("hh:mm:ss") );
+    clock->display( QDateTime::currentDateTime().toString( QObject::tr( "hh:mm:ss") ));
 }
 
 //!

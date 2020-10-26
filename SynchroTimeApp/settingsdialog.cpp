@@ -8,7 +8,11 @@
 //  Project SynchroTime: Command-line client for adjust the exact time and
 //  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
-
+//!
+//! \file settingsdialog.cpp
+//!
+//! \brief The file contains the definition of the constructor and methods of the SettingsDialog class.
+//!
 //------------------------------------------------------------------------------
 // Includes
 //------------------------------------------------------------------------------
@@ -30,14 +34,18 @@
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
+QT_USE_NAMESPACE
+
+static const char blankString[] = QT_TRANSLATE_NOOP( "SettingsDialog", "N/A" );
 
 //------------------------------------------------------------------------------
 // Function Prototypes
 //------------------------------------------------------------------------------
-QT_USE_NAMESPACE
 
-static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
-
+//!
+//! \brief SettingsDialog::SettingsDialog
+//! \param parent
+//!
 SettingsDialog::SettingsDialog( QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::SettingsDialog )
@@ -64,11 +72,18 @@ SettingsDialog::SettingsDialog( QWidget *parent ) :
     updateSettings();
 }
 
+//!
+//! \brief SettingsDialog::~SettingsDialog
+//!
 SettingsDialog::~SettingsDialog()
 {
     delete ui;
 }
 
+//!
+//! \brief SettingsDialog::settings
+//! \return
+//!
 Settings_t SettingsDialog::settings() const
 {
     return currentSettings;
@@ -116,12 +131,19 @@ void SettingsDialog::fillSettingsUi()
     }
 }
 
+//!
+//! \brief SettingsDialog::show
+//!
 void SettingsDialog::show()
 {
     fillPortsInfo();
     QWidget::show();
 }
 
+//!
+//! \brief SettingsDialog::showPortInfo
+//! \param idx
+//!
 void SettingsDialog::showPortInfo(int idx)
 {
     if (idx == -1)
@@ -136,6 +158,9 @@ void SettingsDialog::showPortInfo(int idx)
     ui->pidLabel->setText( QObject::tr( "Product Identifier: %1" ).arg( list.count() > 6 ? list.at(6) : tr(blankString) ));
 }
 
+//!
+//! \brief SettingsDialog::apply
+//!
 void SettingsDialog::apply()
 {
     updateSettings();
@@ -143,12 +168,18 @@ void SettingsDialog::apply()
     QWidget::hide();
 }
 
+//!
+//! \brief SettingsDialog::cansel
+//!
 void SettingsDialog::cansel()
 {
     fillSettingsUi();
     QWidget::hide();
 }
 
+//!
+//! \brief SettingsDialog::reset
+//!
 void SettingsDialog::reset()
 {
     ui->baudRateBox->setCurrentIndex(3);
@@ -158,6 +189,10 @@ void SettingsDialog::reset()
     ui->flowControlBox->setCurrentIndex(0);
 }
 
+//!
+//! \brief SettingsDialog::checkCustomBaudRatePolicy
+//! \param idx
+//!
 void SettingsDialog::checkCustomBaudRatePolicy(int idx)
 {
     bool isCustomBaudRate = !ui->baudRateBox->itemData(idx).isValid();
@@ -169,6 +204,10 @@ void SettingsDialog::checkCustomBaudRatePolicy(int idx)
     }
 }
 
+//!
+//! \brief SettingsDialog::checkCustomDevicePathPolicy
+//! \param idx
+//!
 void SettingsDialog::checkCustomDevicePathPolicy(int idx)
 {
     bool isCustomPath = !ui->serialPortInfoListBox->itemData(idx).isValid();
@@ -177,6 +216,9 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
         ui->serialPortInfoListBox->clearEditText();
 }
 
+//!
+//! \brief SettingsDialog::fillPortsParameters
+//!
 void SettingsDialog::fillPortsParameters()
 {
     ui->baudRateBox->addItem( QStringLiteral( "9600" ), QSerialPort::Baud9600 );
@@ -191,11 +233,11 @@ void SettingsDialog::fillPortsParameters()
     ui->dataBitsBox->addItem( QStringLiteral( "8" ), QSerialPort::Data8 );
     ui->dataBitsBox->setCurrentIndex(3);
 
-    ui->parityBox->addItem( QObject::tr( "NoParity" ), QSerialPort::NoParity );
-    ui->parityBox->addItem( QObject::tr( "EvenParity" ), QSerialPort::EvenParity );
-    ui->parityBox->addItem( QObject::tr( "OddParity" ), QSerialPort::OddParity );
-    ui->parityBox->addItem( QObject::tr( "MarkParity" ), QSerialPort::MarkParity );
-    ui->parityBox->addItem( QObject::tr( "SpaceParity" ), QSerialPort::SpaceParity );
+    ui->parityBox->addItem( QStringLiteral( "NoParity" ), QSerialPort::NoParity );
+    ui->parityBox->addItem( QStringLiteral( "EvenParity" ), QSerialPort::EvenParity );
+    ui->parityBox->addItem( QStringLiteral( "OddParity" ), QSerialPort::OddParity );
+    ui->parityBox->addItem( QStringLiteral( "MarkParity" ), QSerialPort::MarkParity );
+    ui->parityBox->addItem( QStringLiteral( "SpaceParity" ), QSerialPort::SpaceParity );
 
     ui->stopBitsBox->addItem( QStringLiteral( "1" ), QSerialPort::OneStop );
 #ifdef Q_OS_WIN
@@ -203,11 +245,14 @@ void SettingsDialog::fillPortsParameters()
 #endif
     ui->stopBitsBox->addItem( QStringLiteral( "2" ), QSerialPort::TwoStop );
 
-    ui->flowControlBox->addItem( QObject::tr( "None" ), QSerialPort::NoFlowControl );
-    ui->flowControlBox->addItem( QObject::tr( "RTS/CTS" ), QSerialPort::HardwareControl );
-    ui->flowControlBox->addItem( QObject::tr( "XON/XOFF" ), QSerialPort::SoftwareControl );
+    ui->flowControlBox->addItem( QStringLiteral( "None" ), QSerialPort::NoFlowControl );
+    ui->flowControlBox->addItem( QStringLiteral( "RTS/CTS" ), QSerialPort::HardwareControl );
+    ui->flowControlBox->addItem( QStringLiteral( "XON/XOFF" ), QSerialPort::SoftwareControl );
 }
 
+//!
+//! \brief SettingsDialog::fillPortsInfo
+//!
 void SettingsDialog::fillPortsInfo()
 {
     ui->serialPortInfoListBox->clear();
@@ -230,9 +275,12 @@ void SettingsDialog::fillPortsInfo()
         ui->serialPortInfoListBox->addItem(list.first(), list);
     }
 
-    ui->serialPortInfoListBox->addItem(tr("Custom"));
+    ui->serialPortInfoListBox->addItem( QObject::tr( "Custom" ));
 }
 
+//!
+//! \brief SettingsDialog::updateSettings
+//!
 void SettingsDialog::updateSettings()
 {
     currentSettings.name = ui->serialPortInfoListBox->currentText();

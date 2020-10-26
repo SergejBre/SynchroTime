@@ -8,27 +8,37 @@
 //  Project SynchroTime: Command-line client for adjust the exact time and
 //  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
-
+//!
+//! \file console.cpp
+//!
+//! \brief The file contains the definition of the constructor and methods of the Console class.
+//!
 //------------------------------------------------------------------------------
 // Includes
 //------------------------------------------------------------------------------
 #include "console.h"
 #include <QScrollBar>
 
-Console::Console(QWidget *parent)
-    : QPlainTextEdit(parent)
-    , localEchoEnabled(false)
+//!
+//! \brief Console::Console
+//! \param parent
+//!
+Console::Console( QWidget *parent )
+    : QPlainTextEdit( parent )
+    , localEchoEnabled( false )
 {
-    document()->setMaximumBlockCount(100);
+    document()->setMaximumBlockCount( 100 );
     QPalette p = palette();
-    p.setColor(QPalette::Base, Qt::black);
-    p.setColor(QPalette::Text, Qt::green);
-//    p.setColor(QPalette::Text, 0xAAAAAA);
-    setPalette(p);
+    p.setColor( QPalette::Base, Qt::black );
+    p.setColor( QPalette::Text, Qt::green );
+    setPalette( p );
 
     buffer = new QByteArray();
 }
 
+//!
+//! \brief Console::~Console
+//!
 Console::~Console()
 {
     if ( buffer != nullptr )
@@ -38,22 +48,34 @@ Console::~Console()
     }
 }
 
-void Console::putData(const QByteArray &data)
+//!
+//! \brief Console::putData
+//! \param data
+//!
+void Console::putData( const QByteArray &data )
 {
-    insertPlainText(QString(data));
+    insertPlainText( QString( data ));
 
     QScrollBar *bar = verticalScrollBar();
-    bar->setValue(bar->maximum());
+    bar->setValue( bar->maximum() );
 }
 
-void Console::setLocalEchoEnabled(bool set)
+//!
+//! \brief Console::setLocalEchoEnabled
+//! \param set
+//!
+void Console::setLocalEchoEnabled( bool set )
 {
     localEchoEnabled = set;
 }
 
-void Console::keyPressEvent(QKeyEvent *e)
+//!
+//! \brief Console::keyPressEvent
+//! \param e
+//!
+void Console::keyPressEvent( QKeyEvent *e )
 {
-    switch (e->key()) {
+    switch ( e->key() ) {
     case Qt::Key_Backspace:
     case Qt::Key_Left:
     case Qt::Key_Right:
@@ -70,30 +92,42 @@ void Console::keyPressEvent(QKeyEvent *e)
         break;
     case Qt::Key_Enter:
     case Qt::Key_Return:
-        if (localEchoEnabled)
-            QPlainTextEdit::keyPressEvent(e);
+        if ( localEchoEnabled )
+            QPlainTextEdit::keyPressEvent( e );
         emit getData( *buffer );
         buffer->clear();
         break;
     default:
-        if (localEchoEnabled)
-            QPlainTextEdit::keyPressEvent(e);
+        if ( localEchoEnabled )
+            QPlainTextEdit::keyPressEvent( e );
         buffer->append( e->text().toLocal8Bit() );
     }
 }
 
-void Console::mousePressEvent(QMouseEvent *e)
+//!
+//! \brief Console::mousePressEvent
+//! \param e
+//!
+void Console::mousePressEvent( QMouseEvent *e )
 {
-    Q_UNUSED(e)
+    Q_UNUSED( e )
     setFocus();
 }
 
-void Console::mouseDoubleClickEvent(QMouseEvent *e)
+//!
+//! \brief Console::mouseDoubleClickEvent
+//! \param e
+//!
+void Console::mouseDoubleClickEvent( QMouseEvent *e )
 {
-    Q_UNUSED(e)
+    Q_UNUSED( e )
 }
 
-void Console::contextMenuEvent(QContextMenuEvent *e)
+//!
+//! \brief Console::contextMenuEvent
+//! \param e
+//!
+void Console::contextMenuEvent( QContextMenuEvent *e )
 {
-    Q_UNUSED(e)
+    Q_UNUSED( e )
 }

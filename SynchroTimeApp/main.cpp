@@ -69,12 +69,12 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    app.setApplicationName( "SynchroTime" );
-    app.setApplicationVersion( "v.1.0.0, built on: " + QString(__DATE__).simplified() + " " + __TIME__ );
-    app.setWindowIcon( QIcon( "../images/icon.png") );
+    app.setApplicationName( QStringLiteral( "SynchroTime" ));
+    app.setApplicationVersion( QStringLiteral( "v.1.0.0, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
+    app.setWindowIcon( QIcon( QStringLiteral( "../images/icon.png") ));
 
 #ifndef QT_NO_TRANSLATION
-    QString translatorFileName = QLatin1String( "qt_" );
+    QString translatorFileName = QLatin1String( QStringLiteral( "qt_" ));
     translatorFileName += QLocale::system().name();
     QTranslator *translator = new QTranslator( &app );
     if ( translator->load( translatorFileName, QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ))
