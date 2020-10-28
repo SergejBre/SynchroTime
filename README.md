@@ -7,7 +7,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 ## About the app
 
-* CLI and GUI applications are used for fine adjustment and calibration of the DS3231 RTC module.
+* CLI and GUI applications are used for fine adjust and calibrating the DS3231 RTC module.
 
 * The application allows you to:
   * Synchronize the time of the RTC DS3231 with your computer time;
@@ -125,7 +125,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Request for SetRegister completed successfully. 
 ```
 
-## Using the CLI app
+## Using the GUI app
 
 All functionality is similar to the CLI application (see figure below). As an extra, there is the option of selecting the numerous serial port settings.
 
@@ -171,7 +171,7 @@ $ ntpq -p
 
 * Windows OS has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. Therefore, it is necessary to adjust the computer time manually before setting up and calibrating, or using the subtleties of the settings in the system registry.
 
-## Installing the app
+## Installing the CLI and GUI apps
 
 * According to the working platform, download the appropriate archive with the command-line application from the [releases page](https://github.com/SergejBre/SynchroTime/releases).
 
@@ -180,7 +180,7 @@ $ ntpq -p
  $ tar -x -j -f SynchroTime_x64_linux_1.0.0-beta.tar.bz2
 ``` 
 
-* Run the application according to the instructions in the section **Using the app**.
+* Run the application according to the instructions in the section **Using the CLI or GUI app**.
 ```
  $ cd SynchroTime
 
