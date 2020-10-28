@@ -90,8 +90,8 @@ private:
     enum class StatusMessages: quint8;
     // The connection function.
     void connectToRTC();
-    // The function realizing protocol with RTC.
-    void setProtocol( QByteArray &protocolData, Request request, quint8 size = 0, quint8 const* data = nullptr );
+    // The function send a request to the RTC.
+    QByteArray sendRequest( QByteArray &protocolData, Request request, quint8 size = 0, const quint8 *data = nullptr );
     // Information request.
     void informationRequest();
     // Adjustment request.
