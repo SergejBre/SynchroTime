@@ -1,4 +1,4 @@
-# SynchroTime - Command-line client for adjust the exact time and calibrating the RTC DS3231 module
+# SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 module
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 
 ## Motivation
@@ -7,7 +7,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 ## About the app
 
-* Command-line application is used for fine tuning and calibration of the RTC DS3231 module.
+* CLI and GUI applications are used for fine adjustment and calibration of the DS3231 RTC module.
 
 * The application allows you to:
   * Synchronize the time of the RTC DS3231 with your computer time;
@@ -25,7 +25,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 ![synchroTime -h](./images/consoleApp_About.png)
 
-## Using the app
+## Using the CLI app
 
 1. First, you need to load a sketch into Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory and connect the RTC DS3231 module according to the circuit shown in the specification.
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be /dev/ttyUSBx, under Windows - COMx).
@@ -124,6 +124,12 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
  Request for SetRegister completed successfully. 
 ```
+
+## Using the CLI app
+
+All functionality is similar to the CLI application (see figure below). As an extra, there is the option of selecting the numerous serial port settings.
+
+![PROJECT_IMAGE](./images/guiApp_About2.png)
 
 ## Specification
 
