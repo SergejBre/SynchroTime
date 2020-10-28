@@ -85,12 +85,11 @@
    <addaction name="separator"/>
    <addaction name="actionInformation"/>
    <addaction name="actionAdjustment"/>
-   <addaction name="actionCalibration"/>
-   <addaction name="actionReset"/>
    <addaction name="separator"/>
    <addaction name="actionPort_Setting"/>
    <addaction name="separator"/>
    <addaction name="actionClear"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConnect">
