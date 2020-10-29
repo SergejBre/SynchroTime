@@ -35,6 +35,7 @@
 #define STARTBYTE '@';  //!< Start byte of the protocol of communication with the RTC device.
 #define DEVICE_ID 0x00; //!< ID of the RTC device.
 #define REBOOT_WAIT 1500 //!< Interval for a time-out in milliseconds
+#define TIME_WAIT 50 //!< Interval for a time-out in milliseconds
 
 //------------------------------------------------------------------------------
 // Function Prototypes
@@ -85,7 +86,6 @@ RTC::RTC( const QString & portName, QObject *parent )
 RTC::RTC( const Settings_t &portSettings, QObject *parent )
     : QObject( parent ),
       m_pSerialPort( nullptr ),
-      m_isConnected( false ),
       m_pTimerCheckConnection( nullptr )
 {
     // Initialization of the serial interface.
@@ -109,8 +109,8 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
     QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
                       this, &RTC::handleError );
 
-    // Connect the serial port.
-    connectToRTC();
+    // Open the serial port.
+    m_isConnected = openSerialPort();
     m_pTimerCheckConnection->start();
 }
 
@@ -212,6 +212,7 @@ void RTC::handleError( QSerialPort::SerialPortError error )
     Q_ASSERT( m_pSerialPort != nullptr );
     if ( error == QSerialPort::ResourceError ) {
         emit portError( m_pSerialPort->errorString() );
+        m_pSerialPort->blockSignals( true );
     }
     else if ( error != QSerialPort::NoError )
     {
@@ -267,6 +268,28 @@ void RTC::handleError( QSerialPort::SerialPortError error )
 }
 
 //!
+//! \brief RTC::openSerialPort
+//! \retval true
+//! \retval false
+//!
+bool RTC::openSerialPort()
+{
+    Q_ASSERT( m_pSerialPort != nullptr );
+    if ( m_pSerialPort->open( QSerialPort::ReadWrite ) )
+    {
+        m_pSerialPort->setBreakEnabled( false );
+        m_pSerialPort->setDataTerminalReady( true );
+        this->thread()->msleep( REBOOT_WAIT );
+        return true;
+    }
+    else
+    {
+        qDebug() << QStringLiteral( "Failed to open the serial interface" );
+    }
+    return false;
+}
+
+//!
 //! \brief RTC::connectToRTC
 //!
 void RTC::connectToRTC()
@@ -277,7 +300,7 @@ void RTC::connectToRTC()
         m_pSerialPort->setBreakEnabled( false );
         m_pSerialPort->setDataTerminalReady( true );
         this->thread()->msleep( REBOOT_WAIT );
-        // Make sure that the RTC device is connected to the serial port.
+        // Make sure the RTC device is actually connected to the serial port.
         m_isConnected = statusRequest();
 
         if ( m_isConnected )
@@ -332,14 +355,14 @@ QByteArray RTC::sendRequest( QByteArray &protocolData, Request request, quint8 s
 //    protocolData[size + 3] = crc;
 
     Q_ASSERT( m_pSerialPort->isOpen() );
-    // Send data to the serial port and wait up to 100 ms until the write is done.
+    // Send data to the serial port and wait up to 50 ms until the write is done.
     m_pSerialPort->write( protocolData );
-    m_pSerialPort->waitForBytesWritten( 100 );
+    m_pSerialPort->waitForBytesWritten( TIME_WAIT );
 
     // Sleep 50 ms, waiting for the microcontroller to process the data and respond.
-    this->thread()->msleep( 50 );
+    this->thread()->msleep( TIME_WAIT );
     // Reading data from RTC.
-    m_pSerialPort->waitForReadyRead( 50 );
+    m_pSerialPort->waitForReadyRead( TIME_WAIT );
     return m_pSerialPort->readAll();
 }
 
@@ -457,12 +480,13 @@ bool RTC::statusRequest()
 
     if ( receivedData.size() == 1 && receivedData.at(0) == 0x00 )
     {
-        qDebug() << QStringLiteral( "status request ok" );
         return true;
     }
     else
     {
-        qDebug() << QStringLiteral( "status request failed" );
+        qDebug() << QStringLiteral( "Status Request failed" );
+        emit portError( QStringLiteral( "Another device is connected to the RTC serial port! " ) + m_pSerialPort->errorString() );
+        m_pSerialPort->blockSignals( true );
     }
     //! \todo
 

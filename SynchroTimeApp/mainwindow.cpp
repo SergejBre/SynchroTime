@@ -220,8 +220,7 @@ void MainWindow::about()
 //!
 void MainWindow::handleError( const QString &error )
 {
-    //! \todo
-    QObject::disconnect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
+//    QObject::disconnect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
     disconnectRTC();
     QMessageBox::critical( this, QObject::tr( "Serial Port Error" ), error, QMessageBox::Ok );
 }
@@ -267,8 +266,9 @@ void MainWindow::connectRTC()
         m_pThread->wait( WAIT_FOR_STREAM );
 
         showStatusMessage( QObject::tr( "Connection error" ));
-        QMessageBox::critical(this, QObject::tr( "Connection error" ), QObject::tr( "Connect the RTC device to the correct serial port, "
-                                                                                    "or set the serial port name in the port settings." ),
+        QMessageBox::critical(this, QObject::tr( "Connection error" ),
+                              QObject::tr( "Connect the RTC device to the correct serial port, "
+                                           "or set the serial port name in the port settings." ),
                               QMessageBox::Ok);
     }
 }

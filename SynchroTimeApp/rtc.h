@@ -88,6 +88,8 @@ private slots:
 
 private:
     enum class StatusMessages: quint8;
+    // Open the serial port
+    bool openSerialPort();
     // The connection function.
     void connectToRTC();
     // The function send a request to the RTC.
