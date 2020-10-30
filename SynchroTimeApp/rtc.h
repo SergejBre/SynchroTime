@@ -58,7 +58,7 @@ class RTC : public QObject
     Q_OBJECT
 
 public:
-    explicit RTC( const QString & portName, QObject *parent = 0 );
+    explicit RTC( const QString &portName, QObject *parent = 0 );
     explicit RTC( const Settings_t &portSettings, QObject *parent = 0 );
     ~RTC();
 
@@ -89,11 +89,11 @@ private slots:
 private:
     enum class StatusMessages: quint8;
     // Open the serial port
-    bool openSerialPort();
+    bool openSerialPort() const;
     // The connection function.
     void connectToRTC();
     // The function send a request to the RTC.
-    QByteArray sendRequest( QByteArray &protocolData, Request request, quint8 size = 0, const quint8 *data = nullptr );
+    QByteArray sendRequest( Request request, quint8 size = 0, const quint8 *const data = nullptr ) const;
     // Information request.
     void informationRequest();
     // Adjustment request.
