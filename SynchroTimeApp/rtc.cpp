@@ -587,25 +587,49 @@ void RTC::setRegisterRequest( const float newValue )
 //!
 bool RTC::statusRequest()
 {
-    bool status = false;
+    bool result = false;
     // Send a request to the RTC device
     QByteArray receivedData = sendRequest( Request::STATUS );
 
     QString output;
     QTextStream out( &output );
     // Check of the received response to the request
-    if ( receivedData.size() > 0 && receivedData.at(0) == 0x00 )
+    if ( receivedData.size() == 1 )
     {
-        status =  true;
+        StatusMessages status = static_cast<StatusMessages>( receivedData.at(0) );
+        switch ( status ) {
+        case StatusMessages::STATUS_SUCCESS:
+            result =  true;
+            break;
+        case StatusMessages::STATUS_ERROR:
+            out << QStringLiteral( "Processing the data failed" );
+            break;
+        case StatusMessages::STATUS_INVALID_PARAMETER:
+            out << QStringLiteral( "Received parameter(s) are invalid" );
+            break;
+        case StatusMessages::STATUS_INPUT_DATA_TOLONG:
+            out << QStringLiteral( "Input data too long" );
+            break;
+        case StatusMessages::STATUS_NOT_SUPPORTED:
+            out << QStringLiteral( "The state of the device is undefined" );
+            break;
+        case StatusMessages::STATUS_UNKNOWN_ERROR:
+            out << QStringLiteral( "Unexpected error" );
+            break;
+        case StatusMessages::STATUS_DISCONNECTION:
+            out << QStringLiteral( "No confirmation of connection received" );
+            break;
+        default:
+            out << receivedData.toHex() << endl;
+        }
     }
     else
     {
-        out << receivedData << endl;
-        out << QStringLiteral( "Status Request failed" );
-        emit getData( output.toLocal8Bit() );
+        out << QStringLiteral( "Status Request failed" ) << endl;
         emit portError( QStringLiteral( "Another device is connected to the RTC serial port! " ) + m_pSerialPort->errorString() );
         m_pSerialPort->blockSignals( true );
     }
-    return status;
+    if ( !result ) emit getData( output.toLocal8Bit() );
+    return result;
 }
 

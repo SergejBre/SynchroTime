@@ -27,12 +27,10 @@
 // Enums
 //------------------------------------------------------------------------------
 //!
-//! \enum Request
-//!
-//! \brief The Request enum
+//! \enum The Request enum
 //!
 //! \details
-//! Requests available to us sent by RTC. Sent as the third byte in the protocol.
+//! Requests to be sent to the RTC device. Sent as the second byte in the protocol.
 //!
 enum class Request : quint8
 {
@@ -44,6 +42,22 @@ enum class Request : quint8
     STATUS = 't'  //!< Status request.
 };
 
+//!
+//! \enum The StatusMessages enum
+//!
+//! \details
+//! Contains all possible error codes in response to a status request.
+enum class StatusMessages : quint8
+{
+    STATUS_SUCCESS = 0x00,           //!< Data processing has been successful.
+    STATUS_ERROR = 0x01,             //!< Processing the data failed.
+    STATUS_INVALID_PARAMETER = 0x02, //!< Received parameter(s) are invalid.
+    STATUS_INPUT_DATA_TOLONG = 0x03, //!< Input data too long.
+    STATUS_NOT_SUPPORTED = 0x04,     //!< The state of the device is undefined.
+    STATUS_UNKNOWN_ERROR = 0x05,     //!< Unexpected error.
+    STATUS_DISCONNECTION = 0x06      //!< No confirmation of connection received.
+};
+
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
@@ -51,7 +65,7 @@ enum class Request : quint8
 //!
 //! \class RTC
 //!
-//! \brief The RTC class
+//! \details The RTC class
 //!
 class RTC : public QObject
 {
@@ -87,7 +101,6 @@ private slots:
     void handleError( QSerialPort::SerialPortError error );
 
 private:
-    enum class StatusMessages: quint8;
     // Open the serial port
     bool openSerialPort() const;
     // The connection function.
@@ -107,21 +120,8 @@ private:
     // Status request.
     bool statusRequest();
 
-    // RTC status messages.
-    enum class StatusMessages : quint8
-    {
-        STATUS_SUCCESS = 0x00,           //!< Data processing has been successful.
-        STATUS_ERROR = 0x01,             //!< Processing the data failed.
-        STATUS_INVALID_PARAMETER = 0x02, //!< Received parameter(s) are invalid.
-        STATUS_INPUT_DATA_TOLONG = 0x03, //!< Input data too long.
-        STATUS_NOT_SUPPORTED = 0x04,     //!< DEVICE STATUS UNKNOWN.
-        STATUS_UNKNOWN_ERROR = 0x05,     //!< Unexpected error.
-        STATUS_DISCONNECTION = 0x06      //!< No confirmation of connection
-    };
-
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
-
     QTimer *m_pTimerCheckConnection;
 };
 
