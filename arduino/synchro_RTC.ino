@@ -25,14 +25,14 @@ The settings are:
 #include <Wire.h>
 #include "RTClib.h"
 
-#define TIME_ZONE 2           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
+#define TIME_ZONE 1           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
 #define OFFSET_REGISTER 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
-#define MIN_TIME_SPAN 10000
-typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG } task_t;
-typedef struct {
+#define MIN_TIME_SPAN 200000
+typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS } task_t;
+typedef struct time_s {
   uint32_t utc;
   uint16_t milliSecs;
 } time_t;
@@ -71,17 +71,18 @@ void setup () {
   }
 
   if ( rtc.lostPower() ) {
-    Serial.println( F("RTC lost power, lets set the time!") );
+//    Serial.println( F("RTC lost power, lets set the time!") );
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
     const uint32_t newtime = DateTime( F(__DATE__), F(__TIME__) ).unixtime();
+    // offset value from -128 to +127, default is 0
+    uint8_t offset_val = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
     adjustTime( newtime - TIME_ZONE * 3600 );
-    /*
-        // offset value from -128 to +127, default is 0
-        int8_t offset_val = (int8_t) i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
-        writeToOffsetReg( offset_val );
-        Serial.print( F( "Set Offset Reg: " ) );
-        Serial.println( offset_val );
-    */
+
+    if ( offset_val != 0xFF ) {
+        writeToOffsetReg( int8_t( offset_val ) );
+//        Serial.print( F( "Set Offset Reg: " ) );
+//        Serial.println( offset_val, DEC );
+    }
   }
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
   attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
@@ -96,7 +97,7 @@ void oneHz( void ) {
 void loop () {
   task_t task = TASK_IDLE;
   bool ok = false;
-  uint8_t set = 0;
+  uint8_t set = 0U;
   uint8_t numberOfBytes = 0U;
   float drift_in_ppm = 0;
   time_t t;
@@ -129,10 +130,13 @@ void loop () {
         case 's':                     // set offset reg. request
           task = TASK_SETREG;
           break;
+        case 't':                     // status request
+          task = TASK_STATUS;
+          break;
         default:                      // unknown request
           task = TASK_IDLE;
           Serial.print( F("unknown request ") );
-          Serial.println( thisChar );
+          Serial.print( thisChar );
       }
 
       if ( Serial.available() ) {
@@ -201,6 +205,11 @@ void loop () {
     case TASK_SETREG:               // set register
       ok = adjustTimeDrift( drift_in_ppm );
       byteBuffer[set] = ok;
+      set++;
+      task = TASK_IDLE;
+      break;
+    case TASK_STATUS:               // get status
+      byteBuffer[set] = 0x00;
       set++;
       task = TASK_IDLE;
       break;
@@ -350,7 +359,7 @@ bool i2c_eeprom_write_byte( int deviceAddress, unsigned int eeAddress, uint8_t d
    WARNING: address is a page address, 6-bit end will wrap around
    also, data can be maximum of about 30 bytes, because the Wire library has a buffer of 32 bytes
 */
-bool i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, uint8_t* const data, uint8_t length ) {
+bool i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, const uint8_t* data, uint8_t length ) {
   Wire.beginTransmission( deviceAddress );
   Wire.write( (int)( eeAddressPage >> 8 ) ); // MSB
   Wire.write( (int)( eeAddressPage & 0xFF ) ); // LSB
