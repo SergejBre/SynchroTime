@@ -16,6 +16,7 @@
 #include <QLoggingCategory>
 #include <QDebug>
 #include <QDateTime>
+#include <QElapsedTimer>
 #include "helper.h"
 
 //------------------------------------------------------------------------------
@@ -276,7 +277,7 @@ int handleAdjustmentRequest( Session * const session )
     memcpy( requestForAdjustment.data() + 6, &milliSecs, sizeof(milliSecs) );
 
     milliSecs = 1000 - milliSecs;
-    QTime time;
+    QElapsedTimer time;
     time.start();
     while ( time.elapsed() < milliSecs );
 
@@ -343,7 +344,7 @@ int handleCalibrationRequest( Session * const session )
     memcpy( requestForCalibration.data() + 6, &ms, sizeof(ms) );
 
     milliSecs = 1000 - milliSecs;
-    QTime time;
+    QElapsedTimer time;
     time.start();
     while ( time.elapsed() < milliSecs );
 

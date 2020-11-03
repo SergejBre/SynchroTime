@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QThread>
 #include <QDateTime>
+#include <QElapsedTimer>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -444,7 +445,7 @@ void RTC::adjustmentRequest()
     memcpy( sentData + 4, &milliSecs, sizeof(milliSecs) );
 
     milliSecs = 1000 - milliSecs;
-    QTime time;
+    QElapsedTimer time;
     time.start();
     while ( time.elapsed() < milliSecs );
 
@@ -488,7 +489,7 @@ void RTC::calibrationRequest()
     memcpy( sentData + 4, &ms, sizeof( ms ) );
 
     milliSecs = 1000 - milliSecs;
-    QTime time;
+    QElapsedTimer time;
     time.start();
     while ( time.elapsed() < milliSecs );
 

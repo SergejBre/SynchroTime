@@ -16,7 +16,8 @@
 //#include <QCoreApplication>
 #include <QLoggingCategory>
 #include <QDebug>
-#include <QTime>
+//#include <QTime>
+#include <QElapsedTimer>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -463,7 +464,7 @@ bool InterfaceSP::readTheData( const quint32 timewait, const quint32 bytes )
 
     if ( this->serialPort->isOpen() && this->serialPort->isReadable() )
     {
-        QTime time;
+        QElapsedTimer time;
         time.start();
         wait = true;
         while ( wait )
@@ -648,7 +649,7 @@ bool InterfaceSP::openSocket( void )
     }
 
     // the timer is needed, since the microcontroller after the DTR (Data Terminal Ready) signal goes into reboot.
-    QTime time;
+    QElapsedTimer time;
     time.start();
     while ( time.elapsed() < REBOOT_WAIT );
 
