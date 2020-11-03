@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     app.setApplicationName( QStringLiteral( "SynchroTime" ));
-    app.setApplicationVersion( QStringLiteral( "v.1.0.0, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
+    app.setApplicationVersion( QStringLiteral( "v.1.1.0, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
     app.setWindowIcon( QIcon( QStringLiteral( "../images/icon.png") ));
 
 #ifndef QT_NO_TRANSLATION

@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
 
     app.setApplicationName( "SynchroTime" );
-    app.setApplicationVersion( "v.1.0.0, built on: " + QString(__DATE__).simplified() + " " + __TIME__ );
+    app.setApplicationVersion( "v.1.1.0, built on: " + QString(__DATE__).simplified() + " " + __TIME__ );
 
     Settings *settings = new Settings( &app );
 
