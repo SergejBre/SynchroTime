@@ -148,6 +148,28 @@ All functionality is similar to the CLI application (see figure below). As an ex
 * The suggested connection to the DS3231 module is according to the Circuit below.
 ![circuit](images/Steckplatine_DS3231.png)
 
+## Description of the request protocol
+
+The client is the computer. The client is always the first to send a request. Upon receipt of each message, the microprocessor must send back the appropriate response.
+
+Each request is as follows:
+```
+@ req <local time>, <value> [CRC]
+``` 
+where:
+
+`@` - mandatory start byte, sign for the beginning of the transfer (always equal to `0x40`),
+`req` - request from the set `{a, c, i, r, s, t}` (1 byte),
+`local time` - local computer time only for requests `a, c, i, s` (6 bytes),
+`value` - new value for the offset register only for request `s` (4 bytes),
+`CRC` - checksum (1 byte). The checksum is calculated as the sum of all bytes, starting from the first byte of the request and ending with the last byte of data,
+`a` - time adjustment request,
+`c` - calibrating request,
+`i` - information request,
+`s` - set offset register request,
+`r` - reset request,
+`t` - status request.
+
 ## Recommended System Requirements
 
 * For correct work your system time required to be synchronized with NTP. Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
