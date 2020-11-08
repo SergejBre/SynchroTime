@@ -55,7 +55,10 @@ RESOURCES += \
 
 # For Linux, MacOS
 linux|macx {
-    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
+    QTPLUGIN.platforms = qminimal qxcb
+    CONFIG -= import_plugins
+    CONFIG += static
+#    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
 }
 # For Win32 release
 win32 {

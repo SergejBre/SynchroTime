@@ -34,6 +34,11 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QLibraryInfo>
+#ifndef Q_OS_WIN
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
+#endif
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -70,8 +75,11 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     app.setApplicationName( QStringLiteral( "SynchroTime" ));
-    app.setApplicationVersion( QStringLiteral( "v.1.1.0, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
+    app.setApplicationVersion( QStringLiteral( "v1.1.2, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
     app.setWindowIcon( QIcon( QStringLiteral( "../images/icon.png") ));
+#ifdef Q_OS_WIN
+    app.addLibraryPath( QLibraryInfo::location( QLibraryInfo::LibrariesPath ));
+#endif
 
 #ifndef QT_NO_TRANSLATION
     QString translatorFileName = QLatin1String( QStringLiteral( "qt_" ));
