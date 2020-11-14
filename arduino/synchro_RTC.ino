@@ -109,7 +109,7 @@ void loop () {
     t.milliSecs = millis() - tickCounter;
     DateTime now = rtc.now();       // reading clock time
     t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
-
+    // command parser
     char thisChar = Serial.read();  // read the first byte of request
     if ( thisChar == '@' && Serial.available() ) {
       thisChar = Serial.read();     // read request for..
@@ -138,7 +138,7 @@ void loop () {
           Serial.print( F("unknown request ") );
           Serial.print( thisChar );
       }
-
+      // data parser
       if ( Serial.available() ) {
         numberOfBytes = Serial.readBytes( byteBuffer, 6 );
         if ( numberOfBytes > 5 ) {
@@ -162,7 +162,7 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_INFO:                 // information
-      memcpy( byteBuffer + set, &t, sizeof( t ) );  // write time
+      memcpy( byteBuffer, &t, sizeof( t ) );  // write time to buffer bytes
       set = sizeof( t );
       byteBuffer[set] = readFromOffsetReg();  // reading offset value
       set++;
@@ -181,7 +181,6 @@ void loop () {
       floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
       set += sizeof(drift_in_ppm);
       ok = adjustTimeDrift( drift_in_ppm );
-      ok = true;
       if ( ok ) {
         ok &= adjustTime( ref.utc ); // adjust time
         byteBuffer[set] = readFromOffsetReg();  // read new value from the offset register
