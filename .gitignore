@@ -78,6 +78,7 @@ build
 doc/Doxyfile
 doc/html
 doc/latex
+doc/gitstats
 lib
 moc
 plugins
