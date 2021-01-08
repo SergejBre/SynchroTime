@@ -150,12 +150,10 @@ All functionality is similar to the CLI application (see figure below). As an ex
 
 ## Description of the request protocol
 
-The client is the computer. The client is always the first to send a request. Upon receipt of each message, the microprocessor must send back the appropriate response.
+The computer is a client. The client is always the first to send a request. Upon receipt of each request, the microprocessor must send back the appropriate response.
 
-Each request is as follows:
-```
-@ req <local time>, <value> [CRC]
-``` 
+Each request is as follows: `<@ req> <local time> or <value> [CRC]`,
+ 
 where:
 
 * `@` - mandatory start byte, sign for the beginning of the transfer (always equal to `0x40`),
@@ -170,14 +168,14 @@ where:
 * `r` - reset request,
 * `t` - status request.
 
-| Request Name        |  ID  | Data           | Expected Response |
-|---------------------|------|----------------|-------------------|
-| Time adjustment     | `@a` | `<local time>` | yes               |
-| Calibrating         | `@c` | `<local time>` | yes               |
-| Information         | `@i` | `<local time>` | yes               |
-| Set offset Register | `@s` | `<value>`      | yes               |
-| Reset               | `@r` |     ---        | yes               |
-| Status              | `@s` |     ---        | yes               |
+| Request Name        |  ID  | Data           | Expected response on request              |
+|---------------------|------|----------------|-------------------------------------------|
+| Time adjustment     | `@a` | `<local time>` | `<successful/failed>`                     |
+| Calibrating         | `@c` | `<local time>` | `<old Val> <drift> <new Val> <succ/fail>` |
+| Information         | `@i` | `<local time>` | `<RTC time> <Val> <drift> <Last Set time>`|
+| Set offset Register | `@s` | `<value>`      | `<successful/failed>`                     |
+| Reset               | `@r` |     ---        | `<successful/failed>`                     |
+| Status              | `@t` |     ---        | `<successful/failed>`                     |
 
 ## Recommended System Requirements
 
