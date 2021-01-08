@@ -103,52 +103,49 @@ void loop () {
   time_t t;
   time_t ref = {0, 0};
 
-  if ( Serial.available() ) {       // if there is data available
+  if ( Serial.available() > 1 && Serial.read() == '@' ) {       // if there is data available
 
     while ( millis() - tickCounter > 998 );
     t.milliSecs = millis() - tickCounter;
     DateTime now = rtc.now();       // reading clock time
     t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
     // command parser
-    char thisChar = Serial.read();  // read the first byte of request
-    if ( thisChar == '@' && Serial.available() ) {
-      thisChar = Serial.read();     // read request for..
-      switch ( thisChar )
-      {
-        case 'a':                     // time adjustment request
-          task = TASK_ADJUST;
-          break;
-        case 'i':                     // information request
-          task = TASK_INFO;
-          break;
-        case 'c':                     // calibrating request
-          task = TASK_CALIBR;
-          break;
-        case 'r':                     // reset request
-          task = TASK_RESET;
-          break;
-        case 's':                     // set offset reg. request
-          task = TASK_SETREG;
-          break;
-        case 't':                     // status request
-          task = TASK_STATUS;
-          break;
-        default:                      // unknown request
-          task = TASK_IDLE;
-          Serial.print( F("unknown request ") );
-          Serial.print( thisChar );
+    char thisChar = Serial.read();  // read the byte of request
+    switch ( thisChar )
+    {
+      case 'a':                     // time adjustment request
+        task = TASK_ADJUST;
+        break;
+      case 'i':                     // information request
+        task = TASK_INFO;
+        break;
+      case 'c':                     // calibrating request
+        task = TASK_CALIBR;
+        break;
+      case 'r':                     // reset request
+        task = TASK_RESET;
+        break;
+      case 's':                     // set offset reg. request
+        task = TASK_SETREG;
+        break;
+      case 't':                     // status request
+        task = TASK_STATUS;
+        break;
+      default:                      // unknown request
+        task = TASK_IDLE;
+        Serial.print( F("unknown request ") );
+        Serial.print( thisChar );
+    }
+    // data parser
+    if ( Serial.available() > 3 ) {
+      numberOfBytes = Serial.readBytes( byteBuffer, 6 );
+      if ( numberOfBytes > 5 ) {
+        // reading reference time if data is available. in the form [time|ms] = 4+2 bytes
+        memcpy( &ref, byteBuffer, sizeof( ref ) );
       }
-      // data parser
-      if ( Serial.available() ) {
-        numberOfBytes = Serial.readBytes( byteBuffer, 6 );
-        if ( numberOfBytes > 5 ) {
-          // reading reference time if data is available. in the form [time|ms] = 4+2 bytes
-          memcpy( &ref, byteBuffer, sizeof( ref ) );
-        }
-        else if ( numberOfBytes > 3 ) {
-          // reading new value for the offset reg. [float] = 4 bytes
-          memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ) );
-        }
+      else {
+        // reading new value for the offset reg. [float] = 4 bytes
+        memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ) );
       }
     }
   }
