@@ -168,14 +168,14 @@ where:
 * `r` - reset request,
 * `t` - status request.
 
-| Request Name        |  ID  | Data           | Expected response on request              |
-|---------------------|------|----------------|-------------------------------------------|
-| Time adjustment     | `@a` | `<local time>` | `<successful/failed>`                     |
-| Calibrating         | `@c` | `<local time>` | `<old Val> <drift> <new Val> <succ/fail>` |
-| Information         | `@i` | `<local time>` | `<RTC time> <Val> <drift> <Last Set time>`|
-| Set offset Register | `@s` | `<value>`      | `<successful/failed>`                     |
-| Reset               | `@r` |     ---        | `<successful/failed>`                     |
-| Status              | `@t` |     ---        | `<successful/failed>`                     |
+| Request Name        |  ID  | Data           | Size bytes | Expected response on request              |
+|---------------------|------|----------------|------------|-------------------------------------------|
+| Time adjustment     | `@a` | `<local time>` | 8          | `<successful/failed>`                     |
+| Calibrating         | `@c` | `<local time>` | 8          | `<old Val> <drift> <new Val> <succ/fail>` |
+| Information         | `@i` | `<local time>` | 8          | `<RTC time> <Val> <drift> <Last Set time>`|
+| Set offset Register | `@s` | `<value>`      | 6          | `<successful/failed>`                     |
+| Reset               | `@r` |     ---        | 2          | `<successful/failed>`                     |
+| Status              | `@t` |     ---        | 2          | `<successful/failed>`                     |
 
 ## Recommended System Requirements
 
