@@ -160,7 +160,7 @@ where:
 
 * `@` - mandatory start byte, sign for the beginning of the transfer (always equal to `0x40`),
 * `req` - request from the set `{a, c, i, r, s, t}` (1 byte),
-* `local time` - local computer time only for requests `a, c, i, s` (6 bytes),
+* `local time` - local computer time only for requests `a, c, i` (6 bytes),
 * `value` - new value for the offset register only for request `s` (4 bytes),
 * `CRC` - checksum (1 byte). The checksum is calculated as the sum of all bytes, starting from the first byte of the request and ending with the last byte of data,
 * `a` - time adjustment request,
@@ -169,6 +169,16 @@ where:
 * `s` - set offset register request,
 * `r` - reset request,
 * `t` - status request.
+
+|-------------------------------------------------------|
+| Request Name  | ID | Data         | Expected Response |
+|---------------|----|--------------|-------------------|
+| Time Adjust   | @a | <local time> | yes               |
+| Calibrating   | @c | <local time> | yes               |
+| Information   | @i | <local time> | yes               |
+| Set offset Reg| @s | <value>      | yes               |
+| Reset         | @r | ---          | yes               |
+| Status        | @t | ---          | yes               |
 
 ## Recommended System Requirements
 
