@@ -170,15 +170,14 @@ where:
 * `r` - reset request,
 * `t` - status request.
 
-|-------------------------------------------------------|
-| Request Name  | ID | Data         | Expected Response |
-|---------------|----|--------------|-------------------|
-| Time Adjust   | @a | <local time> | yes               |
-| Calibrating   | @c | <local time> | yes               |
-| Information   | @i | <local time> | yes               |
-| Set offset Reg| @s | <value>      | yes               |
-| Reset         | @r | ---          | yes               |
-| Status        | @t | ---          | yes               |
+| Request Name        |  ID  | Data           | Expected Response |
+|---------------------|------|----------------|-------------------|
+| Time adjustment     | `@a` | `<local time>` | yes               |
+| Calibrating         | `@c` | `<local time>` | yes               |
+| Information         | `@i` | `<local time>` | yes               |
+| Set offset Register | `@s` | `<value>`      | yes               |
+| Reset               | `@r` |     ---        | yes               |
+| Status              | `@s` |     ---        | yes               |
 
 ## Recommended System Requirements
 
