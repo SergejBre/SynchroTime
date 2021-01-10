@@ -153,14 +153,13 @@ All functionality is similar to the CLI application (see figure below). As an ex
 The computer is a client. The client is always the first to send a request. Upon receipt of each request, the microprocessor must send back the appropriate response.
 
 Each request is as follows: `<@ req> <local time> or <value> [CRC]`,
- 
 where:
 
-* `@` - mandatory start byte, sign for the beginning of the transfer (always equal to `0x40`),
-* `req` - request from the set `{a, c, i, r, s, t}` (1 byte),
-* `local time` - local computer time only for requests `a, c, i` (6 bytes),
-* `value` - new value for the offset register only for request `s` (4 bytes),
-* `CRC` - checksum (1 byte). The checksum is calculated as the sum of all bytes, starting from the first byte of the request and ending with the last byte of data,
+* `@` - mandatory start byte, sign for the beginning of the transfer (always equal to `0x40`, 1 byte),
+* `req` - request from the set `{a, c, i, r, s, t}` (size 1 byte),
+* `local time` - local computer time only for requests `a, c, i` (size 6 bytes),
+* `value` - new value for the offset register only for request `s` (size 4 bytes),
+* `CRC` - checksum (size 1 byte). The checksum is calculated as the sum of all bytes, starting from the first byte of the request command and ending with the last byte of data,
 * `a` - time adjustment request,
 * `c` - calibrating request,
 * `i` - information request,
@@ -168,14 +167,15 @@ where:
 * `r` - reset request,
 * `t` - status request.
 
-| Request Name        |  ID  | Data           | Size bytes | Expected response on request              |
-|---------------------|------|----------------|------------|-------------------------------------------|
-| Time adjustment     | `@a` | `<local time>` | 8          | `<successful/failed>`                     |
-| Calibrating         | `@c` | `<local time>` | 8          | `<old Val> <drift> <new Val> <succ/fail>` |
-| Information         | `@i` | `<local time>` | 8          | `<RTC time> <Val> <drift> <Last Set time>`|
-| Set offset Register | `@s` | `<value>`      | 6          | `<successful/failed>`                     |
-| Reset               | `@r` |     ---        | 2          | `<successful/failed>`                     |
-| Status              | `@t` |     ---        | 2          | `<successful/failed>`                     |
+###Protocol table
+| Request Name        | ID   | Request Data        | Size b| Expected response on request              |
+|---------------------|------|---------------------|-------|-------------------------------------------|
+| Time adjustment     | `@a` | `<local time> [CRC]`| 2+6+1 | `<successful/failed>`                     |
+| Calibrating         | `@c` | `<local time> [CRC]`| 2+6+1 | `<old Val> <drift> <new Val> <succ/fail>` |
+| Information         | `@i` | `<local time> [CRC]`| 2+6+1 | `<RTC time> <Val> <drift> <Last Set time>`|
+| Set offset Register | `@s` | `<value> [CRC]`     | 2+4+1 | `<successful/failed>`                     |
+| Reset               | `@r` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
+| Status              | `@t` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
 
 ## Recommended System Requirements
 
