@@ -167,15 +167,15 @@ where:
 * `r` - reset request,
 * `t` - status request.
 
-###Protocol table
-| Request Name        | ID   | Request Data        | Size b| Expected response on request              |
-|---------------------|------|---------------------|-------|-------------------------------------------|
-| Time adjustment     | `@a` | `<local time> [CRC]`| 2+6+1 | `<successful/failed>`                     |
-| Calibrating         | `@c` | `<local time> [CRC]`| 2+6+1 | `<old Val> <drift> <new Val> <succ/fail>` |
-| Information         | `@i` | `<local time> [CRC]`| 2+6+1 | `<RTC time> <Val> <drift> <Last Set time>`|
-| Set offset Register | `@s` | `<value> [CRC]`     | 2+4+1 | `<successful/failed>`                     |
-| Reset               | `@r` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
-| Status              | `@t` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
+### Protocol table
+| Request Name        |Head| Request Data        |Size, bytes| Expected response on request              |
+|---------------------|----|---------------------|-----------|-------------------------------------------|
+| Time adjustment     | @a | `<local time> [CRC]`| 2+6+1     | `<successful/failed>`                     |
+| Calibrating         | @c | `<local time> [CRC]`| 2+6+1     | `<old Val> <drift> <new Val> <succ/fail>` |
+| Information         | @i | `<local time> [CRC]`| 2+6+1     | `<RTC time> <Val> <drift> <Last Set time>`|
+| Set offset Register | @s | `<value> [CRC]`     | 2+4+1     | `<successful/failed>`                     |
+| Reset               | @r | `[CRC]`             | 2+1       | `<successful/failed>`                     |
+| Status              | @t | `[CRC]`             | 2+1       | `<successful/failed>`                     |
 
 ## Recommended System Requirements
 
