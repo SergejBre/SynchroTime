@@ -339,15 +339,13 @@ QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const d
 {
     // Data that are sent to the serial interface.
     QByteArray sentData;
-//    sentData.resize(size + 4);
-    sentData.resize(size + 2);
+    sentData.resize(size + 3);
     sentData[0] = STARTBYTE;
 //    sentData[1] = DEVICE_ID;
 
     // Checksum = the sum of all bytes starting from the request command.
     quint8 crc = 0;
     crc += sentData[1] = static_cast<quint8>( request );
-//    crc += sentData[2] = size;
 
     // If there are data bytes, then they are also added to the checksum.
     if ( size > 0 && data != nullptr )
@@ -355,13 +353,12 @@ QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const d
         int i;
         for ( i = 0; i < size; ++i)
         {
-//            crc += sentData[i + 3] = data[i];
             crc += sentData[i + 2] = data[i];
         }
     }
 
     // The last byte is the checksum.
-//    sentData[size + 3] = crc;
+    sentData[size + 2] = crc;
 
     Q_ASSERT( m_pSerialPort->isOpen() );
     // Send data to the serial port and wait up to 50 ms until the write is done
@@ -398,29 +395,29 @@ void RTC::informationRequest()
     const qint8 blength = receivedData.size();
 
     // Check of the received response to the request
-    if ( blength > 5 )
+    if ( blength > 6 && receivedData.at(0) == '@' )
     {
         qint64 numberOfMSec = 0LL;
         quint16 numberOfSec = 0U;
         auto p_byteBuffer = receivedData.constData();
-        memcpy( &numberOfMSec, p_byteBuffer, sizeof( quint32 ) );
+        memcpy( &numberOfMSec, p_byteBuffer + 1, sizeof( quint32 ) );
         numberOfMSec *= 1000;
-        memcpy( &numberOfSec, p_byteBuffer + 4, sizeof( numberOfSec ) );
+        memcpy( &numberOfSec, p_byteBuffer + 5, sizeof( numberOfSec ) );
         numberOfMSec += numberOfSec;
         QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
         out << "Time from DS3231 \t" << numberOfMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
         out << "System local time\t" << localTimeMSecs << " ms: " << local.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
         out << "Difference between\t" << numberOfMSec - localTimeMSecs << " ms" << endl;
-        if ( blength > 6 ) {
-            const float offset_reg = float( p_byteBuffer[6] )/10;
+        if ( blength > 7 ) {
+            const float offset_reg = float( p_byteBuffer[7] )/10;
             out << "Offset reg. in ppm\t" << offset_reg << " ppm" << endl;
-            if ( blength > 10 ) {
+            if ( blength > 11 ) {
                 float drift_in_ppm = 0;
-                memcpy( &drift_in_ppm, p_byteBuffer + 7, sizeof( drift_in_ppm ) );
+                memcpy( &drift_in_ppm, p_byteBuffer + 8, sizeof( drift_in_ppm ) );
                 out << "Time drift in ppm\t" << drift_in_ppm << " ppm" << endl;
-                if ( blength > 14 ) {
+                if ( blength > 15 ) {
                     qint64 lastAdjustOfTimeMSec = 0LL;
-                    memcpy( &lastAdjustOfTimeMSec, p_byteBuffer + 11, sizeof( quint32 ) );
+                    memcpy( &lastAdjustOfTimeMSec, p_byteBuffer + 12, sizeof( quint32 ) );
                     if ( lastAdjustOfTimeMSec < 0xFFFFFFFF ) {
                         lastAdjustOfTimeMSec *= 1000;
                         time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec );
@@ -433,7 +430,7 @@ void RTC::informationRequest()
     }
     else
     {
-        out << QStringLiteral( "Request for the information failed" );
+        out << QStringLiteral( "Request for the information failed. " ) << receivedData << endl;
     }
     emit getData( output.toLocal8Bit() );
 }
@@ -464,7 +461,7 @@ void RTC::adjustmentRequest()
     const qint8 blength = receivedData.size();
 
     // Check of the received response to the request.
-    if ( blength > 0 )
+    if ( blength > 1 && receivedData.at(0) == '@' )
     {
         const quint8 ret_value = receivedData.at( blength - 1 );
         local.setTime_t( localTimeSecs );
@@ -473,7 +470,7 @@ void RTC::adjustmentRequest()
     }
     else
     {
-        out << QStringLiteral( "Request for adjustment failed" );
+        out << QStringLiteral( "Request for adjustment failed. " ) << receivedData << endl;
     }
     emit getData( output.toLocal8Bit() );
 }
@@ -504,26 +501,26 @@ void RTC::calibrationRequest()
     const qint8 blength = receivedData.size();
 
     // Check of the received response to the request
-    if ( blength > 0 )
+    if ( blength > 1 && receivedData.at(0) == '@' )
     {
         auto byteBuffer = receivedData.constData();
         const quint8 ret_value = byteBuffer[ blength-1 ];
         local.setTime_t( localTimeSecs );
         out << "System local time\t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" ) << endl;
-        qint8 offset_reg = byteBuffer[0];
+        qint8 offset_reg = byteBuffer[1];
         out << "Offset last value\t" << offset_reg << endl;
-        if ( blength > 5 ) {
+        if ( blength > 6 ) {
             float drift_in_ppm = 0;
-            memcpy( &drift_in_ppm, byteBuffer + 1, sizeof( drift_in_ppm ) );
+            memcpy( &drift_in_ppm, byteBuffer + 2, sizeof( drift_in_ppm ) );
             out << "Time drift in ppm\t" << drift_in_ppm << " ppm" << endl;
-            offset_reg = byteBuffer[5];
+            offset_reg = byteBuffer[6];
             out << "Offset new value\t" << offset_reg << endl;
         }
         out << "Request for calibration " << ( ret_value ? "completed successfully" : "fail" ) << endl;
     }
     else
     {
-        out << QStringLiteral( "Request for calibration failed" );
+        out << QStringLiteral( "Request for calibration failed. " ) << receivedData << endl;
     }
     emit getData( output.toLocal8Bit() );
 }
@@ -542,14 +539,14 @@ void RTC::resetRequest()
     const qint8 blength = receivedData.size();
 
     // Check of the received response to the request
-    if ( blength > 0 )
+    if ( blength > 1 && receivedData.at(0) == '@' )
     {
         const quint8 ret_value = receivedData.at( blength - 1 );
         out << "Request for reset " << ( ret_value ? "completed successfully" : "fail" ) << endl;
     }
     else
     {
-        out << "Request for reset failed";
+        out << QStringLiteral( "Request for reset failed. " ) << receivedData << endl;
     }
     emit getData( output.toLocal8Bit() );
 }
@@ -572,14 +569,14 @@ void RTC::setRegisterRequest( const float newValue )
     const qint8 blength = receivedData.size();
 
     // Check of the Received request
-    if ( blength > 0 )
+    if ( blength > 1 && receivedData.at(0) == '@' )
     {
         const quint8 ret_value = receivedData.at( blength - 1 );
         out << "Request for SetRegister " << ( ret_value ? "completed successfully" : "fail" ) << endl;
     }
     else
     {
-        out << QStringLiteral( "Request for SetRegister failed" );
+        out << QStringLiteral( "Request for SetRegister failed. " ) << receivedData << endl;
     }
     emit getData( output.toLocal8Bit() );
 }
@@ -597,9 +594,9 @@ bool RTC::statusRequest()
     QString output;
     QTextStream out( &output );
     // Check of the received response to the request
-    if ( receivedData.size() == 1 )
+    if ( receivedData.size() > 1 && receivedData.at(0) == '@' )
     {
-        StatusMessages status = static_cast<StatusMessages>( receivedData.at(0) );
+        StatusMessages status = static_cast<StatusMessages>( receivedData.at(1) );
         switch ( status ) {
         case StatusMessages::STATUS_SUCCESS:
             result =  true;
@@ -630,7 +627,7 @@ bool RTC::statusRequest()
     {
         // Not received a response to the device status request.
         out << QStringLiteral( "Status Request failed" ) << endl;
-        emit portError( QStringLiteral( "Another device is connected to the RTC serial port! " ) + m_pSerialPort->errorString() );
+        emit portError( QStringLiteral( "Not received a response to the device status request: " ) + m_pSerialPort->errorString() );
         m_pSerialPort->blockSignals( true );
     }
     if ( !result ) emit getData( output.toLocal8Bit() );

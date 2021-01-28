@@ -30,16 +30,15 @@ The settings are:
 #define OFFSET_REGISTER 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
-#define MIN_TIME_SPAN 200000
-typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS } task_t;
+#define MIN_TIME_SPAN 200000  // The minimum time required for a stable calculation of the time drift.
+typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG } task_t;
 typedef struct time_s {
   uint32_t utc;
   uint16_t milliSecs;
 } time_t;
 
 RTC_DS3231 rtc;
-uint8_t buff[4];
-uint8_t byteBuffer[16];
+uint8_t buff[4];  // temporary buffer
 
 // Function Prototypes
 int8_t readFromOffsetReg( void ); // read from offset register
@@ -47,12 +46,12 @@ bool writeToOffsetReg( const int8_t value ); // write to offset register
 bool setControlRegTo1Hz( void ); // Control Register to 1 Hz Out (SQW-pin)
 inline void intToHex( uint8_t* const buff, const uint32_t value );
 inline void floatToHex( uint8_t* const buff, const float value );
-uint32_t hexToInt( uint8_t* const buff );
+uint32_t hexToInt( const uint8_t* const buff );
 uint32_t getUTCtime( const uint32_t localTimeSecs );
 bool adjustTime( const uint32_t utcTimeSecs );
 bool adjustTimeDrift( float drift_in_ppm );
-float calculateDrift_ppm( time_t* const ref, time_t* const t );
-void sendBytes( const uint8_t blength );
+float calculateDrift_ppm( const time_t* const ref, const time_t* const t );
+uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
@@ -60,7 +59,7 @@ void setup () {
   Serial.setTimeout( 5 ); // timeout 5ms
 
   if ( !rtc.begin() ) {
-    Serial.println( F( "Couldn't find DS3231 RTC modul" ) );
+    Serial.println( F( "Couldn't find DS3231 modul" ) );
     Serial.flush();
     abort();
   }
@@ -95,6 +94,7 @@ void oneHz( void ) {
 }
 
 void loop () {
+  uint8_t byteBuffer[16];
   task_t task = TASK_IDLE;
   bool ok = false;
   uint8_t set = 0U;
@@ -109,7 +109,8 @@ void loop () {
     t.milliSecs = millis() - tickCounter;
     DateTime now = rtc.now();       // reading clock time
     t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
-    // command parser
+
+    // Command Parser
     char thisChar = Serial.read();  // read the byte of request
     switch ( thisChar )
     {
@@ -133,34 +134,55 @@ void loop () {
         break;
       default:                      // unknown request
         task = TASK_IDLE;
-        Serial.print( F("unknown request ") );
+        Serial.print( F("Unknown Request ") );
         Serial.print( thisChar );
     }
-    // data parser
-    if ( Serial.available() > 3 ) {
-      numberOfBytes = Serial.readBytes( byteBuffer, 6 );
-      if ( numberOfBytes > 5 ) {
-        // reading reference time if data is available. in the form [time|ms] = 4+2 bytes
-        memcpy( &ref, byteBuffer, sizeof( ref ) );
+
+    // Data Parser
+    uint8_t crc = 0U;
+    uint8_t sum = uint8_t( thisChar );
+    if ( Serial.available() > 0 ) {
+      numberOfBytes = Serial.readBytes( byteBuffer, 7 );
+      if ( numberOfBytes > sizeof( ref ) ) {
+        // reading reference time if data is available. in the form [sec|ms] = 4+2 bytes
+        memcpy( &ref, byteBuffer, sizeof( ref ));
+        crc = byteBuffer[ sizeof( ref )];
+        sum += sumOfBytes( byteBuffer, sizeof( ref ));
+      }
+      else if ( numberOfBytes > sizeof( drift_in_ppm ) ) {
+        // reading new value for the offset reg. in the form [float] = 4 bytes
+        
+        memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ));
+        crc = byteBuffer[ sizeof( drift_in_ppm )];
+        sum += sumOfBytes( byteBuffer, sizeof( drift_in_ppm ));
       }
       else {
-        // reading new value for the offset reg. [float] = 4 bytes
-        memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ) );
+        crc = byteBuffer[0];
       }
+    }
+    // checksum verification
+    if ( crc != sum ) {
+      task = TASK_IDLE;
+      Serial.print( F("Invalid Data") );
+    }
+    else if ( task != TASK_IDLE ) {
+      byteBuffer[set] = '@';
+      set++;
     }
   }
 
   switch ( task )
   {
     case TASK_ADJUST:               // adjust time
+      oneHz();
       ok = adjustTime( ref.utc );
       byteBuffer[set] = ok;
       set++;
       task = TASK_IDLE;
       break;
     case TASK_INFO:                 // information
-      memcpy( byteBuffer, &t, sizeof( t ) );  // write time to buffer bytes
-      set = sizeof( t );
+      memcpy( byteBuffer + set, &t, sizeof( t ) );  // write time to buffer bytes
+      set += sizeof( t );
       byteBuffer[set] = readFromOffsetReg();  // reading offset value
       set++;
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
@@ -212,13 +234,13 @@ void loop () {
     case TASK_IDLE:                 // idle task
       break;
     default:
-      Serial.print( F("unknown task ") );
+      Serial.print( F("Unknown Task ") );
       Serial.println( task, HEX );
       task = TASK_IDLE;
   }
 
   if ( set > 0 ) {
-    sendBytes( set );
+    Serial.write( byteBuffer, set );
   }
 }
 
@@ -254,7 +276,7 @@ inline void floatToHex( uint8_t* const buff, const float value ) {
   memcpy( buff, &value, sizeof(value) );
 }
 
-uint32_t hexToInt( uint8_t* const buff ) {
+uint32_t hexToInt( const uint8_t* const buff ) {
   uint32_t *y = (uint32_t *)buff;
   return y[0];
 }
@@ -294,7 +316,7 @@ bool adjustTimeDrift( float drift_in_ppm ) {
    number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
    drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
 */
-float calculateDrift_ppm( time_t* const referenceTime, time_t* const clockTime ) {
+float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const clockTime ) {
   if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
     return 0;
   }
@@ -310,10 +332,14 @@ float calculateDrift_ppm( time_t* const referenceTime, time_t* const clockTime )
   return time_drift * 1000 / diff;
 }
 
-void sendBytes( const uint8_t blength ) {
-  if ( blength <= sizeof(byteBuffer) ) {
-    Serial.write( byteBuffer, blength );
-  }
+uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength ) {
+  uint8_t sum = 0U;
+//  if ( blength <= sizeof(bbuffer) ) {
+    for ( uint8_t idx = 0U; idx < blength; idx++ ) {
+      sum += bbuffer[idx];
+    }
+//  }
+  return sum;
 }
 
 uint8_t i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
