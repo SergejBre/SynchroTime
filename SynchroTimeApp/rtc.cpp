@@ -20,7 +20,6 @@
 #include <QDebug>
 #include <QThread>
 #include <QDateTime>
-#include <QElapsedTimer>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -449,15 +448,12 @@ void RTC::adjustmentRequest()
     QDateTime local(QDateTime::currentDateTime());
     const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
-    quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
+    const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
     localTimeSecs++;
     memcpy( sentData, &localTimeSecs, sizeof(localTimeSecs) );
-    memcpy( sentData + 4, &milliSecs, sizeof(milliSecs) );
+    sentData[4] = sentData[5] = 0;
 
-    milliSecs = 1000 - milliSecs;
-    QElapsedTimer time;
-    time.start();
-    while ( time.elapsed() < milliSecs );
+    this->thread()->msleep( 1000 - milliSecs );
 
     // Send a request to the RTC device
     QByteArray receivedData = sendRequest( Request::ADJUST, sizeof( sentData ), sentData );
@@ -492,16 +488,12 @@ void RTC::calibrationRequest()
     QDateTime local( QDateTime::currentDateTime() );
     const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
-    quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
-    const quint16 ms = 0U;
+    const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
     localTimeSecs++;
     memcpy( sentData, &localTimeSecs, sizeof( localTimeSecs ) );
-    memcpy( sentData + 4, &ms, sizeof( ms ) );
+    sentData[4] = sentData[5] = 0;
 
-    milliSecs = 1000 - milliSecs;
-    QElapsedTimer time;
-    time.start();
-    while ( time.elapsed() < milliSecs );
+    this->thread()->msleep( 1000 - milliSecs );
 
     // Send a request to the RTC device
     QByteArray receivedData = sendRequest( Request::CALIBR, sizeof( sentData ), sentData );
