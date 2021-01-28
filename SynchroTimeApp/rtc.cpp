@@ -53,30 +53,34 @@ RTC::RTC( const QString &portName, QObject *parent )
       m_pTimerCheckConnection( nullptr )
 {
     // Initialization of the serial interface.
-    m_pSerialPort = new QSerialPort( this );
-    m_pSerialPort->setPortName( portName );
-    // Data transfer rate: 115200 бит/с.
-    m_pSerialPort->setBaudRate(QSerialPort::Baud115200);
-    m_pSerialPort->setDataBits(QSerialPort::Data8);
-    m_pSerialPort->setParity(QSerialPort::NoParity);
-    m_pSerialPort->setStopBits(QSerialPort::OneStop);
-    m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
+    m_pSerialPort = ::new( std::nothrow ) QSerialPort( this );
+    if ( m_pSerialPort != nullptr ) {
+        m_pSerialPort->setPortName( portName );
+        // Data transfer rate: 115200 бит/с.
+        m_pSerialPort->setBaudRate(QSerialPort::Baud115200);
+        m_pSerialPort->setDataBits(QSerialPort::Data8);
+        m_pSerialPort->setParity(QSerialPort::NoParity);
+        m_pSerialPort->setStopBits(QSerialPort::OneStop);
+        m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
-    // Create a timer with 1 second intervals.
-    m_pTimerCheckConnection = new QTimer( this );
-    m_pTimerCheckConnection->setInterval( 1000 );
+        QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
+                          this, &RTC::handleError );
+        // Connect the serial port.
+        connectToRTC();
 
-    // After a time of 1 s, the statusRequest() command is called.
-    // This is where the lambda function is used to avoid creating a slot.
-    QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
-        statusRequest();
-    });
-    QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
-                      this, &RTC::handleError );
+        // Create a timer with 1 second intervals.
+        m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
+        if ( m_pTimerCheckConnection != nullptr ) {
+        m_pTimerCheckConnection->setInterval( 1000 );
 
-    // Connect the serial port.
-    connectToRTC();
-    m_pTimerCheckConnection->start();
+        // After a time of 1 s, the statusRequest() command is called.
+        // This is where the lambda function is used to avoid creating a slot.
+        QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
+            statusRequest();
+        });
+        m_pTimerCheckConnection->start();
+        }
+    }
 }
 
 //!
@@ -90,29 +94,33 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
       m_pTimerCheckConnection( nullptr )
 {
     // Initialization of the serial interface.
-    m_pSerialPort = new QSerialPort( this );
-    m_pSerialPort->setPortName( portSettings.name );
-    m_pSerialPort->setBaudRate( portSettings.baudRate );
-    m_pSerialPort->setDataBits( portSettings.dataBits );
-    m_pSerialPort->setParity( portSettings.parity );
-    m_pSerialPort->setStopBits( portSettings.stopBits );
-    m_pSerialPort->setFlowControl( portSettings.flowControl );
+    m_pSerialPort = ::new( std::nothrow ) QSerialPort( this );
+    if ( m_pSerialPort != nullptr ) {
+        m_pSerialPort->setPortName( portSettings.name );
+        m_pSerialPort->setBaudRate( portSettings.baudRate );
+        m_pSerialPort->setDataBits( portSettings.dataBits );
+        m_pSerialPort->setParity( portSettings.parity );
+        m_pSerialPort->setStopBits( portSettings.stopBits );
+        m_pSerialPort->setFlowControl( portSettings.flowControl );
 
-    // Create a timer with 1 second intervals.
-    m_pTimerCheckConnection = new QTimer( this );
-    m_pTimerCheckConnection->setInterval( 1000 );
+        QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
+                          this, &RTC::handleError );
+        // Open the serial port.
+        m_isConnected = openSerialPort();
 
-    // After a time of 1 s, the statusRequest() command is called.
-    // This is where the lambda function is used to avoid creating a slot.
-    QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
-        statusRequest();
-    });
-    QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
-                      this, &RTC::handleError );
+        // Create a timer with 1 second intervals.
+        m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
+        if ( m_pTimerCheckConnection != nullptr ) {
+            m_pTimerCheckConnection->setInterval( 1000 );
 
-    // Open the serial port.
-    m_isConnected = openSerialPort();
-    m_pTimerCheckConnection->start();
+            // After a time of 1 s, the statusRequest() command is called.
+            // This is where the lambda function is used to avoid creating a slot.
+            QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
+                statusRequest();
+            });
+            m_pTimerCheckConnection->start();
+        }
+    }
 }
 
 //!
@@ -143,7 +151,7 @@ bool RTC::isConnected() const
 //!
 void RTC::informationRequestSlot()
 {
-    if ( isConnected() )
+    if ( m_isConnected )
     {
         informationRequest();
     }
@@ -154,7 +162,7 @@ void RTC::informationRequestSlot()
 //!
 void RTC::adjustmentRequestSlot()
 {
-    if ( isConnected() )
+    if ( m_isConnected )
     {
         adjustmentRequest();
     }
@@ -165,7 +173,7 @@ void RTC::adjustmentRequestSlot()
 //!
 void RTC::calibrationRequestSlot()
 {
-    if ( isConnected() )
+    if ( m_isConnected )
     {
         calibrationRequest();
     }
@@ -176,7 +184,7 @@ void RTC::calibrationRequestSlot()
 //!
 void RTC::resetRequestSlot()
 {
-    if ( isConnected() )
+    if ( m_isConnected )
     {
         resetRequest();
     }
@@ -187,7 +195,7 @@ void RTC::resetRequestSlot()
 //!
 void RTC::setRegisterRequestSlot( const float newValue )
 {
-    if ( isConnected() )
+    if ( m_isConnected )
     {
         setRegisterRequest( newValue );
     }
@@ -198,7 +206,7 @@ void RTC::setRegisterRequestSlot( const float newValue )
 //!
 void RTC::statusRequestSlot()
 {
-    if ( isConnected() )
+    if ( m_isConnected )
     {
         statusRequest();
     }
@@ -247,6 +255,7 @@ void RTC::handleError( QSerialPort::SerialPortError error )
             break;
         case QSerialPort::ReadError:
             out << QStringLiteral( "ReadError" );
+            m_pSerialPort->blockSignals( true );
             break;
         case QSerialPort::ResourceError:
             out << QStringLiteral( "ResourceError" );
@@ -379,7 +388,7 @@ void RTC::informationRequest()
     const quint32 localTimeSecs = localTimeMSecs/1000;
     const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
     memcpy( sentData, &localTimeSecs, sizeof(localTimeSecs) );
-    memcpy( sentData + 4, &milliSecs, sizeof(milliSecs) );
+    memcpy( sentData + sizeof(localTimeSecs), &milliSecs, sizeof(milliSecs) );
 
     // Send a request to the RTC device
     QByteArray receivedData = sendRequest( Request::INFO, sizeof( sentData ), sentData );
@@ -388,6 +397,7 @@ void RTC::informationRequest()
     QTextStream out( &output );
     out << QStringLiteral( "@i Request for Info:" ) << endl;
     const qint8 blength = receivedData.size();
+
     // Check of the received response to the request
     if ( blength > 5 )
     {
@@ -626,6 +636,7 @@ bool RTC::statusRequest()
     }
     else
     {
+        // Not received a response to the device status request.
         out << QStringLiteral( "Status Request failed" ) << endl;
         emit portError( QStringLiteral( "Another device is connected to the RTC serial port! " ) + m_pSerialPort->errorString() );
         m_pSerialPort->blockSignals( true );

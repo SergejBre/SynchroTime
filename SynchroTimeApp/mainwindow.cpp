@@ -230,45 +230,51 @@ void MainWindow::handleError( const QString &error )
 //!
 void MainWindow::connectRTC()
 {
+    m_pThread = ::new( std::nothrow ) QThread( this );
     Settings p = m_pSettingsDialog->settings();
-    m_pThread = new QThread( this );
     // There is no need to specify the parent. The parent will be a thread when we move our RTC object into it.
-    m_pRTC = new RTC( p );
-    // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
-    // Create a connection: Delete the RTC object when the stream ends. start the thread.
-    Q_ASSERT( m_pThread != nullptr && m_pRTC != nullptr );
-    m_pRTC->moveToThread( m_pThread );
-    QObject::connect( m_pThread, SIGNAL( finished() ), m_pRTC, SLOT( deleteLater() ) );
-    m_pThread->start();
+    m_pRTC = ::new( std::nothrow ) RTC( p );
+    if ( m_pThread != nullptr && m_pRTC != nullptr ) {
+        // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
+        // Create a connection: Delete the RTC object when the stream ends. start the thread.
+        m_pRTC->moveToThread( m_pThread );
+        QObject::connect( m_pThread, SIGNAL( finished() ), m_pRTC, SLOT( deleteLater() ) );
+        m_pThread->start();
 
-    // Checking the connection.
-    if ( m_pRTC->isConnected() )
-    {
-        Q_ASSERT( m_pConsole != nullptr );
-        m_pConsole->setEnabled( true );
-        actionsTrigger( true );
+        // Checking the connection.
+        if ( m_pRTC->isConnected() ) {
+            Q_ASSERT( m_pConsole != nullptr );
+            m_pConsole->setEnabled( true );
+            actionsTrigger( true );
 
-        QObject::connect(ui->actionInformation, &QAction::triggered, m_pRTC, &RTC::informationRequestSlot);
-        QObject::connect(ui->actionAdjustment, &QAction::triggered, m_pRTC, &RTC::adjustmentRequestSlot);
-        QObject::connect(ui->actionCalibration, &QAction::triggered, m_pRTC, &RTC::calibrationRequestSlot);
-        QObject::connect(ui->actionReset, &QAction::triggered, m_pRTC, &RTC::resetRequestSlot);
-        QObject::connect(this, &MainWindow::setRegister, m_pRTC, &RTC::setRegisterRequestSlot);
+            QObject::connect(ui->actionInformation, &QAction::triggered, m_pRTC, &RTC::informationRequestSlot);
+            QObject::connect(ui->actionAdjustment, &QAction::triggered, m_pRTC, &RTC::adjustmentRequestSlot);
+            QObject::connect(ui->actionCalibration, &QAction::triggered, m_pRTC, &RTC::calibrationRequestSlot);
+            QObject::connect(ui->actionReset, &QAction::triggered, m_pRTC, &RTC::resetRequestSlot);
+            QObject::connect(this, &MainWindow::setRegister, m_pRTC, &RTC::setRegisterRequestSlot);
 
-        QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
-        QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
+            QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
+            QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
-        showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 bps" )
-                           .arg( p.name ).arg( p.stringBaudRate ) );
+            showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 bps" )
+                               .arg( p.name ).arg( p.stringBaudRate ) );
+        }
+        else {
+            m_pThread->quit();
+            m_pThread->wait( WAIT_FOR_STREAM );
+
+            showStatusMessage( QObject::tr( "Connection error" ));
+            QMessageBox::critical(this, QObject::tr( "Connection error" ),
+                                  QObject::tr( "Connect the RTC device to the correct serial port, "
+                                               "or set the serial port name in the port settings." ),
+                                  QMessageBox::Ok);
+        }
     }
-    else
-    {
-        m_pThread->quit();
-        m_pThread->wait( WAIT_FOR_STREAM );
-
-        showStatusMessage( QObject::tr( "Connection error" ));
-        QMessageBox::critical(this, QObject::tr( "Connection error" ),
-                              QObject::tr( "Connect the RTC device to the correct serial port, "
-                                           "or set the serial port name in the port settings." ),
+    else {
+        showStatusMessage( QObject::tr( "Bad allocation memory" ));
+        QMessageBox::critical(this, QObject::tr( "Bad allocation memory" ),
+                              QObject::tr( "Bad allocation memory, execution terminating.\n"
+                                           "Advice: terminate unnecessary applications!" ),
                               QMessageBox::Ok);
     }
 }
