@@ -80,7 +80,7 @@ public:
     bool isConnected() const;
 
 signals:
-    void getData( const QByteArray &data );
+    void getData( const QString &data );
     void portError( const QString &error );
 
 public slots:

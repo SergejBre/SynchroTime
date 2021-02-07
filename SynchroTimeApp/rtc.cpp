@@ -432,7 +432,7 @@ void RTC::informationRequest()
     {
         out << QStringLiteral( "Request for the information failed. " ) << receivedData << endl;
     }
-    emit getData( output.toLocal8Bit() );
+    emit getData( output );
 }
 
 //!
@@ -472,7 +472,7 @@ void RTC::adjustmentRequest()
     {
         out << QStringLiteral( "Request for adjustment failed. " ) << receivedData << endl;
     }
-    emit getData( output.toLocal8Bit() );
+    emit getData( output );
 }
 
 //!
@@ -522,7 +522,7 @@ void RTC::calibrationRequest()
     {
         out << QStringLiteral( "Request for calibration failed. " ) << receivedData << endl;
     }
-    emit getData( output.toLocal8Bit() );
+    emit getData( output );
 }
 
 //!
@@ -548,7 +548,7 @@ void RTC::resetRequest()
     {
         out << QStringLiteral( "Request for reset failed. " ) << receivedData << endl;
     }
-    emit getData( output.toLocal8Bit() );
+    emit getData( output );
 }
 
 //!
@@ -578,7 +578,7 @@ void RTC::setRegisterRequest( const float newValue )
     {
         out << QStringLiteral( "Request for SetRegister failed. " ) << receivedData << endl;
     }
-    emit getData( output.toLocal8Bit() );
+    emit getData( output );
 }
 
 //!
@@ -630,7 +630,7 @@ bool RTC::statusRequest()
         emit portError( QStringLiteral( "Not received a response to the device status request: " ) + m_pSerialPort->errorString() );
         m_pSerialPort->blockSignals( true );
     }
-    if ( !result ) emit getData( output.toLocal8Bit() );
+    if ( !result ) emit getData( output );
     return result;
 }
 

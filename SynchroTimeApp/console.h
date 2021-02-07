@@ -39,7 +39,7 @@ public:
     explicit Console( QWidget *parent = 0 );
     ~Console();
 
-    void putData( const QByteArray &data );
+    void putData( const QString &data );
     void setLocalEchoEnabled( bool set );
 
 signals:
