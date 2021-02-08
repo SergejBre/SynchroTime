@@ -20,6 +20,8 @@
 #include <QDebug>
 #include <QThread>
 #include <QDateTime>
+#include <QTimer>
+#include <QSerialPort>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -288,7 +290,7 @@ bool RTC::openSerialPort() const
     {
         m_pSerialPort->setBreakEnabled( false );
         m_pSerialPort->setDataTerminalReady( true );
-        this->thread()->msleep( REBOOT_WAIT );
+        thread()->msleep( REBOOT_WAIT );
         return true;
     }
     else
@@ -308,7 +310,7 @@ void RTC::connectToRTC()
     {
         m_pSerialPort->setBreakEnabled( false );
         m_pSerialPort->setDataTerminalReady( true );
-        this->thread()->msleep( REBOOT_WAIT );
+        thread()->msleep( REBOOT_WAIT );
         // Make sure the RTC device is actually connected to the serial port.
         m_isConnected = statusRequest();
 
@@ -366,7 +368,7 @@ QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const d
     m_pSerialPort->waitForBytesWritten( TIME_WAIT );
 
     // Sleep 50 ms, waiting for the microcontroller to process the data and respond
-    this->thread()->msleep( TIME_WAIT );
+    thread()->msleep( TIME_WAIT );
     // Reading data from RTC.
     m_pSerialPort->waitForReadyRead( TIME_WAIT );
     return m_pSerialPort->readAll();
@@ -377,10 +379,14 @@ QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const d
 //!
 void RTC::informationRequest()
 {
+    QString output;
+    QTextStream out( &output );
+    out << QStringLiteral( "@i Request for Info:" ) << endl;
+
     // Data that are sent to the serial interface.
     quint8 sentData[6];
     const QDateTime local(QDateTime::currentDateTime());
-    const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    const qint64 localTimeMSecs = QDateTime::currentDateTime().toMSecsSinceEpoch(); //local.toMSecsSinceEpoch();
     const quint32 localTimeSecs = localTimeMSecs/1000;
     const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
     memcpy( sentData, &localTimeSecs, sizeof(localTimeSecs) );
@@ -388,10 +394,6 @@ void RTC::informationRequest()
 
     // Send a request to the RTC device
     QByteArray receivedData = sendRequest( Request::INFO, sizeof( sentData ), sentData );
-
-    QString output;
-    QTextStream out( &output );
-    out << QStringLiteral( "@i Request for Info:" ) << endl;
     const qint8 blength = receivedData.size();
 
     // Check of the received response to the request
@@ -440,30 +442,30 @@ void RTC::informationRequest()
 //!
 void RTC::adjustmentRequest()
 {
+    QString output;
+    QTextStream out( &output );
+    out << QStringLiteral( "@a Request for Adjustment:" ) << endl;
+
     // Data that are sent to the serial interface.
     quint8 sentData[6];
-    QDateTime local(QDateTime::currentDateTime());
-    const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
+    const qint64 localTimeMSecs = QDateTime::currentDateTime().toMSecsSinceEpoch(); //local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
     const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
     localTimeSecs++;
     memcpy( sentData, &localTimeSecs, sizeof(localTimeSecs) );
     sentData[4] = sentData[5] = 0;
 
-    this->thread()->msleep( 1000 - milliSecs );
+    thread()->msleep( 1000 - milliSecs );
 
     // Send a request to the RTC device
     QByteArray receivedData = sendRequest( Request::ADJUST, sizeof( sentData ), sentData );
-
-    QString output;
-    QTextStream out( &output );
-    out << QStringLiteral( "@a Request for Adjustment:" ) << endl;
     const qint8 blength = receivedData.size();
 
     // Check of the received response to the request.
     if ( blength > 1 && receivedData.at(0) == '@' )
     {
         const quint8 ret_value = receivedData.at( blength - 1 );
+        QDateTime local; //(QDateTime::currentDateTime());
         local.setTime_t( localTimeSecs );
         out << "System local time\t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" ) << endl;
         out << "Request for adjustment " << ( ret_value ? "completed successfully" : "fail" ) << endl;
@@ -490,7 +492,7 @@ void RTC::calibrationRequest()
     memcpy( sentData, &localTimeSecs, sizeof( localTimeSecs ) );
     sentData[4] = sentData[5] = 0;
 
-    this->thread()->msleep( 1000 - milliSecs );
+    thread()->msleep( 1000 - milliSecs );
 
     // Send a request to the RTC device
     QByteArray receivedData = sendRequest( Request::CALIBR, sizeof( sentData ), sentData );
