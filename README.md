@@ -139,6 +139,8 @@ All functionality is similar to the CLI application (see figure below). As an ex
 
 * The application allows you to calibrate the module clock within the range from -12.8 to +12.7 ppm.
 
+* Calibration by Offset Register is stable over the operating temperature range: +10°C to +35°C (see part **Discussion**).
+
 * The application communicates with the Arduino server through any virtual serial interface (UART). The Baud Rate is assumed unchanged and equals 115200 bps.
 
 * The Arduino is in turn connected to the Precision RTC DS3231 module via the I²C-interface: A4 (SDA), A5 (SCL) pins (SDA - data line and SCL - clock line).
@@ -217,6 +219,8 @@ $ ntpq -p
 ``` 
 
 ## Discussion
+Manipulation with the Aging Register within LBS values ​​affects the thermal stabilization of the oscillator. This is reflected in the graph from the DS3231 [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) below. According to the curves of the dependences of Frequency Deviation on Temperature and LBS Values, it is seen that there is a stability interval where frequency deviation remains quite stable. This range is between 10°C and + 35°C. And according to the datasheet, at room temperature + 25°C for each 1 of the LBS Aging Register there is approximately 0.1ppm Frequency Deviation (i.e. 1 ≈ 0.1ppm). We use this data in our further calculations. **Please note that this will limit the operating temperature range**.
+![Frequency deviation](./images/frequency_deviation.png)
 
 ## Dependencies
 
