@@ -197,7 +197,7 @@ $ ntpq -p
 +ntp1.hetzner.de 124.216.164.14   2 u   11   64  377   25.011   -5.987   6.489
 +chilipepper.can 134.71.66.21     2 u   74   64  376   26.689   -5.881   4.974 
 ```
-The columns **delay**, **offset** and **jitter** show some timing values which are derived from the query results. In some versions of ntpq the last column is labeled **disp** (for dispersion) instead of **jitter**. All values are in in milliseconds (ms).
+* The columns **delay**, **offset** and **jitter** show some timing values which are derived from the query results. In some versions of ntpq the last column is labeled **disp** (for dispersion) instead of **jitter**. All values are in in milliseconds (ms).
   * The **delay** value is derived from the roundtrip time of the queries.
   * The **offset** value shows the difference between the reference time and the system clock.
   * The **jitter** value indicates the magnitude of jitter between several time queries.
