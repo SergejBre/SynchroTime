@@ -6,23 +6,24 @@
 //  Copyright (C) 2020 free Project SynchroTime. All rights reserved.
 //------------------------------------------------------------------------------
 /*
- * Sketch for old versions of SynchroTime, including version 1.1.2 !
- * 
 This sketch performs as a server on an arduino controller for connecting a computer
   with an RTC DS3231 module via a serial port.Built-in server functions allow you to:
   - adjust the RTC DS3231 time in accordance with the reference time of your computer;
-  - correct the time shift of the RTC DS3231 clock;
+  - correct the time drift of the RTC DS3231 clock;
   - evaluate the accuracy and reliability of the RTC oscillator for a specific sample,
     as well as the chances of a successful correction in the event of a significant time drift;
   - save parameters and calibration data to the energy-independent flash memory;
-  - read from the offset register;
-  - write to the offset register;
+  - read from the Aging offset register;
+  - write to the Aging offset register;
   - etc.
 The settings are:
   - The selection of the time zone, which is determined as the local local time on the worker computer.
     time_zone = Difference of the UTC-time. A value from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
     +1/+2 for Europe, depending on which season is winter (+1) or summer time (+2).
   - MIN_TIME_SPAN the minimum time required for a stable calculation of the time drift.
+Dependencies:
+  - Arduino IDE version >= 1.8.13 (!Replace compilation flags from -Os to -O2);
+  - Adafruit RTC library for Arduino RTClib version >= 1.12.5 (https://github.com/adafruit/RTClib).
 */
 #include <Wire.h>
 #include "RTClib.h"

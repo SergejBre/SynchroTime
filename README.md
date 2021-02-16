@@ -179,7 +179,7 @@ where:
 | Reset               | `@r` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
 | Status              | `@t` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
 
-## Recommended System Requirements
+## System Requirements
 
 * For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
 ```
@@ -243,6 +243,7 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 | Qt lib 64bit | >= 5.6                           | Didn't test with older versions, but it may work|
 | C++ compiler | supporting C++11 (i.e. gcc 4.6+) |                                                 |
 | Arduino IDE  | >= 1.8.13                        | !Replace compilation flags from -Os to -O2      |
+| RTC library  | >= 1.12.5                        | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
 
 ```
 $ ldd synchroTime
