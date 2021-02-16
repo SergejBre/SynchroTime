@@ -181,7 +181,7 @@ where:
 
 ## Recommended System Requirements
 
-* For correct work your system time required to be synchronized with NTP. Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
+* For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
 ```
  $ sudo apt-get install ntp 
 ```
@@ -197,10 +197,16 @@ $ ntpq -p
 +ntp1.hetzner.de 124.216.164.14   2 u   11   64  377   25.011   -5.987   6.489
 +chilipepper.can 134.71.66.21     2 u   74   64  376   26.689   -5.881   4.974 
 ```
+The columns **delay**, **offset** and **jitter** show some timing values which are derived from the query results. In some versions of ntpq the last column is labeled **disp** (for dispersion) instead of **jitter**. All values are in in milliseconds (ms).
+  * The **delay** value is derived from the roundtrip time of the queries.
+  * The **offset** value shows the difference between the reference time and the system clock.
+  * The **jitter** value indicates the magnitude of jitter between several time queries.
 
-* Look for a table entry `*`: table values offset and jitter (ms), they should be as minimal as possible `max[offset ± jitter] <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
+* Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max[offset ± jitter] <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
 
 * Windows OS has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. Therefore, it is necessary to adjust the computer time manually before setting up and calibrating, or using the subtleties of the settings in the system registry.
+
+* The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm) projects.
 
 ## Installing the CLI and GUI apps
 
