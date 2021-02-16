@@ -204,9 +204,7 @@ $ ntpq -p
 
 * Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max[offset ± jitter] <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
 
-* Windows OS has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. Therefore, it is necessary to adjust the computer time manually before setting up and calibrating, or using the subtleties of the settings in the system registry.
-
-* The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm) projects.
+* The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced projects: [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm).
 
 ## Installing the CLI and GUI apps
 
