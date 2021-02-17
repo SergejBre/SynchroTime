@@ -29,8 +29,8 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 1. First, you need to load a sketch into Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory and connect the RTC DS3231 module according to the circuit shown in the specification.
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be /dev/ttyUSBx, under Windows - COMx).
- To find the name of this port, call the application with the -d (--discovery) switch:
-```$ ./synchroTime -d
+ To find the name of this port, call the application with the `-d (--discovery)` switch:
+ ```$ ./synchroTime -d
  Serial Port : ttyUSB1
  Description : USB2.0-Serial
  Manufacturer: 1a86
@@ -49,7 +49,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  
  A total of 2 serial ports were found.```
  And under the Windows OS
-```C:\SynchroTime\build>synchroTime -d
+ ```C:\SynchroTime\build>synchroTime -d
  Serial Port : COM5
  Description : USB-SERIAL CH340
  Manufacturer: wch.cn
