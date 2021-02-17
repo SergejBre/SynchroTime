@@ -31,7 +31,8 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be /dev/ttyUSBx, under Windows - COMx).
  To find the name of this port, call the application with the `-d (--discovery)` switch:
 
- ```$ ./synchroTime -d
+ ```
+ $ ./synchroTime -d
  Serial Port : ttyUSB1
  Description : USB2.0-Serial
  Manufacturer: 1a86
@@ -48,11 +49,13 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  System Locat: /dev/ttyUSB0
  Busy        : No
  
- A total of 2 serial ports were found.```
+ A total of 2 serial ports were found.
+ ```
 
  And under the Windows OS
 
- ```C:\SynchroTime\build>synchroTime -d
+ ```
+ C:\SynchroTime\build>synchroTime -d
  Serial Port : COM5
  Description : USB-SERIAL CH340
  Manufacturer: wch.cn
@@ -69,7 +72,8 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  System Locat: \\.\COM3
  Busy        : No
 
- A total of 2 serial ports were found.``` 
+ A total of 2 serial ports were found.
+ ``` 
 
 2. To select a virtual Serial Port, enter its system name after the command -p \<portName\>. The app will automatically create a configuration file, and the next call will contact the selected port.
 ```
