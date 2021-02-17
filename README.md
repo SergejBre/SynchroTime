@@ -28,10 +28,9 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ## Using the CLI app
 
 1. First, you need to load a sketch into Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory and connect the RTC DS3231 module according to the circuit shown in the specification.
- Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be /dev/ttyUSBx, under Windows - COMx).
+ Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be `/dev/ttyUSBx`, under Windows - `COMx`).
  To find the name of this port, call the application with the `-d (--discovery)` switch:
-
- ```
+```
  $ ./synchroTime -d
  Serial Port : ttyUSB1
  Description : USB2.0-Serial
@@ -50,11 +49,9 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Busy        : No
  
  A total of 2 serial ports were found.
- ```
-
+```
  And under the Windows OS
-
- ```
+```
  C:\SynchroTime\build>synchroTime -d
  Serial Port : COM5
  Description : USB-SERIAL CH340
@@ -73,9 +70,9 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Busy        : No
 
  A total of 2 serial ports were found.
- ``` 
+``` 
 
-2. To select a virtual Serial Port, enter its system name after the command -p \<portName\>. The app will automatically create a configuration file, and the next call will contact the selected port.
+2. To select a virtual Serial Port, enter its system name after the command `-p \<portName\>`. The app will automatically create a configuration file, and the next call will contact the selected port.
 ```
  $ ./synchroTime -p ttyUSB0
  Added new serial interface ttyUSB0. 
@@ -86,7 +83,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Added new serial interface COM5.
 ``` 
 
-3. Use the -i (--information) command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the offset register and the calculated time drift value in ppm. If the offset register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
+3. Use the `-i (--information)` command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the offset register and the calculated time drift value in ppm. If the offset register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
 ```
  $ ./synchroTime -i
  DS3231 clock time	1598896552596 ms: 31.08.2020 19:55:52.596
@@ -97,14 +94,14 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  last adjust of time	1594663200000 ms: 13.07.2020 20:00:00.000 
 ```
 
-4. To set the exact time, use the -a (--adjust) command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
+4. To set the exact time, use the `-a (--adjust)` command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
 ```
  $ ./synchroTime -a
  System local time	Mo. 31 Aug. 2020 20:02:52.000
  Request for adjustment completed successfully. 
 ```
 
-5. To calibrate the clock of the DS3231 module, enter the -c (--calibration) command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (ca 55 hours or 2.3 days, see part **Discussion**). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
+5. To calibrate the clock of the DS3231 module, enter the `-c (--calibration)` command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (ca 55 hours or 2.3 days, see part **Discussion**). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
 ```
  $ ./synchroTime -c
  System local time	Mo. 31 Aug. 2020 20:04:14.000
@@ -114,14 +111,14 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Request for calibration completed successfully. 
 ```
 
-6. To reset the offset register to its default value and clear the module's memory of calibration data, enter the -r (--reset) command. The default value will be written to the register, and memory cells will be overwritten with bytes with 0xFF.
+6. To reset the offset register to its default value and clear the module's memory of calibration data, enter the `-r (--reset)` command. The default value will be written to the register, and memory cells will be overwritten with bytes with `0xFF`.
 ```
  $ ./synchroTime -r
 
  Request for reset completed successfully. 
 ```
 
-7. Use the -s (--setreg) command to write the new value to the offset register of the DS3231. Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6).
+7. Use the `-s (--setreg)` command to write the new value to the offset register of the DS3231. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
 ```
  $ ./synchroTime -s
 
@@ -226,7 +223,7 @@ $ ntpq -p
 ``` 
 
 ## Discussion
-DS3231 is an extremely accurate RTC with a guaranteed accuracy of 2.5 ppm (0°C to +40°C), which translates into an error of just 80 seconds over the course of a year under the worst case scenario.
+DS3231 is an extremely accurate RTC with a guaranteed accuracy of 2 ppm (0°C to +40°C), which translates into an error of just 60 seconds over the course of a year under the worst case scenario.
 
 While by default DS3231 is already very accurate, we can push its accuracy even higher by adjusting its aging offset register (8bit). This adjustment works by adding or subtracting the corresponding capacitance to or from the oscillator capacitor array. The adjustable range is represented as 2’s complement (-128 to 127) and each LSB change corresponds to ca 0.1 ppm of change in frequency (which translates into roughly between 0.002 to 0.003 Hz). So the overall adjustment range can be achieved programmatically is ca ±13 ppm.
 
