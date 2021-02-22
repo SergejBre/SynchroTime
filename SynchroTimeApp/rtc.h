@@ -25,7 +25,7 @@
 // Enums
 //------------------------------------------------------------------------------
 //!
-//! \enum The Request enum
+//! \enum Request
 //!
 //! \details
 //! Requests to be sent to the RTC device. Sent as the second byte in the protocol.
@@ -41,7 +41,7 @@ enum class Request : quint8
 };
 
 //!
-//! \enum The StatusMessages enum
+//! \enum StatusMessages
 //!
 //! \details
 //! Contains all possible error codes in response to a status request.
