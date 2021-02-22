@@ -8,14 +8,14 @@
 //  Project SynchroTime: Command-line client for adjust the exact time and
 //  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
-//!
-//! \mainpage SynchroTimeApp - GUI application (GUI-app)
-//!
-//! SynchroTimeApp: GUI client for adjust the exact time and
-//! calibrating the RTC DS3231 module via the serial interface (UART).
-//!
-//! \author SergejBre sergej1@email.ua
-//!
+//
+// \mainpage SynchroTimeApp - GUI application (GUI-app)
+//
+// SynchroTimeApp: GUI client for adjust the exact time and
+// calibrating the RTC DS3231 module via the serial interface (UART).
+//
+// \author SergejBre sergej1@email.ua
+//
 
 //!
 //! \file main.cpp

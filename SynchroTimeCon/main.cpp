@@ -9,7 +9,7 @@
 //  calibrating the RTC DS3231 module via the serial interface (UART).
 //------------------------------------------------------------------------------
 
-/**
+/*
 * @mainpage SynchroTime - Command-line application (CLI-app)
 *
 * SynchroTime: Command-line client for adjust the exact time and
