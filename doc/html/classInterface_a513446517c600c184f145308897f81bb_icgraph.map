@@ -1,0 +1,15 @@
+<map id="Interface::getReceivedData" name="Interface::getReceivedData">
+<area shape="rect" id="node2" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16. " alt="" coords="746,48,854,75"/>
+<area shape="rect" id="node3" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17. " alt="" coords="746,150,854,176"/>
+<area shape="rect" id="node4" href="$helper_8h.html#aab3e153f54786f53d750e965d190c8a1" title="Request for the Adjustment of the device. " alt="" coords="252,251,427,278"/>
+<area shape="rect" id="node5" href="$helper_8h.html#a7c28bb38d1f8dde09dd59e32edcc69f8" title="Request for the Calibration of the device. " alt="" coords="254,302,425,328"/>
+<area shape="rect" id="node6" href="$helper_8h.html#a4c9d894a31536848ea3ffff2f3002379" title="Request for the Information of the device. " alt="" coords="252,352,427,379"/>
+<area shape="rect" id="node7" href="$classInterfaceSP.html#a1fff334c84059cf307e6ce0bfd089bb8" title="InterfaceSP::handleReadyRead" alt="" coords="236,403,443,430"/>
+<area shape="rect" id="node11" href="$helper_8h.html#aa2e3eeb0c176ac23625fe08b0b703e19" title="Request for the Reset of the device. " alt="" coords="267,454,411,480"/>
+<area shape="rect" id="node12" href="$helper_8h.html#a6b47493181446abfe480779efdc7ab2f" title="Request to update the register value. " alt="" coords="250,504,429,531"/>
+<area shape="rect" id="node13" href="$classInterfaceSP.html#a219c5ee6c1c8268a342ad431258ee643" title="InterfaceSP::readTheData Reads all remaining data from the UART device. " alt="" coords="252,124,427,151"/>
+<area shape="rect" id="node14" href="$classInterfaceSP.html#af593dd6e938e6ddd8014cfe37d984d83" title="InterfaceSP::writeTheData Writes the content of byteArray to the Serial Port device. " alt="" coords="491,48,668,75"/>
+<area shape="rect" id="node8" href="$classInterfaceSP.html#ad32de4ed374ef20b1edc7e45f1edc5fd" title="InterfaceSP::InterfaceSP Constructor of the class InterfaceSP for creating objects with default value..." alt="" coords="495,428,663,455"/>
+<area shape="rect" id="node9" href="$classInterfaceSP.html#ab2f9c36700c9bbd032fb4431fa9c5e29" title="InterfaceSP::initSerialPort Prepare a instance of the Serial Port. " alt="" coords="493,378,666,404"/>
+<area shape="rect" id="node10" href="$classInterfaceSP.html#a95dd41204e3c465e3a70e67da3f3aac5" title="InterfaceSP::InterfaceSP Constructor of the class InterfaceSP for creating objects with default value..." alt="" coords="716,378,884,404"/>
+</map>

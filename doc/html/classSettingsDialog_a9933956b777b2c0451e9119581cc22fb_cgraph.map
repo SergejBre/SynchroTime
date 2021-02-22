@@ -1,0 +1,12 @@
+<map id="SettingsDialog::SettingsDialog" name="SettingsDialog::SettingsDialog">
+<area shape="rect" id="node2" href="$classSettingsDialog.html#aa0d7c1ec47555d438b86912af4830819" title="SettingsDialog::apply. " alt="" coords="241,5,387,32"/>
+<area shape="rect" id="node3" href="$classSettingsDialog.html#a349c9a5d2af7bb8001df096b43786d2d" title="SettingsDialog::updateSettings. " alt="" coords="460,31,663,57"/>
+<area shape="rect" id="node4" href="$classSettingsDialog.html#af25f3f9b4143a513e2b83261252f8e4e" title="SettingsDialog::cansel. " alt="" coords="237,107,391,133"/>
+<area shape="rect" id="node6" href="$classSettingsDialog.html#aae0cd05c0c0204e11d9e4703ecf7b0a4" title="SettingsDialog::checkCustomBaudRatePolicy. " alt="" coords="216,158,412,199"/>
+<area shape="rect" id="node7" href="$classSettingsDialog.html#a5b561a34cba1fba972081978f3da0a4a" title="SettingsDialog::checkCustomDevicePathPolicy. " alt="" coords="216,223,412,265"/>
+<area shape="rect" id="node8" href="$classSettingsDialog.html#a9e2b682d0cfe9f8a16b7912f495aa034" title="SettingsDialog::fillPortsInfo. " alt="" coords="223,289,405,316"/>
+<area shape="rect" id="node9" href="$classSettingsDialog.html#ac2a0ea7c05f7cb98e3bc2474981bc5e7" title="SettingsDialog::fillPortsParameters. " alt="" coords="235,341,393,382"/>
+<area shape="rect" id="node10" href="$classSettingsDialog.html#a51de698192c7c809e92221fcbffaf642" title="SettingsDialog::reset. " alt="" coords="242,407,386,433"/>
+<area shape="rect" id="node11" href="$classSettingsDialog.html#a70f6f67b5f5e3af21d011fa90c2b2098" title="SettingsDialog::showPortInfo. " alt="" coords="218,457,410,484"/>
+<area shape="rect" id="node5" href="$classSettingsDialog.html#a1cd11b641ae63b931292ca077a9fcd01" title="SettingsDialog::fillSettingsUi. " alt="" coords="467,107,656,133"/>
+</map>

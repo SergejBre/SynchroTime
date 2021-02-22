@@ -1,0 +1,7 @@
+<map id="standardOutput" name="standardOutput">
+<area shape="rect" id="node2" href="$helper_8h.html#aab3e153f54786f53d750e965d190c8a1" title="Request for the Adjustment of the device. " alt="" coords="166,5,341,32"/>
+<area shape="rect" id="node3" href="$helper_8h.html#a7c28bb38d1f8dde09dd59e32edcc69f8" title="Request for the Calibration of the device. " alt="" coords="168,56,339,83"/>
+<area shape="rect" id="node4" href="$helper_8h.html#a4c9d894a31536848ea3ffff2f3002379" title="Request for the Information of the device. " alt="" coords="166,107,341,133"/>
+<area shape="rect" id="node5" href="$helper_8h.html#aa2e3eeb0c176ac23625fe08b0b703e19" title="Request for the Reset of the device. " alt="" coords="181,157,325,184"/>
+<area shape="rect" id="node6" href="$helper_8h.html#a6b47493181446abfe480779efdc7ab2f" title="Request to update the register value. " alt="" coords="164,208,343,235"/>
+</map>

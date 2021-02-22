@@ -1,0 +1,9 @@
+<map id="handleResetRequest" name="handleResetRequest">
+<area shape="rect" id="node2" href="$classInterface.html#a931c6f770aee9c2bf27ca3395c27aa4f" title="Interface::closeSocket" alt="" coords="212,5,365,32"/>
+<area shape="rect" id="node3" href="$classSession.html#ac4a3fdb231a91e8668c4a400f4be7593" title="Session::getInterface" alt="" coords="215,56,362,83"/>
+<area shape="rect" id="node4" href="$classInterface.html#a513446517c600c184f145308897f81bb" title="Interface::getReceivedData. " alt="" coords="197,107,380,133"/>
+<area shape="rect" id="node5" href="$classInterface.html#a9eeeb00ade23828b2a218ec3d6d09ba2" title="Interface::openSocket" alt="" coords="213,157,364,184"/>
+<area shape="rect" id="node6" href="$classInterface.html#a0284f3b052f1ad4876fbb42722b14dda" title="Interface::readTheData" alt="" coords="211,208,367,235"/>
+<area shape="rect" id="node7" href="$helper_8cpp.html#a9b44a0fbde7dc5555411b20005453d5f" title="standardOutput" alt="" coords="233,259,344,285"/>
+<area shape="rect" id="node8" href="$classInterface.html#a22bb76d41467d557b2aaedb63dcaf5c5" title="Interface::writeTheData" alt="" coords="209,309,368,336"/>
+</map>

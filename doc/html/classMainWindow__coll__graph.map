@@ -1,0 +1,6 @@
+<map id="MainWindow" name="MainWindow">
+<area shape="rect" id="node3" href="$classConsole.html" title="The Console class. " alt="" coords="137,1178,322,1373"/>
+<area shape="rect" id="node5" href="$classRTC.html" title="{RTC\n|&#45; m_pSerialPort\l&#45; m_isConnected\l&#45; m_pTimerCheckConnection\l|+ RTC()\l+ RTC()\l+ ~RTC()\l+ isConnected()\l+ informationRequestSlot()\l+ adjustmentRequestSlot()\l+ calibrationRequestSlot()\l+ resetRequestSlot()\l+ setRegisterRequestSlot()\l+ statusRequestSlot()\l&#45; openSerialPort()\l&#45; connectToRTC()\l&#45; sendRequest()\l&#45; informationRequest()\l&#45; adjustmentRequest()\l&#45; calibrationRequest()\l&#45; resetRequest()\l&#45; setRegisterRequest()\l&#45; statusRequest()\l&#45; handleError()\l}" alt="" coords="275,717,467,1103"/>
+<area shape="rect" id="node9" href="$structSettings.html" title="The Settings class. " alt="" coords="415,132,553,693"/>
+<area shape="rect" id="node7" href="$classSettingsDialog.html" title="The SettingsDialog class. " alt="" coords="457,1127,679,1424"/>
+</map>

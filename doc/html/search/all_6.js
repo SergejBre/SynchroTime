@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['getblocksize',['getBlockSize',['../classInterface.html#a8121757bd84539e4d18ce35ea71d8431',1,'Interface']]],
+  ['getclassname',['getClassName',['../classBase.html#a35bd93b59ecf74ef0ada1c265ece8f89',1,'Base']]],
+  ['getdata',['getData',['../classConsole.html#a1976aad46ce1a77be730bc628275038f',1,'Console::getData()'],['../classRTC.html#a780780ce52f405cc38bec0c617730125',1,'RTC::getData()']]],
+  ['getdescription',['getDescription',['../classInterfaceSP.html#a9185905801f87b327cd8f2ebbec9e398',1,'InterfaceSP']]],
+  ['getinterface',['getInterface',['../classSession.html#ac4a3fdb231a91e8668c4a400f4be7593',1,'Session']]],
+  ['getmanufacturer',['getManufacturer',['../classInterfaceSP.html#a9a46e7f2c09a93cda1184fc16e69d16b',1,'InterfaceSP']]],
+  ['getportbaudrate',['getPortBaudRate',['../classInterfaceSP.html#a5b925d134c154f41e8f34ce149a1799d',1,'InterfaceSP']]],
+  ['getportname',['getPortName',['../classInterfaceSP.html#a3043d3eef41e70c9d51cd970b536b4c0',1,'InterfaceSP']]],
+  ['getproductidentifier',['getProductIdentifier',['../classInterfaceSP.html#a77eb3dd86f99dfe3e8ffb40f868c98a0',1,'InterfaceSP']]],
+  ['getreceivedbytes',['getReceivedBytes',['../classInterface.html#a9be1d097eec85eea87b25699dfe8a6af',1,'Interface']]],
+  ['getreceiveddata',['getReceivedData',['../classInterface.html#a513446517c600c184f145308897f81bb',1,'Interface']]],
+  ['getserialnumber',['getSerialNumber',['../classInterfaceSP.html#ab8375b0cef177665548a6cafb8ff9417',1,'InterfaceSP']]],
+  ['getserialport',['getSerialPort',['../classInterfaceSP.html#ab2120b2287d749d50dc0be498664dbec',1,'InterfaceSP']]],
+  ['getserialportinfo',['getSerialPortInfo',['../classInterfaceSP.html#a3d866d2bf7143249f5829365461824a7',1,'InterfaceSP']]],
+  ['getsocket',['getSocket',['../classInterface.html#a2ef69db9e4b67362d36285818b28cc4d',1,'Interface::getSocket()'],['../classInterfaceSP.html#ab5a6a6b9afcecb27d2a91203763e3dbc',1,'InterfaceSP::getSocket()']]],
+  ['gettimeout',['getTimeout',['../classInterface.html#a01f9f81697c3a37f6c44bf842d678257',1,'Interface']]],
+  ['gettimer',['getTimer',['../classInterface.html#ae660ae946b46f3260f95f0a7666c9212',1,'Interface']]]
+];

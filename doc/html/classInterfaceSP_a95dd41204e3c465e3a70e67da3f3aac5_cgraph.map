@@ -1,0 +1,14 @@
+<map id="InterfaceSP::InterfaceSP" name="InterfaceSP::InterfaceSP">
+<area shape="rect" id="node2" href="$classInterfaceSP.html#a7fecd553852998e93ae7c6a328065d4d" title="InterfaceSP::init. " alt="" coords="261,208,377,235"/>
+<area shape="rect" id="node9" href="$classInterfaceSP.html#ab2f9c36700c9bbd032fb4431fa9c5e29" title="InterfaceSP::initSerialPort Prepare a instance of the Serial Port. " alt="" coords="232,157,405,184"/>
+<area shape="rect" id="node13" href="$classInterfaceSP.html#ae510a1fa3769e9f109e6f36779b033b1" title="InterfaceSP::searchSerialPort This method checks a serial port for existence. " alt="" coords="221,259,416,285"/>
+<area shape="rect" id="node3" href="$classInterface.html#a1041f89c79b750592fe0337cc5453b0c" title="Interface::setTimer. " alt="" coords="501,309,633,336"/>
+<area shape="rect" id="node4" href="$classInterface.html#ae660ae946b46f3260f95f0a7666c9212" title="Interface::getTimer. " alt="" coords="744,208,876,235"/>
+<area shape="rect" id="node5" href="$classInterface.html#ab241d152934da63b1bc5c3ba06ce859f" title="Interface::setTimeout. " alt="" coords="494,259,641,285"/>
+<area shape="rect" id="node6" href="$classInterfaceSP.html#a9cca2a82ecb2926c3e725d1e49b6bfb6" title="InterfaceSP::handleTimeout A slot for treatment of the signal Time&#45;Out. " alt="" coords="475,56,659,83"/>
+<area shape="rect" id="node8" href="$classInterface.html#a01f9f81697c3a37f6c44bf842d678257" title="Interface::getTimeout. " alt="" coords="737,107,883,133"/>
+<area shape="rect" id="node7" href="$classBase.html#a85b705d167ffb375c185d4625fea5246" title="Base::stdOutput. " alt="" coords="751,31,869,57"/>
+<area shape="rect" id="node10" href="$classInterfaceSP.html#a1fff334c84059cf307e6ce0bfd089bb8" title="InterfaceSP::handleReadyRead" alt="" coords="464,157,671,184"/>
+<area shape="rect" id="node12" href="$classInterfaceSP.html#ab11fa5aadadef40afc48f30cb665bd32" title="InterfaceSP::handleError" alt="" coords="485,5,650,32"/>
+<area shape="rect" id="node11" href="$classInterface.html#a513446517c600c184f145308897f81bb" title="Interface::getReceivedData. " alt="" coords="719,157,901,184"/>
+</map>

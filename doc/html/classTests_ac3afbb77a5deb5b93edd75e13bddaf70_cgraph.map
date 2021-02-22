@@ -1,0 +1,12 @@
+<map id="Tests::Case17" name="Tests::Case17">
+<area shape="rect" id="node2" href="$classInterfaceSP.html#a3043d3eef41e70c9d51cd970b536b4c0" title="InterfaceSP::getPortName. " alt="" coords="162,5,338,32"/>
+<area shape="rect" id="node3" href="$classInterface.html#a513446517c600c184f145308897f81bb" title="Interface::getReceivedData. " alt="" coords="612,107,795,133"/>
+<area shape="rect" id="node4" href="$classInterfaceSP.html#ab2120b2287d749d50dc0be498664dbec" title="InterfaceSP::getSerialPort. " alt="" coords="163,259,337,285"/>
+<area shape="rect" id="node5" href="$classInterfaceSP.html#a219c5ee6c1c8268a342ad431258ee643" title="InterfaceSP::readTheData Reads all remaining data from the UART device. " alt="" coords="387,157,561,184"/>
+<area shape="rect" id="node8" href="$classInterfaceSP.html#af593dd6e938e6ddd8014cfe37d984d83" title="InterfaceSP::writeTheData Writes the content of byteArray to the Serial Port device. " alt="" coords="161,208,339,235"/>
+<area shape="rect" id="node6" href="$classInterface.html#a9be1d097eec85eea87b25699dfe8a6af" title="Interface::getReceivedBytes. " alt="" coords="609,157,797,184"/>
+<area shape="rect" id="node7" href="$classBase.html#a85b705d167ffb375c185d4625fea5246" title="Base::stdOutput. " alt="" coords="645,259,762,285"/>
+<area shape="rect" id="node9" href="$classInterface.html#a8121757bd84539e4d18ce35ea71d8431" title="Interface::getBlockSize. " alt="" coords="395,360,553,387"/>
+<area shape="rect" id="node10" href="$classInterface.html#a01f9f81697c3a37f6c44bf842d678257" title="Interface::getTimeout. " alt="" coords="401,208,547,235"/>
+<area shape="rect" id="node11" href="$classInterface.html#ae660ae946b46f3260f95f0a7666c9212" title="Interface::getTimer. " alt="" coords="408,259,540,285"/>
+</map>

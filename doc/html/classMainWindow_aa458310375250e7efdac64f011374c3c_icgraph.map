@@ -1,0 +1,6 @@
+<map id="MainWindow::actionsTrigger" name="MainWindow::actionsTrigger">
+<area shape="rect" id="node2" href="$classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="703,37,881,63"/>
+<area shape="rect" id="node3" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="929,37,1109,63"/>
+<area shape="rect" id="node4" href="$classMainWindow.html#a323fa790f37b65d177f0fc6fb4708c82" title="MainWindow::disconnectRTC. " alt="" coords="240,62,436,89"/>
+<area shape="rect" id="node5" href="$classMainWindow.html#a8758b1d4dca6bf7cc89f25b4779f36ad" title="MainWindow::handleError. " alt="" coords="484,62,655,89"/>
+</map>

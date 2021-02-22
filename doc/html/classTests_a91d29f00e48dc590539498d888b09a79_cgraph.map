@@ -1,0 +1,13 @@
+<map id="Tests::Case16" name="Tests::Case16">
+<area shape="rect" id="node2" href="$classInterfaceSP.html#a3043d3eef41e70c9d51cd970b536b4c0" title="InterfaceSP::getPortName. " alt="" coords="171,5,347,32"/>
+<area shape="rect" id="node3" href="$classInterface.html#a513446517c600c184f145308897f81bb" title="Interface::getReceivedData. " alt="" coords="629,107,812,133"/>
+<area shape="rect" id="node4" href="$classInterfaceSP.html#ab2120b2287d749d50dc0be498664dbec" title="InterfaceSP::getSerialPort. " alt="" coords="171,259,346,285"/>
+<area shape="rect" id="node5" href="$classInterfaceSP.html#a219c5ee6c1c8268a342ad431258ee643" title="InterfaceSP::readTheData Reads all remaining data from the UART device. " alt="" coords="404,157,579,184"/>
+<area shape="rect" id="node8" href="$classInterfaceSP.html#ae510a1fa3769e9f109e6f36779b033b1" title="InterfaceSP::searchSerialPort This method checks a serial port for existence. " alt="" coords="161,309,356,336"/>
+<area shape="rect" id="node9" href="$classInterfaceSP.html#af593dd6e938e6ddd8014cfe37d984d83" title="InterfaceSP::writeTheData Writes the content of byteArray to the Serial Port device. " alt="" coords="170,208,347,235"/>
+<area shape="rect" id="node6" href="$classInterface.html#a9be1d097eec85eea87b25699dfe8a6af" title="Interface::getReceivedBytes. " alt="" coords="627,157,815,184"/>
+<area shape="rect" id="node7" href="$classBase.html#a85b705d167ffb375c185d4625fea5246" title="Base::stdOutput. " alt="" coords="662,259,779,285"/>
+<area shape="rect" id="node10" href="$classInterface.html#a8121757bd84539e4d18ce35ea71d8431" title="Interface::getBlockSize. " alt="" coords="412,360,571,387"/>
+<area shape="rect" id="node11" href="$classInterface.html#a01f9f81697c3a37f6c44bf842d678257" title="Interface::getTimeout. " alt="" coords="418,208,565,235"/>
+<area shape="rect" id="node12" href="$classInterface.html#ae660ae946b46f3260f95f0a7666c9212" title="Interface::getTimer. " alt="" coords="425,259,557,285"/>
+</map>

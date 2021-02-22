@@ -1,0 +1,9 @@
+<map id="InterfaceSP::InterfaceSP" name="InterfaceSP::InterfaceSP">
+<area shape="rect" id="node2" href="$classInterfaceSP.html#a7fecd553852998e93ae7c6a328065d4d" title="InterfaceSP::init. " alt="" coords="221,107,337,133"/>
+<area shape="rect" id="node3" href="$classInterface.html#a1041f89c79b750592fe0337cc5453b0c" title="Interface::setTimer. " alt="" coords="411,5,543,32"/>
+<area shape="rect" id="node4" href="$classInterface.html#ae660ae946b46f3260f95f0a7666c9212" title="Interface::getTimer. " alt="" coords="411,56,543,83"/>
+<area shape="rect" id="node5" href="$classInterface.html#ab241d152934da63b1bc5c3ba06ce859f" title="Interface::setTimeout. " alt="" coords="404,107,551,133"/>
+<area shape="rect" id="node6" href="$classInterfaceSP.html#a9cca2a82ecb2926c3e725d1e49b6bfb6" title="InterfaceSP::handleTimeout A slot for treatment of the signal Time&#45;Out. " alt="" coords="385,157,569,184"/>
+<area shape="rect" id="node8" href="$classInterface.html#a01f9f81697c3a37f6c44bf842d678257" title="Interface::getTimeout. " alt="" coords="617,208,764,235"/>
+<area shape="rect" id="node7" href="$classBase.html#a85b705d167ffb375c185d4625fea5246" title="Base::stdOutput. " alt="" coords="632,157,749,184"/>
+</map>

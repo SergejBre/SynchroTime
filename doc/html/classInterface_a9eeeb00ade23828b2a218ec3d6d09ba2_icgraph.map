@@ -1,0 +1,7 @@
+<map id="Interface::openSocket" name="Interface::openSocket">
+<area shape="rect" id="node2" href="$helper_8h.html#aab3e153f54786f53d750e965d190c8a1" title="Request for the Adjustment of the device. " alt="" coords="206,5,381,32"/>
+<area shape="rect" id="node3" href="$helper_8h.html#a7c28bb38d1f8dde09dd59e32edcc69f8" title="Request for the Calibration of the device. " alt="" coords="208,56,379,83"/>
+<area shape="rect" id="node4" href="$helper_8h.html#a4c9d894a31536848ea3ffff2f3002379" title="Request for the Information of the device. " alt="" coords="206,107,381,133"/>
+<area shape="rect" id="node5" href="$helper_8h.html#aa2e3eeb0c176ac23625fe08b0b703e19" title="Request for the Reset of the device. " alt="" coords="221,157,365,184"/>
+<area shape="rect" id="node6" href="$helper_8h.html#a6b47493181446abfe480779efdc7ab2f" title="Request to update the register value. " alt="" coords="204,208,383,235"/>
+</map>

@@ -1,0 +1,15 @@
+<map id="Base::stdOutput" name="Base::stdOutput">
+<area shape="rect" id="node2" href="$classInterfaceSP.html#ab11fa5aadadef40afc48f30cb665bd32" title="InterfaceSP::handleError" alt="" coords="193,56,359,83"/>
+<area shape="rect" id="node6" href="$classInterfaceSP.html#a9cca2a82ecb2926c3e725d1e49b6bfb6" title="InterfaceSP::handleTimeout A slot for treatment of the signal Time&#45;Out. " alt="" coords="184,132,368,159"/>
+<area shape="rect" id="node9" href="$classInterfaceSP.html#a219c5ee6c1c8268a342ad431258ee643" title="InterfaceSP::readTheData Reads all remaining data from the UART device. " alt="" coords="189,208,363,235"/>
+<area shape="rect" id="node10" href="$classInterfaceSP.html#af593dd6e938e6ddd8014cfe37d984d83" title="InterfaceSP::writeTheData Writes the content of byteArray to the Serial Port device. " alt="" coords="429,259,607,285"/>
+<area shape="rect" id="node13" href="$classInterfaceSP.html#a69168c93dcb9e54557d5af2382090427" title="InterfaceSP::searchAllSerialPort Info about all available serial ports. " alt="" coords="171,309,381,336"/>
+<area shape="rect" id="node3" href="$classInterfaceSP.html#ad32de4ed374ef20b1edc7e45f1edc5fd" title="InterfaceSP::InterfaceSP Constructor of the class InterfaceSP for creating objects with default value..." alt="" coords="434,56,602,83"/>
+<area shape="rect" id="node4" href="$classInterfaceSP.html#ab2f9c36700c9bbd032fb4431fa9c5e29" title="InterfaceSP::initSerialPort Prepare a instance of the Serial Port. " alt="" coords="431,5,605,32"/>
+<area shape="rect" id="node5" href="$classInterfaceSP.html#a95dd41204e3c465e3a70e67da3f3aac5" title="InterfaceSP::InterfaceSP Constructor of the class InterfaceSP for creating objects with default value..." alt="" coords="655,5,823,32"/>
+<area shape="rect" id="node7" href="$classInterfaceSP.html#a7fecd553852998e93ae7c6a328065d4d" title="InterfaceSP::init. " alt="" coords="460,107,576,133"/>
+<area shape="rect" id="node8" href="$classInterfaceSP.html#a19d658095a300e0a089a2252d955ca7d" title="InterfaceSP::InterfaceSP Constructor of the class InterfaceSP for creating objects with default value..." alt="" coords="655,107,823,133"/>
+<area shape="rect" id="node11" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16. " alt="" coords="685,247,793,273"/>
+<area shape="rect" id="node12" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17. " alt="" coords="685,171,793,197"/>
+<area shape="rect" id="node14" href="$classSerialThread.html#ad775eb9eef3b8b4603c8f638082a46b0" title="SerialThread::run" alt="" coords="457,309,579,336"/>
+</map>

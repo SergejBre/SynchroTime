@@ -1,0 +1,5 @@
+<map id="InterfaceSP::readTheData" name="InterfaceSP::readTheData">
+<area shape="rect" id="node2" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16. " alt="" coords="453,5,561,32"/>
+<area shape="rect" id="node3" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17. " alt="" coords="453,68,561,95"/>
+<area shape="rect" id="node4" href="$classInterfaceSP.html#af593dd6e938e6ddd8014cfe37d984d83" title="InterfaceSP::writeTheData Writes the content of byteArray to the Serial Port device. " alt="" coords="228,31,405,57"/>
+</map>
