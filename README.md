@@ -182,13 +182,13 @@ where:
 ## System Requirements
 
 * For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
-```
+```bash
  $ sudo apt-get install ntp 
 ```
 
 * Check the correct operation of the service ntp by running the command
-```
-$ ntpq -p
+```bash
+ $ ntpq -p
      remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
 +gromit.nocabal. 131.188.3.222    2 u   64   64  377   27.218   -3.906   5.643
@@ -211,12 +211,12 @@ $ ntpq -p
 * According to the working platform, download the appropriate archive with the command-line application from the [releases page](https://github.com/SergejBre/SynchroTime/releases).
 
 * Unpack it to your home directory with write access, as the application retains its settings.
-```
+```bash
  $ tar -x -j -f SynchroTime_x64_linux_1.0.0-beta.tar.bz2
 ``` 
 
 * Run the application according to the instructions in the section **Using the CLI or GUI app**.
-```
+```bash
  $ cd SynchroTime
 
  SynchroTime$ ./synchroTime -h
@@ -235,6 +235,10 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 
 ![Frequency deviation](./images/frequency_deviation.png)
 
+## Documentation
+
+For the detailed API documentation, see [link](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
+
 ## Dependencies
 
 | Name         | Version                          | Comment                                         |
@@ -245,8 +249,8 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 | Arduino IDE  | >= 1.8.13                        | !Replace compilation flags from -Os to -O2      |
 | RTC library  | >= 1.12.5                        | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
 
-```
-$ ldd synchroTime
+```bash
+ $ ldd synchroTime
 	libQt5SerialPort.so.5 => ./lib/libQt5SerialPort.so.5
 	libQt5Core.so.5 => ./lib/libQt5Core.so.5
 	...
