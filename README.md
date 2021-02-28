@@ -208,11 +208,11 @@ where:
 
 ## Installing the CLI and GUI apps
 
-* According to the working platform, download the appropriate archive with the command-line application from the [releases page](https://github.com/SergejBre/SynchroTime/releases).
+* According to the working platform, download the appropriate archive with the app from [![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases).
 
 * Unpack it to your home directory with write access, as the application retains its settings.
 ```bash
- $ tar -x -j -f SynchroTime_x64_linux_1.0.0-beta.tar.bz2
+ $ tar -x -j -f SynchroTime_x64_linux_1.1.0-beta.tar.bz2
 ``` 
 
 * Run the application according to the instructions in the section **Using the CLI or GUI app**.
@@ -273,4 +273,4 @@ For the detailed API documentation, see [![Documentation](./images/doxygen_badge
 
 ## License
 
-SynchroTime is licensed under [MIT](LICENSE).
+SynchroTime is licensed under [![MIT](./images/license_badge.svg)](LICENSE).
