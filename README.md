@@ -1,4 +1,6 @@
-# SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 module [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)
+# SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 module
+[![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)[![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases)
+
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 
 ## Motivation
