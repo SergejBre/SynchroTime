@@ -237,7 +237,7 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 
 ## Documentation
 
-For the detailed API documentation, see [link](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
+For the detailed API documentation, see [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
 
 ## Dependencies
 
