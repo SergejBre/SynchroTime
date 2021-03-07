@@ -106,7 +106,7 @@ private:
     // The connection function.
     void connectToRTC();
     // The function send a request to the RTC.
-    QByteArray sendRequest( Request request, quint8 size = 0, const quint8 *const data = nullptr ) const;
+    QByteArray sendRequest( Request request, quint8 size = 0, const quint8 *const data = nullptr );
     // Information request.
     void informationRequest();
     // Adjustment request.
@@ -122,6 +122,7 @@ private:
 
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
+    bool m_isBusy;
     QTimer *m_pTimerCheckConnection;
 };
 

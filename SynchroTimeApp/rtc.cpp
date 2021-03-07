@@ -51,6 +51,7 @@
 RTC::RTC( const QString &portName, QObject *parent )
     : QObject( parent ),
       m_pSerialPort( nullptr ),
+      m_isBusy( false ),
       m_pTimerCheckConnection( nullptr )
 {
     // Initialization of the serial interface.
@@ -77,7 +78,7 @@ RTC::RTC( const QString &portName, QObject *parent )
         // After a time of 1 s, the statusRequest() command is called.
         // This is where the lambda function is used to avoid creating a slot.
         QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
-            statusRequest();
+            if ( !m_isBusy ) statusRequest();
         });
         m_pTimerCheckConnection->start();
         }
@@ -92,6 +93,7 @@ RTC::RTC( const QString &portName, QObject *parent )
 RTC::RTC( const Settings_t &portSettings, QObject *parent )
     : QObject( parent ),
       m_pSerialPort( nullptr ),
+      m_isBusy( false ),
       m_pTimerCheckConnection( nullptr )
 {
     // Initialization of the serial interface.
@@ -117,7 +119,7 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
             QObject::connect( m_pTimerCheckConnection, &QTimer::timeout, [this]() {
-                statusRequest();
+                if ( !m_isBusy ) statusRequest();
             });
             m_pTimerCheckConnection->start();
         }
@@ -337,7 +339,7 @@ void RTC::connectToRTC()
 //! \param data
 //! \return
 //!
-QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const data ) const
+QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const data )
 {
     // Data that are sent to the serial interface.
     QByteArray sentData;
@@ -363,6 +365,7 @@ QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const d
     sentData[size + 2] = crc;
 
     Q_ASSERT( m_pSerialPort->isOpen() );
+    m_isBusy = true;
     // Send data to the serial port and wait up to 50 ms until the write is done
     m_pSerialPort->write( sentData );
     m_pSerialPort->waitForBytesWritten( TIME_WAIT );
@@ -371,6 +374,7 @@ QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const d
     thread()->msleep( TIME_WAIT );
     // Reading data from RTC.
     m_pSerialPort->waitForReadyRead( TIME_WAIT );
+    m_isBusy = false;
     return m_pSerialPort->readAll();
 }
 
@@ -630,7 +634,7 @@ bool RTC::statusRequest()
         // Not received a response to the device status request.
         out << QStringLiteral( "Status Request failed" ) << endl;
         emit portError( QStringLiteral( "Not received a response to the device status request: " ) + m_pSerialPort->errorString() );
-        m_pSerialPort->blockSignals( true );
+//        m_pSerialPort->blockSignals( true );
     }
     if ( !result ) emit getData( output );
     return result;
