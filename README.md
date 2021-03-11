@@ -120,9 +120,9 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Request for reset completed successfully. 
 ```
 
-7. Use the `-s (--setreg)` command to write the new value to the offset register of the DS3231. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
+7. Use the `-s (--setreg)` command to write the new value (e.g. `-12.8`) to the offset register of the DS3231. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
 ```bash
- $ ./synchroTime -s
+ $ ./synchroTime -s -12.8
 
  Request for SetRegister completed successfully. 
 ```
@@ -204,7 +204,7 @@ where:
   * The **offset** value shows the difference between the reference time and the system clock.
   * The **jitter** value indicates the magnitude of jitter between several time queries.
 
-* Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max[offset ± jitter] <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
+* Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max|offset ± jitter| <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
 
 * The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced projects: [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm).
 
