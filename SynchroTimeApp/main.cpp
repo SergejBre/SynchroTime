@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     app.setApplicationName( QStringLiteral( "SynchroTime" ));
-    app.setApplicationVersion( QStringLiteral( "v1.1.3, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
+    app.setApplicationVersion( QStringLiteral( "v1.1.4-beta, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
     app.setWindowIcon( QIcon( QStringLiteral( "../images/icon.png") ));
 #ifdef Q_OS_WIN
     app.addLibraryPath( QLibraryInfo::location( QLibraryInfo::LibrariesPath ));
