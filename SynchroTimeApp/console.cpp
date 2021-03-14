@@ -21,7 +21,10 @@
 
 //!
 //! \brief Console::Console
-//! \param parent
+//! \details
+//! Standard constructor
+//!
+//! \param parent of the type *QWidget - main application window (*MainWindow)
 //!
 Console::Console( QWidget *parent )
     : QPlainTextEdit( parent )
@@ -38,6 +41,7 @@ Console::Console( QWidget *parent )
 
 //!
 //! \brief Console::~Console
+//! \details Default destructor
 //!
 Console::~Console()
 {
@@ -49,12 +53,96 @@ Console::~Console()
 }
 
 //!
-//! \brief Console::putData
-//! \param data
+//! \brief Console::formatHtml
+//! \details
+//! This helper function solves the formatting problem.
+//! The problem is that plain text can contain special characters that have meta-values in HTML,
+//! literally: <> & "'. This is solved by a simple formatter that converts them to their corresponding HTML entities.
+//! For example, the function converts the end of the line "\ n" to "\<br/>".
 //!
-void Console::putData(const QString &data )
+//! \param qText of the type const QString. Block of text to convert to HTML.
+//! \param qColor of the type const QColor. The color for the block of text.
+//!
+//! \return qHtmlText of the type const QString.
+//!
+const QString Console::formatHtml( const QString &qText, const QColor &qColor ) const
 {
-    insertPlainText( data );
+    QString qHtmlText = QString::fromLatin1( "<p style='white-space: pre-wrap; color: " )
+            + qColor.name( QColor::HexRgb ) + QString::fromLatin1( "'>" );
+    for ( const QChar qChar : qText ) {
+        switch ( qChar.unicode() ) {
+        case '<': qHtmlText += QString::fromLatin1("&lt;");
+            break;
+        case '>': qHtmlText += QString::fromLatin1("&gt;");
+            break;
+        case '&': qHtmlText += QString::fromLatin1("&amp;");
+            break;
+        case '"': qHtmlText += QString::fromLatin1("&quot;");
+            break;
+        case '\'': qHtmlText += QString::fromLatin1("&apos;");
+            break;
+        case '\t': qHtmlText += QString::fromLatin1("&nbsp;&nbsp;&nbsp;");
+            break;
+        case '\n': qHtmlText += QString::fromLatin1("<br/>");
+            break;
+        default: qHtmlText += qChar; // everything else unchanged
+        }
+    }
+    qHtmlText += QString::fromLatin1("</p>");
+    return qHtmlText;
+}
+
+//!
+//! \brief Console::putData
+//! \details
+//! The function displays text in the console window,
+//! while converting escape sequences '\\x1B' to colored HTML text.
+//!
+//! \param data of the type const QString. Incoming paint-text.
+//!
+void Console::putData( const QString &data )
+{
+    QColor qColor( Qt::green );
+    int pos0 = data.indexOf( QChar('\x1B') );
+    int pos1 = data.indexOf( QChar('\x1B'), pos0 + 1 );
+
+    if ( pos0 > -1 ) {
+        const QChar qChar = data.at( pos0 + 3 );
+        switch ( qChar.unicode() ) {
+        case '1':
+            qColor = QColor( Qt::red );
+            break;
+        case '3':
+            qColor = QColor( Qt::yellow );
+            break;
+        case '6':
+            qColor = QColor( Qt::blue );
+            break;
+        case '7':
+            qColor = QColor( Qt::white );
+            break;
+        default:
+            break;
+        }
+    }
+
+    if ( pos0 > -1 ) {
+        if ( pos0 > 0 ) {
+            appendHtml( formatHtml( data.left( pos0 )));
+        }
+        if ( pos1 > pos0 ) {
+            appendHtml( formatHtml( data.mid( pos0 + 5, pos1 - pos0 - 5 ), qColor ));
+        }
+        if ( pos1 < data.lastIndexOf( QChar('\x1B') ) ) {
+            putData( data.mid( pos1 + 4 ) );
+        }
+        else {
+            appendHtml( formatHtml( data.mid( pos1 + 4 )));
+        }
+    }
+    else {
+        appendHtml( formatHtml( data ));
+    }
 
     QScrollBar *bar = verticalScrollBar();
     bar->setValue( bar->maximum() );
@@ -62,7 +150,7 @@ void Console::putData(const QString &data )
 
 //!
 //! \brief Console::setLocalEchoEnabled
-//! \param set
+//! \param set of the type bool.
 //!
 void Console::setLocalEchoEnabled( bool set )
 {

@@ -28,9 +28,9 @@
 // Types
 //------------------------------------------------------------------------------
 
-//!
+//! \class Console
 //! \brief The Console class
-//!
+//! Provides the user with methods for the console interface.
 class Console : public QPlainTextEdit
 {
     Q_OBJECT
@@ -52,6 +52,7 @@ protected:
     virtual void contextMenuEvent( QContextMenuEvent *e );
 
 private:
+    const QString formatHtml( const QString &qText, const QColor &qColor = QColor(Qt::green) ) const;
     bool localEchoEnabled;
     QByteArray *buffer;
 };

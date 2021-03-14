@@ -62,11 +62,9 @@ enum class StatusMessages : quint8
 class QSerialPort;
 class QTimer;
 
-//!
 //! \class RTC
-//!
-//! \details The RTC class
-//!
+//! \brief The RTC class
+//! The class is responsible for communication with the RTC device.
 class RTC : public QObject
 {
     Q_OBJECT
@@ -106,7 +104,7 @@ private:
     // The connection function.
     void connectToRTC();
     // The function send a request to the RTC.
-    QByteArray sendRequest( Request request, quint8 size = 0, const quint8 *const data = nullptr );
+    const QByteArray sendRequest( Request request, quint8 size = 0, const quint8 *const data = nullptr );
     // Information request.
     void informationRequest();
     // Adjustment request.
