@@ -89,6 +89,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classConsole-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -96,7 +97,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>The <a class="el" href="classConsole.html" title="The Console class. ">Console</a> class.  
+<p>The <a class="el" href="classConsole.html" title="The Console class Provides the user with methods for the console interface. ">Console</a> class Provides the user with methods for the console interface.  
  <a href="classConsole.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="console_8h_source.html">console.h</a>&gt;</code></p>
@@ -104,15 +105,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Inheritance diagram for Console:</div>
 <div class="dyncontent">
 <div class="center"><img src="classConsole__inherit__graph.png" border="0" usemap="#Console_inherit__map" alt="Inheritance graph"/></div>
-<map name="Console_inherit__map" id="Console_inherit__map">
-</map>
 </div>
 <div class="dynheader">
 Collaboration diagram for Console:</div>
 <div class="dyncontent">
 <div class="center"><img src="classConsole__coll__graph.png" border="0" usemap="#Console_coll__map" alt="Collaboration graph"/></div>
-<map name="Console_coll__map" id="Console_coll__map">
-</map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
@@ -150,6 +147,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a199dade448d3ae597d420dc65abca11c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classConsole.html#a199dade448d3ae597d420dc65abca11c" title="Console::contextMenuEvent. ">Console::contextMenuEvent</a>.  <a href="#a199dade448d3ae597d420dc65abca11c">More...</a><br /></td></tr>
 <tr class="separator:a199dade448d3ae597d420dc65abca11c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:af1ab240f6cc791d5e8912d89f54a8790"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConsole.html#af1ab240f6cc791d5e8912d89f54a8790">formatHtml</a> (const QString &amp;qText, const QColor &amp;qColor=QColor(Qt::green)) const </td></tr>
+<tr class="memdesc:af1ab240f6cc791d5e8912d89f54a8790"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classConsole.html#af1ab240f6cc791d5e8912d89f54a8790" title="Console::formatHtml. ">Console::formatHtml</a>.  <a href="#af1ab240f6cc791d5e8912d89f54a8790">More...</a><br /></td></tr>
+<tr class="separator:af1ab240f6cc791d5e8912d89f54a8790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a862b284369f5a8f56056d0db00a049af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConsole.html#a862b284369f5a8f56056d0db00a049af">localEchoEnabled</a></td></tr>
@@ -158,7 +161,7 @@ Private Attributes</h2></td></tr>
 <tr class="separator:af76ed54ac092b8649b63bafce2be9e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The <a class="el" href="classConsole.html" title="The Console class. ">Console</a> class. </p>
+<div class="textblock"><p>The <a class="el" href="classConsole.html" title="The Console class Provides the user with methods for the console interface. ">Console</a> class Provides the user with methods for the console interface. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a1219e6e2000327a02434c56c514bbeda"></a>
 <div class="memitem">
@@ -183,9 +186,10 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classConsole.html#a1219e6e2000327a02434c56c514bbeda" title="Console::Console. ">Console::Console</a>. </p>
+<p>Standard constructor</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parent</td><td></td></tr>
+    <tr><td class="paramname">parent</td><td>of the type *QWidget - main application window (*MainWindow) </td></tr>
   </table>
   </dd>
 </dl>
@@ -208,6 +212,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classConsole.html#a32e8c79c8579b1b076e53848c540d4e7" title="Console::~Console. ">Console::~Console</a>. </p>
+<p>Default destructor </p>
 
 <p>References <a class="el" href="classConsole.html#af76ed54ac092b8649b63bafce2be9e03">buffer</a>.</p>
 
@@ -243,6 +248,66 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="af1ab240f6cc791d5e8912d89f54a8790"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const QString Console::formatHtml </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>qText</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QColor &amp;&#160;</td>
+          <td class="paramname"><em>qColor</em> = <code>QColor(Qt::green)</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classConsole.html#af1ab240f6cc791d5e8912d89f54a8790" title="Console::formatHtml. ">Console::formatHtml</a>. </p>
+<p>This helper function solves the formatting problem. The problem is that plain text can contain special characters that have meta-values in HTML, literally: &lt;&gt; &amp; "'. This is solved by a simple formatter that converts them to their corresponding HTML entities.
+For example, the function converts the end of the line "\ n" to "&lt;br/&gt;".</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">qText</td><td>of the type const QString. Block of text to convert to HTML. </td></tr>
+    <tr><td class="paramname">qColor</td><td>of the type const QColor. The color for the block of text.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>qHtmlText of the type const QString. </dd></dl>
+
+<p>Referenced by <a class="el" href="classConsole.html#ab30d8818bb983bee377438bc2b1a8e63">putData()</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classConsole_af1ab240f6cc791d5e8912d89f54a8790_icgraph.png" border="0" usemap="#classConsole_af1ab240f6cc791d5e8912d89f54a8790_icgraph" alt=""/></div>
+<map name="classConsole_af1ab240f6cc791d5e8912d89f54a8790_icgraph" id="classConsole_af1ab240f6cc791d5e8912d89f54a8790_icgraph">
+<area shape="rect" id="node2" href="classConsole.html#ab30d8818bb983bee377438bc2b1a8e63" title="Console::putData. " alt="" coords="196,5,320,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="368,5,547,32"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="595,5,775,32"/>
+</map>
+</div>
+</p>
 
 </div>
 </div>
@@ -395,14 +460,27 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p><a class="el" href="classConsole.html#ab30d8818bb983bee377438bc2b1a8e63" title="Console::putData. ">Console::putData</a>. </p>
+<p>The function displays text in the console window, while converting escape sequences '\x1B' to colored HTML text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td></td></tr>
+    <tr><td class="paramname">data</td><td>of the type const QString. Incoming paint-text. </td></tr>
   </table>
   </dd>
 </dl>
 
+<p>References <a class="el" href="classConsole.html#af1ab240f6cc791d5e8912d89f54a8790">formatHtml()</a>.</p>
+
 <p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classConsole_ab30d8818bb983bee377438bc2b1a8e63_cgraph.png" border="0" usemap="#classConsole_ab30d8818bb983bee377438bc2b1a8e63_cgraph" alt=""/></div>
+<map name="classConsole_ab30d8818bb983bee377438bc2b1a8e63_cgraph" id="classConsole_ab30d8818bb983bee377438bc2b1a8e63_cgraph">
+<area shape="rect" id="node2" href="classConsole.html#af1ab240f6cc791d5e8912d89f54a8790" title="Console::formatHtml. " alt="" coords="177,5,320,32"/>
+</map>
+</div>
+</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -434,7 +512,7 @@ Here is the caller graph for this function:</div>
 <p><a class="el" href="classConsole.html#a5a17c5b6bc6719a26f73a5d0ac3d7de1" title="Console::setLocalEchoEnabled. ">Console::setLocalEchoEnabled</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">set</td><td></td></tr>
+    <tr><td class="paramname">set</td><td>of the type bool. </td></tr>
   </table>
   </dd>
 </dl>
@@ -495,7 +573,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Feb 22 2021 23:49:18 for SynchroTime by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 16 2021 14:34:17 for SynchroTime by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

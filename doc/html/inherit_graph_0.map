@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node2" href="$classBase.html" title="Base" alt="" coords="133,5,185,32"/>
-<area shape="rect" id="node5" href="$classRTC.html" title="RTC" alt="" coords="134,56,185,83"/>
+<area shape="rect" id="node5" href="$classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. " alt="" coords="134,56,185,83"/>
 <area shape="rect" id="node6" href="$classSession.html" title="Session" alt="" coords="125,107,194,133"/>
 <area shape="rect" id="node7" href="$structSettings.html" title="The Settings class. " alt="" coords="124,157,195,184"/>
 <area shape="rect" id="node8" href="$classTests.html" title="Tests" alt="" coords="132,208,187,235"/>

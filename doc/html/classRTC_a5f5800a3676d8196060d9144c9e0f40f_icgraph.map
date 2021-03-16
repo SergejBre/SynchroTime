@@ -12,7 +12,7 @@
 <area shape="rect" id="node9" href="$classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="412,107,607,133"/>
 <area shape="rect" id="node11" href="$classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="430,157,589,184"/>
 <area shape="rect" id="node13" href="$classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="411,208,608,235"/>
-<area shape="rect" id="node15" href="$classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC. " alt="" coords="702,309,789,336"/>
+<area shape="rect" id="node15" href="$classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="702,309,789,336"/>
 <area shape="rect" id="node16" href="$classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="426,309,593,336"/>
 <area shape="rect" id="node17" href="$classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="436,360,583,387"/>
 </map>

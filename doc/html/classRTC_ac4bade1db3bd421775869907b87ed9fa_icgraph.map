@@ -1,5 +1,5 @@
 <map id="RTC::statusRequest" name="RTC::statusRequest">
 <area shape="rect" id="node2" href="$classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="206,5,353,32"/>
-<area shape="rect" id="node3" href="$classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC. " alt="" coords="411,31,497,57"/>
+<area shape="rect" id="node3" href="$classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="411,31,497,57"/>
 <area shape="rect" id="node4" href="$classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="196,107,363,133"/>
 </map>

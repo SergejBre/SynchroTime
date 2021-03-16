@@ -4,7 +4,7 @@ var searchData=
   ['readme_2emd',['README.md',['../README_8md.html',1,'']]],
   ['readsettings',['readSettings',['../classMainWindow.html#a44e687052bb326e5393fb878e9433581',1,'MainWindow::readSettings()'],['../structSettings.html#a3a68ec75600336f987deb87cf0b7508f',1,'Settings::readSettings()']]],
   ['readthedata',['readTheData',['../classInterface.html#a0284f3b052f1ad4876fbb42722b14dda',1,'Interface::readTheData()'],['../classInterfaceSP.html#a219c5ee6c1c8268a342ad431258ee643',1,'InterfaceSP::readTheData()']]],
-  ['reboot_5fwait',['REBOOT_WAIT',['../interface_8h.html#a603ec0ac39a6800060feeac7b191405b',1,'REBOOT_WAIT():&#160;interface.h'],['../rtc_8cpp.html#a603ec0ac39a6800060feeac7b191405b',1,'REBOOT_WAIT():&#160;rtc.cpp']]],
+  ['reboot_5fwait',['REBOOT_WAIT',['../interface_8h.html#a603ec0ac39a6800060feeac7b191405b',1,'interface.h']]],
   ['received_5fbytes',['RECEIVED_BYTES',['../helper_8h.html#a7cd80a57cfc2c2a2f9ffdc9acf1a815d',1,'helper.h']]],
   ['received_5fbytes_5fcalibr',['RECEIVED_BYTES_CALIBR',['../helper_8h.html#acb7728ec5e9488babab4bedd93778b77',1,'helper.h']]],
   ['received_5fbytes_5finfo',['RECEIVED_BYTES_INFO',['../helper_8h.html#a800c23ecd49bc483fbaa138ef56305fd',1,'helper.h']]],

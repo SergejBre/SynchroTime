@@ -94,7 +94,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>This file contains the implementations of the methods of the <a class="el" href="classRTC.html">RTC</a> class.  
+<p>This file contains the implementations of the methods of the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> class.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="rtc_8h_source.html">rtc.h</a>&quot;</code><br />
 <code>#include &lt;QDebug&gt;</code><br />
@@ -115,20 +115,38 @@ Include dependency graph for rtc.cpp:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a72dd9b3f035ad3b905b099088eb154da"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>&#160;&#160;&#160;'@';</td></tr>
-<tr class="memdesc:a72dd9b3f035ad3b905b099088eb154da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start byte of the protocol of communication with the <a class="el" href="classRTC.html">RTC</a> device.  <a href="#a72dd9b3f035ad3b905b099088eb154da">More...</a><br /></td></tr>
+<tr class="memdesc:a72dd9b3f035ad3b905b099088eb154da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start byte of the protocol of communication with the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> device.  <a href="#a72dd9b3f035ad3b905b099088eb154da">More...</a><br /></td></tr>
 <tr class="separator:a72dd9b3f035ad3b905b099088eb154da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b85963cace75e76ae726bcffb04eb70"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#a0b85963cace75e76ae726bcffb04eb70">DEVICE_ID</a>&#160;&#160;&#160;0x00;</td></tr>
-<tr class="memdesc:a0b85963cace75e76ae726bcffb04eb70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ID of the <a class="el" href="classRTC.html">RTC</a> device.  <a href="#a0b85963cace75e76ae726bcffb04eb70">More...</a><br /></td></tr>
+<tr class="memdesc:a0b85963cace75e76ae726bcffb04eb70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ID of the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> device.  <a href="#a0b85963cace75e76ae726bcffb04eb70">More...</a><br /></td></tr>
 <tr class="separator:a0b85963cace75e76ae726bcffb04eb70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a603ec0ac39a6800060feeac7b191405b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#a603ec0ac39a6800060feeac7b191405b">REBOOT_WAIT</a>&#160;&#160;&#160;1500</td></tr>
-<tr class="memdesc:a603ec0ac39a6800060feeac7b191405b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interval for a time-out in milliseconds.  <a href="#a603ec0ac39a6800060feeac7b191405b">More...</a><br /></td></tr>
-<tr class="separator:a603ec0ac39a6800060feeac7b191405b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24fa2248797a8a88020d8cda0ea2189c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#a24fa2248797a8a88020d8cda0ea2189c">TIME_WAIT</a>&#160;&#160;&#160;50</td></tr>
-<tr class="memdesc:a24fa2248797a8a88020d8cda0ea2189c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interval for a time-out in milliseconds.  <a href="#a24fa2248797a8a88020d8cda0ea2189c">More...</a><br /></td></tr>
-<tr class="separator:a24fa2248797a8a88020d8cda0ea2189c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa4ef8b571913a6719bae2a22a713d82"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#afa4ef8b571913a6719bae2a22a713d82">WAIT_REBOOT</a>&#160;&#160;&#160;1500</td></tr>
+<tr class="memdesc:afa4ef8b571913a6719bae2a22a713d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interval for a time-out in milliseconds.  <a href="#afa4ef8b571913a6719bae2a22a713d82">More...</a><br /></td></tr>
+<tr class="separator:afa4ef8b571913a6719bae2a22a713d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7676cdfa371dfdcf6fb0687737c29a6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#ae7676cdfa371dfdcf6fb0687737c29a6">WAIT_TIME</a>&#160;&#160;&#160;50</td></tr>
+<tr class="memdesc:ae7676cdfa371dfdcf6fb0687737c29a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interval for a time-out in milliseconds.  <a href="#ae7676cdfa371dfdcf6fb0687737c29a6">More...</a><br /></td></tr>
+<tr class="separator:ae7676cdfa371dfdcf6fb0687737c29a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6928401a4ce61a49c288ffe907ad020"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#ae6928401a4ce61a49c288ffe907ad020">WAIT_TIME_W</a>&#160;&#160;&#160;100</td></tr>
+<tr class="memdesc:ae6928401a4ce61a49c288ffe907ad020"><td class="mdescLeft">&#160;</td><td class="mdescRight">The waiting time for the written in milliseconds.  <a href="#ae6928401a4ce61a49c288ffe907ad020">More...</a><br /></td></tr>
+<tr class="separator:ae6928401a4ce61a49c288ffe907ad020"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c053f01ace5aafade2bca8a1727b522"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>&#160;&#160;&#160;QStringLiteral(&quot;\x1b[31m&quot;)</td></tr>
+<tr class="memdesc:a5c053f01ace5aafade2bca8a1727b522"><td class="mdescLeft">&#160;</td><td class="mdescRight">ESCAPE sequence for red.  <a href="#a5c053f01ace5aafade2bca8a1727b522">More...</a><br /></td></tr>
+<tr class="separator:a5c053f01ace5aafade2bca8a1727b522"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbe055efc13db8cf90b0f7cb27bc0862"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>&#160;&#160;&#160;QStringLiteral(&quot;\x1b[33m&quot;)</td></tr>
+<tr class="memdesc:acbe055efc13db8cf90b0f7cb27bc0862"><td class="mdescLeft">&#160;</td><td class="mdescRight">ESCAPE sequence for yellow.  <a href="#acbe055efc13db8cf90b0f7cb27bc0862">More...</a><br /></td></tr>
+<tr class="separator:acbe055efc13db8cf90b0f7cb27bc0862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad116b147d5108d2ec10e77939f35462d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#ad116b147d5108d2ec10e77939f35462d">ESC_BLUE</a>&#160;&#160;&#160;QStringLiteral(&quot;\x1b[36m&quot;)</td></tr>
+<tr class="memdesc:ad116b147d5108d2ec10e77939f35462d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ESCAPE sequence for blue.  <a href="#ad116b147d5108d2ec10e77939f35462d">More...</a><br /></td></tr>
+<tr class="separator:ad116b147d5108d2ec10e77939f35462d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ec58b2f36a753832366a52607e6dbae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>&#160;&#160;&#160;QStringLiteral(&quot;\x1b[37m&quot;)</td></tr>
+<tr class="memdesc:a7ec58b2f36a753832366a52607e6dbae"><td class="mdescLeft">&#160;</td><td class="mdescRight">ESCAPE sequence for white.  <a href="#a7ec58b2f36a753832366a52607e6dbae">More...</a><br /></td></tr>
+<tr class="separator:a7ec58b2f36a753832366a52607e6dbae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e1d760a68101231b8ebe6b63b72c437"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>&#160;&#160;&#160;QStringLiteral(&quot;\x1b[0m&quot;)</td></tr>
+<tr class="memdesc:a7e1d760a68101231b8ebe6b63b72c437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset color.  <a href="#a7e1d760a68101231b8ebe6b63b72c437">More...</a><br /></td></tr>
+<tr class="separator:a7e1d760a68101231b8ebe6b63b72c437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file contains the implementations of the methods of the <a class="el" href="classRTC.html">RTC</a> class. </p>
+<div class="textblock"><p>This file contains the implementations of the methods of the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> class. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a0b85963cace75e76ae726bcffb04eb70"></a>
 <div class="memitem">
@@ -140,23 +158,85 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>ID of the <a class="el" href="classRTC.html">RTC</a> device. </p>
+<p>ID of the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> device. </p>
 
 </div>
 </div>
-<a class="anchor" id="a603ec0ac39a6800060feeac7b191405b"></a>
+<a class="anchor" id="ad116b147d5108d2ec10e77939f35462d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define REBOOT_WAIT&#160;&#160;&#160;1500</td>
+          <td class="memname">#define ESC_BLUE&#160;&#160;&#160;QStringLiteral(&quot;\x1b[36m&quot;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Interval for a time-out in milliseconds. </p>
+<p>ESCAPE sequence for blue. </p>
 
-<p>Referenced by <a class="el" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348">RTC::connectToRTC()</a>, and <a class="el" href="classRTC.html#a6d22d11d6712695573cf7453240faaed">RTC::openSerialPort()</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a5c053f01ace5aafade2bca8a1727b522"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ESC_RED&#160;&#160;&#160;QStringLiteral(&quot;\x1b[31m&quot;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ESCAPE sequence for red. </p>
+
+<p>Referenced by <a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27">RTC::adjustmentRequest()</a>, <a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4">RTC::calibrationRequest()</a>, <a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5">RTC::informationRequest()</a>, <a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813">RTC::resetRequest()</a>, <a class="el" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e">RTC::setRegisterRequest()</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">RTC::statusRequest()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7e1d760a68101231b8ebe6b63b72c437"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ESC_RESET&#160;&#160;&#160;QStringLiteral(&quot;\x1b[0m&quot;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reset color. </p>
+
+<p>Referenced by <a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27">RTC::adjustmentRequest()</a>, <a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4">RTC::calibrationRequest()</a>, <a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5">RTC::informationRequest()</a>, <a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813">RTC::resetRequest()</a>, <a class="el" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e">RTC::setRegisterRequest()</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">RTC::statusRequest()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7ec58b2f36a753832366a52607e6dbae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ESC_WHITE&#160;&#160;&#160;QStringLiteral(&quot;\x1b[37m&quot;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ESCAPE sequence for white. </p>
+
+<p>Referenced by <a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27">RTC::adjustmentRequest()</a>, <a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4">RTC::calibrationRequest()</a>, <a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5">RTC::informationRequest()</a>, <a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813">RTC::resetRequest()</a>, and <a class="el" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e">RTC::setRegisterRequest()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acbe055efc13db8cf90b0f7cb27bc0862"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ESC_YELLOW&#160;&#160;&#160;QStringLiteral(&quot;\x1b[33m&quot;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ESCAPE sequence for yellow. </p>
+
+<p>Referenced by <a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27">RTC::adjustmentRequest()</a>, <a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4">RTC::calibrationRequest()</a>, <a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813">RTC::resetRequest()</a>, and <a class="el" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e">RTC::setRegisterRequest()</a>.</p>
 
 </div>
 </div>
@@ -170,32 +250,64 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Start byte of the protocol of communication with the <a class="el" href="classRTC.html">RTC</a> device. </p>
+<p>Start byte of the protocol of communication with the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> device. </p>
 
-<p>Referenced by <a class="el" href="classRTC.html#a714c976348a28de80abc2e697c9e09c8">RTC::sendRequest()</a>.</p>
+<p>Referenced by <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">RTC::sendRequest()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a24fa2248797a8a88020d8cda0ea2189c"></a>
+<a class="anchor" id="afa4ef8b571913a6719bae2a22a713d82"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define TIME_WAIT&#160;&#160;&#160;50</td>
+          <td class="memname">#define WAIT_REBOOT&#160;&#160;&#160;1500</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Interval for a time-out in milliseconds. </p>
 
-<p>Referenced by <a class="el" href="helper_8h.html#aab3e153f54786f53d750e965d190c8a1">handleAdjustmentRequest()</a>, <a class="el" href="helper_8h.html#a7c28bb38d1f8dde09dd59e32edcc69f8">handleCalibrationRequest()</a>, <a class="el" href="helper_8h.html#a4c9d894a31536848ea3ffff2f3002379">handleInformationRequest()</a>, <a class="el" href="helper_8h.html#aa2e3eeb0c176ac23625fe08b0b703e19">handleResetRequest()</a>, <a class="el" href="helper_8h.html#a6b47493181446abfe480779efdc7ab2f">handleSetRegisterRequest()</a>, and <a class="el" href="classRTC.html#a714c976348a28de80abc2e697c9e09c8">RTC::sendRequest()</a>.</p>
+<p>Referenced by <a class="el" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348">RTC::connectToRTC()</a>, and <a class="el" href="classRTC.html#a6d22d11d6712695573cf7453240faaed">RTC::openSerialPort()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae7676cdfa371dfdcf6fb0687737c29a6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WAIT_TIME&#160;&#160;&#160;50</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Interval for a time-out in milliseconds. </p>
+
+<p>Referenced by <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">RTC::sendRequest()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae6928401a4ce61a49c288ffe907ad020"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WAIT_TIME_W&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The waiting time for the written in milliseconds. </p>
+
+<p>Referenced by <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">RTC::sendRequest()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Feb 22 2021 23:49:18 for SynchroTime by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 16 2021 14:34:17 for SynchroTime by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

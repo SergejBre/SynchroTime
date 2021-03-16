@@ -2,6 +2,7 @@ var searchData=
 [
   ['m_5fbaudrate',['m_baudRate',['../structSettings.html#ae83b5a7d8d6e63aa753dc623dad09d3b',1,'Settings']]],
   ['m_5fenablelog',['m_enableLog',['../structSettings.html#a9a0e9309d6a71052e7e24dbb952ca6e7',1,'Settings']]],
+  ['m_5fisbusy',['m_isBusy',['../classRTC.html#af83a6d3fc409c11c352265ff5c917990',1,'RTC']]],
   ['m_5fisconnected',['m_isConnected',['../classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d',1,'RTC']]],
   ['m_5fmaxsizelog',['m_maxSizeLog',['../structSettings.html#a30197826140e029ac74faddad6dec1da',1,'Settings']]],
   ['m_5fparam',['m_param',['../structSettings.html#a0983e29fb1a957539ff975d600337d74',1,'Settings']]],
