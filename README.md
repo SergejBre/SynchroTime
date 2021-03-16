@@ -135,9 +135,9 @@ All functionality is similar to the CLI application (see figure below). As an ex
 
 ## Specification
 
-* The application allows you to adjust the time with an accuracy of ±1 ms.
+* The application allows you to adjust the time with an accuracy of ±1 ms (under Linux OS).
 
-* The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms.
+* The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms (under Linux OS).
 
 * The application allows you to calibrate the module clock within the range from -12.8 to +12.7 ppm.
 
