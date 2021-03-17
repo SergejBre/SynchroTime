@@ -18,6 +18,7 @@ OBJECTS_DIR = obj
 CONFIG += console
 CONFIG += qt c++11
 CONFIG -= app_bundle
+QMAKE_CXXFLAGS += -std=c++11
 
 TEMPLATE = app
 LANGUAGE = C++
