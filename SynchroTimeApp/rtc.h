@@ -76,8 +76,11 @@ public:
 
     // Connection check function.
     bool isConnected() const;
+    bool isBusy() const;
 
 signals:
+    //! Signal function for determining the access rate via the serial interface
+    void getRate( const float rate );
     void getData( const QString &data );
     void portError( const QString &error );
 

@@ -25,7 +25,7 @@
 #include <QMessageBox>
 #include <QLCDNumber>
 #include <QLabel>
-#include <QDateTime>
+#include <QTime>
 #include <QTimer>
 #include <QSettings>
 #include <QThread>
@@ -46,7 +46,7 @@
 #define WAIT_FOR_STREAM 1000 //!< Wait 1s for the stream
 #define SETTINGS_FILE QStringLiteral( "synchroTimeApp.ini" ) //!< The name of the settings file.
 //------------------------------------------------------------------------------
-// Function Prototypes
+// Function definitions
 //------------------------------------------------------------------------------
 
 //!
@@ -74,11 +74,14 @@ MainWindow::MainWindow( QWidget *parent ) :
     // Here, the settings of the serial interface is retrieved from the configuration file.
     m_pSettingsDialog->fillSettingsUi();
 
+    rate = new QLabel;
+    rate->setStyleSheet( QString("color: blue") );
+    ui->statusBar->addPermanentWidget( rate, 0 );
     clock = new QLCDNumber;
     clock->setDigitCount(8);
     clock->setPalette( Qt::green );
-    clock->setStyleSheet( QStringLiteral( "background: black" ));
-    clock->display( QDateTime::currentDateTime().toString( QStringLiteral( "hh:mm:ss") ));
+    clock->setStyleSheet( QStringLiteral("background: black") );
+    clock->display( QTime::currentTime().toString() );
     ui->statusBar->addPermanentWidget( clock, 0 );
     status = new QLabel;
     ui->statusBar->addWidget( status );
@@ -209,9 +212,19 @@ void MainWindow::about()
                        QObject::tr("The <b>SynchroTime</b> application is used for fine tuning "
                                    "and calibration of the <b>RTC DS3231</b> module."
                                    "<br /><b>Version</b> %1"
-                                   "<br /><b>Copyright</b> © 2020 sergej1@email.ua"
+                                   "<br /><b>Copyright</b> © 2021 sergej1@email.ua"
                                    "<br /><br />For more information follow the link to the "
                                    "<a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.").arg(qApp->applicationVersion()));
+}
+
+//!
+//! \brief MainWindow::putRate
+//! \param rate of the type const float
+//!
+void MainWindow::putRate( const float rate )
+{
+    Q_ASSERT( this->rate != nullptr );
+    this->rate->setNum( rate );
 }
 
 //!
@@ -254,6 +267,7 @@ void MainWindow::connectRTC()
             QObject::connect(this, &MainWindow::setRegister, m_pRTC, &RTC::setRegisterRequestSlot);
 
             QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
+            QObject::connect(m_pRTC, &RTC::getRate, this, &MainWindow::putRate);
             QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
             showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 bps" )
@@ -295,6 +309,7 @@ void MainWindow::disconnectRTC()
     }
 
     showStatusMessage( QObject::tr( "Disconnected" ) );
+    rate->clear();
 }
 
 //!
@@ -330,7 +345,7 @@ void MainWindow::showStatusMessage(const QString &message) const
 void MainWindow::tickClock()
 {
     Q_ASSERT( clock != nullptr );
-    clock->display( QDateTime::currentDateTime().toString( QObject::tr( "hh:mm:ss") ));
+    clock->display( QTime::currentTime().toString() );
 }
 
 //!
@@ -409,7 +424,7 @@ void MainWindow::selectConsoleFont( void )
 void MainWindow::setRegisterSlot()
 {
     bool ok;
-    float value = QInputDialog::getDouble( this, QObject::tr( "Offset register modification" ),
+    const float value = QInputDialog::getDouble( this, QObject::tr( "Offset register modification" ),
                                          QObject::tr( "Enter a new value new value in the Offset Register:" ),
                                          0, -12.8, 12.7, 1, &ok );
     Q_ASSERT( m_pRTC != nullptr );

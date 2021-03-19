@@ -48,7 +48,7 @@ public:
     ~MainWindow();
 
 signals:
-    void setRegister( float value );
+    void setRegister( const float value );
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
@@ -62,10 +62,12 @@ private slots:
     void help();
     void about();
 
+    void putRate( const float rate );
     void handleError( const QString &error );
 
 private:
     Ui::MainWindow *ui;
+    QLabel *rate;
     QLabel *status;
     QLCDNumber *clock;
     QTimer *m_pTimer;
