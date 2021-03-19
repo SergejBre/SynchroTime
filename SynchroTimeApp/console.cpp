@@ -19,6 +19,16 @@
 #include "console.h"
 #include <QScrollBar>
 
+//------------------------------------------------------------------------------
+// Types
+//------------------------------------------------------------------------------
+#define ESC_START QRegExp( QStringLiteral("\x1b[[]3\\dm")) //!< Start of every ESC sequence.
+#define ESC_END QStringLiteral("\x1b[0m")                  //!< End of a ESCAPE sequence.
+
+//------------------------------------------------------------------------------
+// Function definitions
+//------------------------------------------------------------------------------
+
 //!
 //! \brief Console::Console
 //! \details
@@ -30,7 +40,7 @@ Console::Console( QWidget *parent )
     : QPlainTextEdit( parent )
     , localEchoEnabled( false )
 {
-    document()->setMaximumBlockCount( 100 );
+    document()->setMaximumBlockCount( 200 );
     QPalette p = palette();
     p.setColor( QPalette::Base, Qt::black );
     p.setColor( QPalette::Text, Qt::green );
@@ -103,11 +113,11 @@ const QString Console::formatHtml( const QString &qText, const QColor &qColor ) 
 void Console::putData( const QString &data )
 {
     QColor qColor( Qt::green );
-    int pos0 = data.indexOf( QChar('\x1B') );
-    int pos1 = data.indexOf( QChar('\x1B'), pos0 + 1 );
+    int pos_start = data.indexOf( ESC_START );
+    int pos_end = data.indexOf( ESC_END, pos_start + 1 );
 
-    if ( pos0 > -1 ) {
-        const QChar qChar = data.at( pos0 + 3 );
+    if ( pos_start > -1 ) {
+        const QChar qChar = data.at( pos_start + 3 );
         switch ( qChar.unicode() ) {
         case '1':
             qColor = QColor( Qt::red );
@@ -126,18 +136,18 @@ void Console::putData( const QString &data )
         }
     }
 
-    if ( pos0 > -1 ) {
-        if ( pos0 > 0 ) {
-            appendHtml( formatHtml( data.left( pos0 )));
+    if ( pos_start > -1 ) {
+        if ( pos_start > 0 ) {
+            appendHtml( formatHtml( data.left( pos_start )));
         }
-        if ( pos1 > pos0 ) {
-            appendHtml( formatHtml( data.mid( pos0 + 5, pos1 - pos0 - 5 ), qColor ));
+        if ( pos_end > pos_start ) {
+            appendHtml( formatHtml( data.mid( pos_start + 5, pos_end - pos_start - 5 ), qColor ));
         }
-        if ( pos1 < data.lastIndexOf( QChar('\x1B') ) ) {
-            putData( data.mid( pos1 + 4 ) );
+        if ( pos_end < data.lastIndexOf( ESC_END ) ) {
+            putData( data.mid( pos_end + 4 ) );
         }
         else {
-            appendHtml( formatHtml( data.mid( pos1 + 4 )));
+            appendHtml( formatHtml( data.mid( pos_end + 4 )));
         }
     }
     else {
