@@ -30,6 +30,7 @@ Dependencies:
 
 #define TIME_ZONE 1           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
+#define STARTBYTE 0x40        // The starting byte of the data set from the communication protocol.
 #define OFFSET_REGISTER 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
@@ -59,7 +60,7 @@ uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
   while ( !Serial );      // wait for serial port to connect. Needed for native USB
-  Serial.setTimeout( 5 ); // timeout 5ms
+  Serial.setTimeout(1);   // timeout 5ms
 
   if ( !rtc.begin() ) {
     Serial.println( F( "Couldn't find DS3231 modul" ) );
@@ -106,7 +107,7 @@ void loop () {
   time_t t;
   time_t ref = {0, 0};
 
-  if ( Serial.available() > 1 && Serial.read() == '@' ) {       // if there is data available
+  if ( Serial.available() > 1 && Serial.read() == STARTBYTE ) {       // if there is data available
 
     while ( millis() - tickCounter > 998 );
     t.milliSecs = millis() - tickCounter;
@@ -169,7 +170,7 @@ void loop () {
       Serial.print( F("Invalid Data") );
     }
     else if ( task != TASK_IDLE ) {
-      byteBuffer[set] = '@';
+      byteBuffer[set] = STARTBYTE;
       set++;
     }
   }
