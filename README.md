@@ -131,7 +131,9 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 
 All functionality is similar to the CLI application (see figure below). As an extra, there is the option of selecting the numerous serial port settings.
 
-![PROJECT_IMAGE](./images/guiApp_About2.png)
+![PROJECT_IMAGE2](./images/guiApp_About2.png)
+
+![SERIAL_PORT_SETTINGS](./images/serial_port_settings.png)
 
 ## Specification
 
@@ -150,7 +152,7 @@ All functionality is similar to the CLI application (see figure below). As an ex
 * The interrupt on the port D2 (or D3) serves to count milliseconds by the internal Arduino counter millis.
 
 * The suggested connection to the DS3231 module is according to the Circuit below.
-![circuit](images/Steckplatine_DS3231.png)
+![CIRCUIT](images/Steckplatine_DS3231.png)
 
 ## Description of the request protocol
 
