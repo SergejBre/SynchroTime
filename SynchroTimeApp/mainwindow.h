@@ -60,6 +60,7 @@ private slots:
     void setRegisterSlot();
     void tickClock();
     void help();
+    void aboutQt();
     void about();
 
     void putRate( const float rate );

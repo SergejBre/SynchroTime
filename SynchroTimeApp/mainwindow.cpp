@@ -100,6 +100,7 @@ MainWindow::MainWindow( QWidget *parent ) :
     QObject::connect(ui->actionPort_Setting, &QAction::triggered, m_pSettingsDialog, &SettingsDialog::show);
     QObject::connect(ui->actionSelect_Font, &QAction::triggered, this, &MainWindow::selectConsoleFont);
     QObject::connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
+    QObject::connect(ui->actionAbout_Qt, &QAction::triggered, this, &MainWindow::aboutQt);
     QObject::connect(ui->actionContents, &QAction::triggered, this, &MainWindow::help);
     QObject::connect(ui->actionSetRegister, &QAction::triggered, this, &MainWindow::setRegisterSlot );
 }
@@ -384,6 +385,14 @@ void MainWindow::help()
                                           "<li>To reset the offset register to its default value and "
                                           "clear the module's memory of calibration data, use the <b>reset request</b>.</li></ol>"
                                           "For more information follow the link to the <a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.") );
+}
+
+//!
+//! \brief MainWindow::aboutQt
+//! A slot for issuing information about the Qt-Framework used.
+void MainWindow::aboutQt()
+{
+    qApp->aboutQt();
 }
 
 //!
