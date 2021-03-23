@@ -60,7 +60,7 @@ uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
   while ( !Serial );      // wait for serial port to connect. Needed for native USB
-  Serial.setTimeout(1);   // timeout 5ms
+//  Serial.setTimeout(0);   // timeout in ms
 
   if ( !rtc.begin() ) {
     Serial.println( F( "Couldn't find DS3231 modul" ) );
@@ -74,7 +74,6 @@ void setup () {
   }
 
   if ( rtc.lostPower() ) {
-//    Serial.println( F("RTC lost power, lets set the time!") );
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
     const uint32_t newtime = DateTime( F(__DATE__), F(__TIME__) ).unixtime();
     // offset value from -128 to +127, default is 0
@@ -104,8 +103,7 @@ void loop () {
   uint8_t set = 0U;
   uint8_t numberOfBytes = 0U;
   float drift_in_ppm = 0;
-  time_t t;
-  time_t ref = {0, 0};
+  time_t t, ref;
 
   if ( Serial.available() > 1 && Serial.read() == STARTBYTE ) {       // if there is data available
 
@@ -119,21 +117,27 @@ void loop () {
     switch ( thisChar )
     {
       case 'a':                     // time adjustment request
+        numberOfBytes = Serial.readBytes( byteBuffer, 7 );
         task = TASK_ADJUST;
         break;
       case 'i':                     // information request
+        numberOfBytes = Serial.readBytes( byteBuffer, 7 );
         task = TASK_INFO;
         break;
       case 'c':                     // calibrating request
+        numberOfBytes = Serial.readBytes( byteBuffer, 7 );
         task = TASK_CALIBR;
         break;
       case 'r':                     // reset request
+        numberOfBytes = Serial.readBytes( byteBuffer, 1 );
         task = TASK_RESET;
         break;
       case 's':                     // set offset reg. request
+        numberOfBytes = Serial.readBytes( byteBuffer, 5 );
         task = TASK_SETREG;
         break;
       case 't':                     // status request
+        numberOfBytes = Serial.readBytes( byteBuffer, 1 );
         task = TASK_STATUS;
         break;
       default:                      // unknown request
@@ -145,25 +149,23 @@ void loop () {
     // Data Parser
     uint8_t crc = 0U;
     uint8_t sum = uint8_t( thisChar );
-    if ( Serial.available() > 0 ) {
-      numberOfBytes = Serial.readBytes( byteBuffer, 7 );
-      if ( numberOfBytes > sizeof( ref ) ) {
-        // reading reference time if data is available. in the form [sec|ms] = 4+2 bytes
-        memcpy( &ref, byteBuffer, sizeof( ref ));
-        crc = byteBuffer[ sizeof( ref )];
-        sum += sumOfBytes( byteBuffer, sizeof( ref ));
-      }
-      else if ( numberOfBytes > sizeof( drift_in_ppm ) ) {
-        // reading new value for the offset reg. in the form [float] = 4 bytes
-        
-        memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ));
-        crc = byteBuffer[ sizeof( drift_in_ppm )];
-        sum += sumOfBytes( byteBuffer, sizeof( drift_in_ppm ));
-      }
-      else {
-        crc = byteBuffer[0];
-      }
+    if ( numberOfBytes > sizeof( ref ) ) {
+      // reading reference time if data is available. in the form [sec|ms] = 4+2 bytes
+      memcpy( &ref, byteBuffer, sizeof( ref ));
+      crc = byteBuffer[ sizeof( ref )];
+      sum += sumOfBytes( byteBuffer, sizeof( ref ));
     }
+    else if ( numberOfBytes > sizeof( drift_in_ppm ) ) {
+      // reading new value for the offset reg. in the form [float] = 4 bytes
+      
+      memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ));
+      crc = byteBuffer[ sizeof( drift_in_ppm )];
+      sum += sumOfBytes( byteBuffer, sizeof( drift_in_ppm ));
+    }
+    else {
+      crc = byteBuffer[0];
+    }
+
     // checksum verification
     if ( crc != sum ) {
       task = TASK_IDLE;
