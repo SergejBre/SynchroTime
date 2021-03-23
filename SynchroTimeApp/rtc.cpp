@@ -38,9 +38,8 @@
 //------------------------------------------------------------------------------
 #define STARTBYTE 0x40   //!< The starting byte of the data set from the communication protocol.
 #define DEVICE_ID 0x00   //!< ID of the RTC device.
-#define WAIT_REBOOT 1500 //!< Interval for a time-out in milliseconds
-#define WAIT_TIME 50     //!< Interval for a time-out in milliseconds
-#define WAIT_TIME_W 100  //!< The waiting time for the written in milliseconds
+#define WAIT_REBOOT 2500 //!< Interval for a time-out in milliseconds
+#define WAIT_TIME 50     //!< The waiting time for the reading or written in milliseconds
 #define ESC_RED QStringLiteral("\x1b[31m")    //!< ESCAPE sequence for red.
 #define ESC_YELLOW QStringLiteral("\x1b[33m") //!< ESCAPE sequence for yellow.
 #define ESC_BLUE QStringLiteral("\x1b[36m")   //!< ESCAPE sequence for blue.
@@ -82,7 +81,7 @@ RTC::RTC( const QString &portName, QObject *parent )
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
         if ( m_pTimerCheckConnection != nullptr ) {
-            m_pTimerCheckConnection->setInterval( 1000 );
+            m_pTimerCheckConnection->setInterval( 1100 );
 
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
@@ -124,7 +123,7 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
         if ( m_pTimerCheckConnection != nullptr ) {
-            m_pTimerCheckConnection->setInterval( 1000 );
+            m_pTimerCheckConnection->setInterval( 1100 );
 
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
@@ -307,7 +306,7 @@ void RTC::handleError( QSerialPort::SerialPortError error )
 bool RTC::openSerialPort() const
 {
     Q_ASSERT( m_pSerialPort != nullptr );
-    if ( m_pSerialPort->open( QSerialPort::ReadWrite ) )
+    if ( m_pSerialPort->open( QSerialPort::ReadWrite ) && m_pSerialPort->clear( QSerialPort::AllDirections ) )
     {
         thread()->msleep( WAIT_REBOOT );
         return true;
@@ -385,13 +384,19 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     m_isBusy = true;
     // Send data to the serial port and wait up to 50 ms until the write is done
     m_pSerialPort->write( sentData );
-    m_pSerialPort->waitForBytesWritten( WAIT_TIME_W );
+    if ( !m_pSerialPort->waitForBytesWritten( WAIT_TIME ) ) {
+        emit portError( QStringLiteral( "Failed to send device data: " ) + m_pSerialPort->errorString() );
+    }
 
     // Sleep 50 ms, waiting for the microcontroller to process the data and respond
-    thread()->msleep( WAIT_TIME );
+//    thread()->msleep( WAIT_TIME );
     // Reading data from RTC.
-    m_pSerialPort->waitForReadyRead( WAIT_TIME );
-    m_isBusy = false;
+    if ( m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
+        m_isBusy = false;
+    }
+    else {
+        emit portError( QStringLiteral( "No response received from the device: " ) + m_pSerialPort->errorString() );
+    }
     return m_pSerialPort->readAll();
 }
 
@@ -486,11 +491,11 @@ void RTC::adjustmentRequest()
 
     // Send a request to the RTC device
     auto receivedData = sendRequest( Request::ADJUST, sizeof( sentData ), sentData );
-    const qint8 blength = receivedData.size();
 
     // Check of the received response to the request.
-    if ( blength > 1 && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
     {
+        const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
         QDateTime local; //(QDateTime::currentDateTime());
         local.setTime_t( localTimeSecs );
@@ -527,11 +532,11 @@ void RTC::calibrationRequest()
 
     // Send a request to the RTC device
     auto receivedData = sendRequest( Request::CALIBR, sizeof( sentData ), sentData );
-    const qint8 blength = receivedData.size();
 
     // Check of the received response to the request
-    if ( blength > 1 && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
     {
+        const qint8 blength = receivedData.size();
         auto byteBuffer = receivedData.constData();
         const quint8 ret_value = byteBuffer[ blength-1 ];
         local.setTime_t( localTimeSecs );
@@ -565,11 +570,11 @@ void RTC::resetRequest()
 
     // Send a request to the RTC device
     auto receivedData = sendRequest( Request::RESET );
-    const qint8 blength = receivedData.size();
 
     // Check of the received response to the request
-    if ( blength > 1 && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
     {
+        const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
         out << ESC_YELLOW << "Request for reset " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
     }
@@ -594,11 +599,11 @@ void RTC::setRegisterRequest( const float newValue )
 
     // Send a request to the RTC device
     auto receivedData = sendRequest( Request::SETREG, sizeof( sentData ), sentData );
-    const qint8 blength = receivedData.size();
 
     // Check of the Received request
-    if ( blength > 1 && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
     {
+        const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
         out << ESC_YELLOW << "Request for SetRegister " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
     }
@@ -626,7 +631,7 @@ bool RTC::statusRequest()
     const float rate = m_eTimer.nsecsElapsed()/1000000.0;
 
     // Check of the received response to the request
-    if ( receivedData.size() > 1 && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
     {
         StatusMessages status = static_cast<StatusMessages>( receivedData.at(1) );
         switch ( status ) {
