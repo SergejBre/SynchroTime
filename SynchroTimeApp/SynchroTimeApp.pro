@@ -63,7 +63,7 @@ linux|macx {
 }
 # For Win32 release
 win32 {
-    VERSION = 1.1.4.0
+    VERSION = 1.1.5.0
     QMAKE_TARGET_COMPANY = Free Project
     QMAKE_TARGET_PRODUCT = SynchroTime
     QMAKE_TARGET_DESCRIPTION = Time adjust and calibration for RTC DS3231
