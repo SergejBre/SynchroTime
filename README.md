@@ -4,11 +4,9 @@
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 
 ## Motivation
-
 The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/MisterBotBreak/how-to-use-a-real-time-clock-module-ds3231-bc90fe) chip has proven itself well in work with microcontrollers Arduino, Raspberry Pi, etc. According to the declared specification, it is an extremely accurate RTC with a guaranteed accuracy ±2 ppm (from 0°C to +40°C), which translates into an error of just 1 minute over the course of a year under the worst case scenario. But a large number of modules on the market do not meet the accuracy declared by the manufacturer, which is undoubtedly upsetting. Nevertheless, the manufacturer has provided for the possibility of correcting the drift of the clock time, which is associated with the aging of the oscillator crystal in the range from -12.8 to +12.7 ppm. This correction value can be written to one of the registers on the DS3231 (See part **Discussion** for exact ppm values). In addition, the manufacturer has provided a the energy-independent flash memory AT24C256 in the module, into which calibration parameters and correction factors can be placed. The tool below can automatically calibrate the DS3231 module.
 
 ## About the app
-
 * CLI and GUI applications are used for fine adjust and calibrating the DS3231 RTC module.
 
 * The application allows you to:
@@ -28,7 +26,6 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ![synchroTime -h](./images/consoleApp_About.png)
 
 ## Using the CLI app
-
 1. First, you need to load a sketch into Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory and connect the RTC DS3231 module according to the circuit shown in the specification.
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be `/dev/ttyUSBx`, under Windows - `COMx`).
  To find the name of this port, call the application with the `-d (--discovery)` switch:
@@ -120,7 +117,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Request for reset completed successfully. 
 ```
 
-7. Use the `-s (--setreg)` command to write the new value (e.g. `-12.8`) to the offset register of the DS3231. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
+7. Use the `-s (--setreg)` command to add a new value (e.g. `-12.8`) to the offset register of the DS3231. The new value will be added arithmetically to the old register value. The result will be limited to the values 12.7 and -12.8. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
 ```bash
  $ ./synchroTime -s -12.8
 
@@ -128,7 +125,6 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 
 ## Using the GUI app
-
 All functionality is similar to the CLI application (see figure below). As an extra, there is the option of selecting the numerous serial port settings.
 
 ![PROJECT_IMAGE2](./images/guiApp_About2.png)
@@ -136,7 +132,6 @@ All functionality is similar to the CLI application (see figure below). As an ex
 ![SERIAL_PORT_SETTINGS](./images/serial_port_settings.png)
 
 ## Specification
-
 * The application allows you to adjust the time with an accuracy of ±1 ms (under Linux OS).
 
 * The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms (under Linux OS).
@@ -155,12 +150,10 @@ All functionality is similar to the CLI application (see figure below). As an ex
 ![CIRCUIT](images/Steckplatine_DS3231.png)
 
 ## Description of the request protocol
-
 The computer is a client. The client is always the first to send a request. Upon receipt of each request, the microprocessor must send back the appropriate response.
 
 Each request is as follows: `<@ req> <local time> or <value> [CRC]`,
 where:
-
 * `@` - mandatory start byte, sign for the beginning of the transfer (always equal to `0x40`, 1 byte),
 * `req` - request from the set `{a, c, i, r, s, t}` (size 1 byte),
 * `local time` - local computer time only for requests `a, c, i` (size 6 bytes),
@@ -184,7 +177,6 @@ where:
 | Status              | `@t` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
 
 ## System Requirements
-
 * For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
 ```bash
  $ sudo apt-get install ntp 
@@ -211,7 +203,6 @@ where:
 * The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced projects: [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm).
 
 ## Installing the CLI and GUI apps
-
 * According to the working platform, download the appropriate archive with the app from [![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases).
 * Unpack it to your home directory with write access, as the application retains its settings.
 ```bash
@@ -237,11 +228,9 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 ![Frequency deviation](./images/frequency_deviation.png)
 
 ## Documentation
-
 For the detailed API documentation, see [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
 
 ## Dependencies
-
 | Name         | Version                          | Comment                                         |
 |--------------|----------------------------------|-------------------------------------------------|
 | Qt lib 32bit | >= 5.5.1                         | Didn't test with older versions, but it may work|
@@ -261,17 +250,11 @@ For the detailed API documentation, see [![Documentation](./images/doxygen_badge
 ``` 
 
 ## Compilation on Linux
-
 * `sudo apt-get install build-essential qt5-default qt5-qmake gdb git`
-
 * `git clone https://github.com/SergejBre/SynchroTime.git`
-
 * `cd ./SynchroTime`
-
 * `QT_SELECT=5 qmake SynchroTime.pro`
-
 * `make && make clean`
 
 ## License
-
-SynchroTime is licensed under [![MIT](./images/license_badge.svg)](LICENSE).
+SynchroTime is licensed under [![MIT](./images/license_badge.svg)](LICENSE)
