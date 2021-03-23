@@ -85,7 +85,6 @@
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
    <addaction name="actionInformation"/>
-   <addaction name="actionAdjustment"/>
    <addaction name="separator"/>
    <addaction name="actionPort_Setting"/>
    <addaction name="separator"/>
