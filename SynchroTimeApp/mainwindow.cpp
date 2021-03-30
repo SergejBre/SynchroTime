@@ -161,6 +161,10 @@ void MainWindow::readSettings()
     p->stringStopBits = settings.value( QStringLiteral( "stopBits" ), 1 ).toString();
     p->stringFlowControl = settings.value( QStringLiteral( "flowControl" ), QStringLiteral( "None" )).toString();
     settings.endGroup();
+
+    settings.beginGroup( QStringLiteral( "Advanced" ));
+    p->correctionFactor = settings.value( QStringLiteral( "correctionFactor" ), -12.8 ).toFloat();
+    settings.endGroup();
 }
 
 //!
@@ -200,6 +204,12 @@ void MainWindow::writeSettings() const
         settings.setValue( QStringLiteral( "parity" ), p.stringParity );
         settings.setValue( QStringLiteral( "stopBits" ), p.stringStopBits );
         settings.setValue( QStringLiteral( "flowControl" ), p.stringFlowControl );
+    }
+    settings.endGroup();
+
+    settings.beginGroup( QStringLiteral( "Advanced" ));
+    if ( p.isChanged ) {
+        settings.setValue( QStringLiteral( "correctionFactor" ), QString::number( p.correctionFactor ) );
     }
     settings.endGroup();
 }
