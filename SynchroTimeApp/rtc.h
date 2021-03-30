@@ -125,6 +125,7 @@ private:
     bool m_isConnected;
     bool m_isBusy;
     QTimer *m_pTimerCheckConnection;
+    float m_correctionFactor;
 };
 
 #endif // RTC_H

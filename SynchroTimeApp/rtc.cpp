@@ -103,7 +103,8 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
     : QObject( parent ),
       m_pSerialPort( nullptr ),
       m_isBusy( false ),
-      m_pTimerCheckConnection( nullptr )
+      m_pTimerCheckConnection( nullptr ),
+      m_correctionFactor( portSettings.correctionFactor )
 {
     // Initialization of the serial interface.
     m_pSerialPort = ::new( std::nothrow ) QSerialPort( this );
@@ -381,17 +382,16 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     sentData[size + 2] = crc;
 
     Q_ASSERT( m_pSerialPort->isOpen() );
+    bool ready;
     m_isBusy = true;
     // Send data to the serial port and wait up to 50 ms until the write is done
     m_pSerialPort->write( sentData );
-    if ( !m_pSerialPort->waitForBytesWritten( WAIT_TIME ) ) {
-        emit portError( QStringLiteral( "Failed to send device data: " ) + m_pSerialPort->errorString() );
-    }
+    ready = m_pSerialPort->waitForBytesWritten( WAIT_TIME );
 
     // Sleep 50 ms, waiting for the microcontroller to process the data and respond
 //    thread()->msleep( WAIT_TIME );
     // Reading data from RTC.
-    if ( m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
+    if ( ready && m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
         m_isBusy = false;
     }
     else {
@@ -442,12 +442,13 @@ void RTC::informationRequest()
         out << "System local time \t" << localTimeMSecs << " ms: " << local.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
         out << "Difference between\t" << numberOfMSec - localTimeMSecs << " ms" << endl;
         if ( blength > 7 ) {
-            const float offset_reg = float( p_byteBuffer[7] )/10;
-            out << "Offset reg. in ppm\t" << offset_reg << " ppm" << endl;
+            const float offset_reg = static_cast<float>( p_byteBuffer[7] )/10;
+            out << "Offset reg. value \t" << offset_reg << " ppm" << endl;
             if ( blength > 11 ) {
                 float drift_in_ppm = 0;
                 memcpy( &drift_in_ppm, p_byteBuffer + 8, sizeof( drift_in_ppm ) );
-                out << "Time drift in ppm \t" << drift_in_ppm << " ppm" << endl;
+                out << "Frequency deviat. \t" << drift_in_ppm << " ppm" << endl;
+                out << "Corrected value<*>\t" << std::abs(m_correctionFactor) * drift_in_ppm/10 << " ppm for correction faktor " << m_correctionFactor << endl;
                 if ( blength > 15 ) {
                     quint32 lastAdjustOfTimeSec = 0L;
                     memcpy( &lastAdjustOfTimeSec, p_byteBuffer + 12, sizeof( lastAdjustOfTimeSec ) );
@@ -455,7 +456,7 @@ void RTC::informationRequest()
                     if ( lastAdjustOfTimeSec < 0xFFFFFFFF ) {
                         const qint64 lastAdjustOfTimeMSec = qint64(lastAdjustOfTimeSec) * 1000;
                         time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec );
-                        out << "Time drift in ppm*\t" << float(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
+//                        out << "Time drift in ppm*\t" << static_cast<float>(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
                         out << "Last time adjustm.\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
                     }
                 }
