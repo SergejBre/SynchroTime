@@ -10,10 +10,73 @@
     <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
+   <item row="3" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QGroupBox" name="additionalOptionsGroupBox">
+     <property name="title">
+      <string>Additional options</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="faktorLabel">
+        <property name="text">
+         <string>Correction factor:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="factorDoubleSpinBox">
+        <property name="toolTip">
+         <string>Correction factor between frequency deviation and Aging register value.</string>
+        </property>
+        <property name="minimum">
+         <double>-16.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>(default is -12.8)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="0" column="1">
     <widget class="QGroupBox" name="parametersBox">
      <property name="title">
-      <string>Select Parameters</string>
+      <string>Select UART Parameters</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="4" column="1">
@@ -89,17 +152,6 @@
       </item>
      </layout>
     </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="selectBox">

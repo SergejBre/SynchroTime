@@ -129,6 +129,7 @@ void SettingsDialog::fillSettingsUi()
     if ( index > -1 ) {
         ui->flowControlBox->setCurrentIndex( index );
     }
+    ui->factorDoubleSpinBox->setValue( currentSettings.correctionFactor );
 }
 
 //!
@@ -310,5 +311,6 @@ void SettingsDialog::updateSettings()
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
 
 //    currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
+    currentSettings.correctionFactor = static_cast<float>( ui->factorDoubleSpinBox->value() );
 }
 
