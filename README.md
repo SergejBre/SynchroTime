@@ -1,4 +1,5 @@
 # SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 module
+
 [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)[![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases)
 
 ![PROJECT_IMAGE](./images/guiApp_About.png)
@@ -227,8 +228,10 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 
 ![Frequency deviation](./images/frequency_deviation.png)
 
+![Linear approximation](./images/linear_approximation.png)
+
 ## Documentation
-For the detailed API documentation, see [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
+For the detailed API documentation, see [link](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
 
 ## Dependencies
 | Name         | Version                          | Comment                                         |
