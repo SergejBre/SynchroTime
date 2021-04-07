@@ -82,7 +82,7 @@ RTC::RTC( const QString &portName, QObject *parent )
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
         if ( m_pTimerCheckConnection != nullptr ) {
-            m_pTimerCheckConnection->setInterval( 1100 );
+            m_pTimerCheckConnection->setInterval( 1111 );
 
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
@@ -125,7 +125,7 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
         if ( m_pTimerCheckConnection != nullptr ) {
-            m_pTimerCheckConnection->setInterval( 1100 );
+            m_pTimerCheckConnection->setInterval( 1111 );
 
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
@@ -457,7 +457,7 @@ void RTC::informationRequest()
                     if ( lastAdjustOfTimeSec < 0xFFFFFFFF ) {
                         const qint64 lastAdjustOfTimeMSec = qint64(lastAdjustOfTimeSec) * 1000;
                         time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec );
-//                        out << "Time drift in ppm*\t" << static_cast<float>(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
+//                        out << "Frequency drift*  \t" << static_cast<float>(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
                         out << "Last adjustm. time\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
                     }
                 }
@@ -501,7 +501,7 @@ void RTC::adjustmentRequest()
         const quint8 ret_value = receivedData.at( blength - 1 );
         QDateTime local; //(QDateTime::currentDateTime());
         local.setTime_t( localTimeSecs );
-        out << "System local time\t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" );
+        out << "Local system time \t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" );
         out << ESC_YELLOW << "Request for adjustment " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
     }
     else
@@ -542,15 +542,15 @@ void RTC::calibrationRequest()
         auto byteBuffer = receivedData.constData();
         const quint8 ret_value = byteBuffer[ blength-1 ];
         local.setTime_t( localTimeSecs );
-        out << "System local time\t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" ) << endl;
+        out << "Local system time \t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" ) << endl;
         qint8 offset_reg = byteBuffer[1];
-        out << "Offset last value\t" << offset_reg << endl;
+        out << "Offset last value \t" << offset_reg << endl;
         if ( blength > 6 ) {
             float drift_in_ppm = 0;
             memcpy( &drift_in_ppm, byteBuffer + 2, sizeof( drift_in_ppm ) );
-            out << "Time drift in ppm\t" << drift_in_ppm << " ppm" << endl;
+            out << "Frequency drift   \t" << drift_in_ppm << " ppm" << endl;
             offset_reg = byteBuffer[6];
-            out << "Offset new value \t" << offset_reg;
+            out << "Offset new value  \t" << offset_reg;
         }
         out << ESC_YELLOW << "Request for calibration " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
     }

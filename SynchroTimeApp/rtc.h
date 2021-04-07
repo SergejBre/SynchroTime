@@ -63,7 +63,9 @@ class QSerialPort;
 class QTimer;
 
 //! \class RTC
+//!
 //! \brief The RTC class
+//!
 //! The class is responsible for communication with the RTC device.
 class RTC : public QObject
 {

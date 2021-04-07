@@ -39,6 +39,11 @@ namespace Ui {
 class MainWindow;
 }
 
+//! \class MainWindow
+//!
+//! \brief The MainWindow class
+//!
+//! The MainWindow class provides the user with interface methods for the main application window.
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

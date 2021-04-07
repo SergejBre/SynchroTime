@@ -91,7 +91,7 @@ const QString Console::formatHtml( const QString &qText, const QColor &qColor ) 
             break;
         case '\'': qHtmlText += QString::fromLatin1("&apos;");
             break;
-        case '\t': qHtmlText += QString::fromLatin1("&nbsp;&nbsp;&nbsp;&nbsp;");
+        case '\t': qHtmlText += QString::fromLatin1("&nbsp;:&nbsp;&nbsp;");
             break;
         case '\n': qHtmlText += QString::fromLatin1("<br/>");
             break;

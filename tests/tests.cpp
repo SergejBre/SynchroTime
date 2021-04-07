@@ -15,6 +15,10 @@
 #include "../include/interface.h"
 #include "../include/session.h"
 
+//! \class SerialThread
+//!
+//! \brief The SerialThread class
+//! The class for creating a separate thread for tests.
 class SerialThread : public QThread
 {
     Q_OBJECT
@@ -34,6 +38,10 @@ signals:
     void resultReady( const int );
 };
 
+//! \class Tests
+//!
+//! \brief The Tests class
+//! The class includes all test cases.
 class Tests : public QObject
 {
     Q_OBJECT
@@ -57,6 +65,8 @@ private:
     int numberOfPorts;
 };
 
+//! \brief Tests::Tests
+//! Constructor for class Tests
 Tests::Tests()
     : numberOfPorts(0)
 {
@@ -70,17 +80,26 @@ void Tests::cleanupTestCase()
 {
 }
 
+
+//! \brief Tests::handleResults
+//! Implementation of a slot to fix the available serial ports.
+//!
+//! \param value of type const int
 void Tests::handleResults(const int value)
 {
     this->numberOfPorts = value;
 }
 
+//! \brief Tests::Case1_data
+//! Data for Test Case 1
 void Tests::Case1_data()
 {
     QTest::addColumn<QString>("data");
     QTest::newRow("0") << QString();
 }
 
+//! \brief Tests::Case1
+//! Dummy Test Case
 void Tests::Case1()
 {
     QFETCH(QString, data);
@@ -89,7 +108,7 @@ void Tests::Case1()
 
 //!
 //! \brief Tests::Case14
-//! Info about all available in system serial ports.
+//! Info about all available in system serial ports. When using a separate thread.
 //!
 //! \details
 //!
@@ -135,11 +154,11 @@ void Tests::Case15()
     QCOMPARE( app.exec(), 0 );
 }
 
-//!
 //! \brief Tests::Case16
+//! Checking communication with the device via the serial interface.
 //!
-//! \details
-//!
+//! \note
+//! For correct testing, sketch firmware is required ../arduino/synchro_RTC_old.ino
 void Tests::Case16()
 {
     int argc = 1;
@@ -196,11 +215,11 @@ void Tests::Case16()
     QCOMPARE( app.exec(), 0 );
 }
 
-//!
 //! \brief Tests::Case17
+//! Checking communication with the device via the serial interface.
 //!
-//! \details
-//!
+//! \note
+//! For correct testing, sketch firmware is required ../arduino/synchro_RTC_old.ino
 void Tests::Case17()
 {
     int argc = 1;

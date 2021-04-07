@@ -29,7 +29,9 @@
 //------------------------------------------------------------------------------
 
 //! \class Console
+//!
 //! \brief The Console class
+//!
 //! Provides the user with methods for the console interface.
 class Console : public QPlainTextEdit
 {

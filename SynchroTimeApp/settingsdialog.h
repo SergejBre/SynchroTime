@@ -35,10 +35,11 @@ class SettingsDialog;
 class QIntValidator;
 
 //! \class SettingsDialog
+//!
 //! \brief The SettingsDialog class
+//!
 //! The SettingsDialog class is an implementation of a dialog with a user to control
 //! and select parameters for connecting via a serial port.
-//!
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
