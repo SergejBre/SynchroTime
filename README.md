@@ -232,6 +232,10 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 
 ![Frequency deviation](./images/frequency_deviation.png)
 
+Having a graph of the dependence of the Oscillator Frequency Deviation on the Aging Register Values, the user can independently enter the correction factor k into the calculation. By choosing this factor in an appropriate way, you can get a better approximation for calculating the new value of the Aging register `v` from the frequency deviation `Δf`, i.e. ```v(Δf) = k * Δf``` which will be displayed in the parameter list under the name: `Corrected value***`. The last value can be entered into the Aging register manually, via Request: `Set Register <value>`.
+
+A graph showing the approximate dependence of the Frequency Deviation on the Aging Register Values ​​is presented below:
+
 ![Linear approximation](./images/linear_approximation.png)
 
 ## Documentation
