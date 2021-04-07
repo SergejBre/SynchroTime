@@ -51,7 +51,8 @@
 
 //!
 //! \brief MainWindow::MainWindow
-//! \param parent
+//! Constructor of the main application window.
+//! \param parent of the type QWidget
 //!
 MainWindow::MainWindow( QWidget *parent ) :
     QMainWindow( parent ),
@@ -75,7 +76,6 @@ MainWindow::MainWindow( QWidget *parent ) :
     m_pSettingsDialog->fillSettingsUi();
 
     rate = new QLabel;
-    rate->setStyleSheet( QString("color: blue") );
     ui->statusBar->addPermanentWidget( rate, 0 );
     clock = new QLCDNumber;
     clock->setDigitCount(8);
@@ -107,6 +107,7 @@ MainWindow::MainWindow( QWidget *parent ) :
 
 //!
 //! \brief MainWindow::~MainWindow
+//! Destructor in which the completion of a separate thread is checked.
 //!
 MainWindow::~MainWindow()
 {
@@ -151,7 +152,7 @@ void MainWindow::readSettings()
     settings.endGroup();
 
     Q_ASSERT( m_pSettingsDialog != nullptr );
-    Settings_t *p = m_pSettingsDialog->serialPortSettings();
+    Settings_t *const p = m_pSettingsDialog->serialPortSettings();
     settings.beginGroup( QStringLiteral( "SerialPort" ));
     p->name = settings.value( QStringLiteral( "portName" ), QStringLiteral( "ttyUSB0" )).toString();
     p->baudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toUInt();
@@ -162,8 +163,9 @@ void MainWindow::readSettings()
     p->stringFlowControl = settings.value( QStringLiteral( "flowControl" ), QStringLiteral( "None" )).toString();
     settings.endGroup();
 
-    settings.beginGroup( QStringLiteral( "Advanced" ));
+    settings.beginGroup( QStringLiteral( "AdditionalOptions" ));
     p->correctionFactor = settings.value( QStringLiteral( "correctionFactor" ), -12.8 ).toFloat();
+    p->accessRateEnabled = settings.value( QStringLiteral( "accessRateEnabled" ), true ).toBool();
     settings.endGroup();
 }
 
@@ -195,7 +197,7 @@ void MainWindow::writeSettings() const
     settings.endGroup();
 
     Q_ASSERT( m_pSettingsDialog != nullptr );
-    Settings p = m_pSettingsDialog->settings();
+    const Settings p = m_pSettingsDialog->settings();
     settings.beginGroup( QStringLiteral( "SerialPort" ));
     if ( p.isChanged ) {
         settings.setValue( QStringLiteral( "PortName" ), p.name );
@@ -207,15 +209,17 @@ void MainWindow::writeSettings() const
     }
     settings.endGroup();
 
-    settings.beginGroup( QStringLiteral( "Advanced" ));
+    settings.beginGroup( QStringLiteral( "AdditionalOptions" ));
     if ( p.isChanged ) {
         settings.setValue( QStringLiteral( "correctionFactor" ), QString::number( p.correctionFactor ) );
+        settings.setValue( QStringLiteral( "accessRateEnabled" ), QString::number( p.accessRateEnabled ) );
     }
     settings.endGroup();
 }
 
 //!
 //! \brief MainWindow::about
+//! About the app
 //!
 void MainWindow::about()
 {
@@ -230,17 +234,21 @@ void MainWindow::about()
 
 //!
 //! \brief MainWindow::putRate
+//! Displays the time of access to the device through the serial port.
 //! \param rate of the type const float
 //!
 void MainWindow::putRate( const float rate )
 {
+    Q_ASSERT( this->m_pSettingsDialog != nullptr );
     Q_ASSERT( this->rate != nullptr );
-    this->rate->setNum( rate );
+    if ( this->m_pSettingsDialog->settings().accessRateEnabled )
+        this->rate->setText( QString::number( rate, 'f', 3 ).prepend( QStringLiteral("Access rate, ms ")) );
 }
 
 //!
 //! \brief MainWindow::handleError
-//! \param error
+//! Slot for handling errors when communicating with a remote device.
+//! \param error of the type QString
 //!
 void MainWindow::handleError( const QString &error )
 {
@@ -251,11 +259,12 @@ void MainWindow::handleError( const QString &error )
 
 //!
 //! \brief MainWindow::connectRTC
+//! Procedure for creating a separate thread for communication with a device.
 //!
 void MainWindow::connectRTC()
 {
     m_pThread = ::new( std::nothrow ) QThread( this );
-    Settings p = m_pSettingsDialog->settings();
+    auto p = m_pSettingsDialog->settings();
     // There is no need to specify the parent. The parent will be a thread when we move our RTC object into it.
     m_pRTC = ::new( std::nothrow ) RTC( p );
     if ( m_pThread != nullptr && m_pRTC != nullptr ) {
@@ -281,8 +290,12 @@ void MainWindow::connectRTC()
             QObject::connect(m_pRTC, &RTC::getRate, this, &MainWindow::putRate);
             QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
-            showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 bps" )
-                               .arg( p.name ).arg( p.stringBaudRate ) );
+            showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 / %3–%4–%5" )
+                               .arg(p.name)
+                               .arg(p.stringBaudRate)
+                               .arg(p.dataBits)
+                               .arg(p.parity == QSerialPort::NoParity ? 'N' : p.parity == QSerialPort::EvenParity ? 'E' : p.parity == QSerialPort::OddParity ? 'O' : p.parity == QSerialPort::SpaceParity ? 'S' : 'M')
+                               .arg(p.stopBits) );
         }
         else {
             m_pThread->quit();
@@ -306,6 +319,7 @@ void MainWindow::connectRTC()
 
 //!
 //! \brief MainWindow::disconnectRTC
+//! The procedure performs a correct disconnection from the device.
 //!
 void MainWindow::disconnectRTC()
 {
@@ -352,6 +366,7 @@ void MainWindow::showStatusMessage(const QString &message) const
 
 //!
 //! \brief MainWindow::tickClock
+//! Slot for displaying the time of day.
 //!
 void MainWindow::tickClock()
 {
@@ -361,6 +376,7 @@ void MainWindow::tickClock()
 
 //!
 //! \brief MainWindow::help slot
+//! Brief description of how to use the application.
 //!
 void MainWindow::help()
 {
@@ -439,6 +455,7 @@ void MainWindow::selectConsoleFont( void )
 
 //!
 //! \brief MainWindow::setRegisterSlot
+//! Slot for writing to the shift register.
 //!
 void MainWindow::setRegisterSlot()
 {

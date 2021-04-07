@@ -52,8 +52,9 @@ typedef struct Settings {
     QString stringStopBits;                 //!< description of the parameter number of stop bits in a frame.
     QSerialPort::FlowControl flowControl;   //!< This property holds the desired flow control mode.
     QString stringFlowControl;              //!< description of the parameter flow control mode.
-    float correctionFactor;                 //!< Advanced parameter: Correction factor between frequency deviation and Aging register value.
-    bool localEchoEnabled;                  //!< Advanced parameter: This is a flag that allows console input.
+    float correctionFactor;                 //!< Additional parameter: Correction factor between frequency deviation and Aging register value.
+    bool accessRateEnabled;                 //!< Additional parameter: This is a flag that allows determining access rate  via the serial interface.
+    bool localEchoEnabled;                  //!< Additional parameter: This is a flag that allows console input.
     bool isChanged = false;                 //!< This is a flag to save changes to the serial port parameters.
 } Settings_t;
 

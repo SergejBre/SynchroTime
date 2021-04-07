@@ -39,7 +39,7 @@ QT_USE_NAMESPACE
 static const char blankString[] = QT_TRANSLATE_NOOP( "SettingsDialog", "N/A" );
 
 //------------------------------------------------------------------------------
-// Function Prototypes
+// Function definitions
 //------------------------------------------------------------------------------
 
 //!
@@ -82,13 +82,17 @@ SettingsDialog::~SettingsDialog()
 
 //!
 //! \brief SettingsDialog::settings
-//! \return
+//! \return currentSettings of the type Settings_t
 //!
 Settings_t SettingsDialog::settings() const
 {
     return currentSettings;
 }
 
+//!
+//! \brief SettingsDialog::serialPortSettings
+//! \return currentSettings ot the type Settings_t*
+//!
 Settings_t *SettingsDialog::serialPortSettings()
 {
     return &currentSettings;
@@ -130,6 +134,7 @@ void SettingsDialog::fillSettingsUi()
         ui->flowControlBox->setCurrentIndex( index );
     }
     ui->factorDoubleSpinBox->setValue( currentSettings.correctionFactor );
+    ui->accessRateCheckBox->setChecked( currentSettings.accessRateEnabled );
 }
 
 //!
@@ -237,8 +242,8 @@ void SettingsDialog::fillPortsParameters()
     ui->parityBox->addItem( QStringLiteral( "NoParity" ), QSerialPort::NoParity );
     ui->parityBox->addItem( QStringLiteral( "EvenParity" ), QSerialPort::EvenParity );
     ui->parityBox->addItem( QStringLiteral( "OddParity" ), QSerialPort::OddParity );
-    ui->parityBox->addItem( QStringLiteral( "MarkParity" ), QSerialPort::MarkParity );
     ui->parityBox->addItem( QStringLiteral( "SpaceParity" ), QSerialPort::SpaceParity );
+    ui->parityBox->addItem( QStringLiteral( "MarkParity" ), QSerialPort::MarkParity );
 
     ui->stopBitsBox->addItem( QStringLiteral( "1" ), QSerialPort::OneStop );
 #ifdef Q_OS_WIN
@@ -311,6 +316,7 @@ void SettingsDialog::updateSettings()
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
 
 //    currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
+    currentSettings.accessRateEnabled = ui->accessRateCheckBox->isChecked();
     currentSettings.correctionFactor = static_cast<float>( ui->factorDoubleSpinBox->value() );
 }
 
