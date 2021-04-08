@@ -62,6 +62,7 @@ private slots:
     void reset();
     void checkCustomBaudRatePolicy(int idx);
     void checkCustomDevicePathPolicy(int idx);
+    void on_statusControlCheckBox_clicked( bool checked );
 
 private:
     void fillPortsParameters();

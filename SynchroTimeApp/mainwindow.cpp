@@ -124,12 +124,12 @@ MainWindow::~MainWindow()
 //! \brief MainWindow::readSettings
 //! The function reads the parameters necessary for the user interface that were saved in the previous session.
 //!
-//! Such important parameters will be read as
+//! The following important parameters will be read as:
 //! - the position of the window on the screen and window size,
 //! - interface font and its size,
-//! - the user interface settings (overwrite of the data, recurse of dir's, etc.)
-//! - and the serial port options.
-//!
+//! - the user interface settings (overwrite of the data, recurse of dir's, etc.),
+//! - the serial port options,
+//! - and other additional parameters.
 void MainWindow::readSettings()
 {
     QSettings settings( SETTINGS_FILE, QSettings::IniFormat );
@@ -166,6 +166,8 @@ void MainWindow::readSettings()
     settings.beginGroup( QStringLiteral( "AdditionalOptions" ));
     p->correctionFactor = settings.value( QStringLiteral( "correctionFactor" ), -12.8 ).toFloat();
     p->accessRateEnabled = settings.value( QStringLiteral( "accessRateEnabled" ), true ).toBool();
+    p->statusControlEnabled = settings.value( QStringLiteral( "statusControlEnabled" ), true ).toBool();
+    p->requestRate = settings.value( QStringLiteral( "requestRate" ), 500 ).toInt();
     settings.endGroup();
 }
 
@@ -173,12 +175,12 @@ void MainWindow::readSettings()
 //! \brief MainWindow::writeSettings
 //! The function saves the user interface parameters that have been changed by the user in the current session.
 //!
-//! Such parameters will be updated as
+//! The following important parameters will be updated as:
 //! - the position of the window on the screen and window size,
 //! - interface font and its size,
-//! - the user interface settings (overwrite of the data, recurse of dir's, etc.)
-//! - and the serial port options.
-//!
+//! - the user interface settings (overwrite of the data, recurse of dir's, etc.),
+//! - the serial port options,
+//! - and other additional parameters.
 void MainWindow::writeSettings() const
 {
     QSettings settings( SETTINGS_FILE, QSettings::IniFormat );
@@ -213,6 +215,8 @@ void MainWindow::writeSettings() const
     if ( p.isChanged ) {
         settings.setValue( QStringLiteral( "correctionFactor" ), QString::number( p.correctionFactor ) );
         settings.setValue( QStringLiteral( "accessRateEnabled" ), QString::number( p.accessRateEnabled ) );
+        settings.setValue( QStringLiteral( "statusControlEnabled" ), QString::number( p.statusControlEnabled ) );
+        settings.setValue( QStringLiteral( "requestRate" ), QString::number( p.requestRate ) );
     }
     settings.endGroup();
 }

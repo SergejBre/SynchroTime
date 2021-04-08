@@ -135,6 +135,10 @@ void SettingsDialog::fillSettingsUi()
     }
     ui->factorDoubleSpinBox->setValue( currentSettings.correctionFactor );
     ui->accessRateCheckBox->setChecked( currentSettings.accessRateEnabled );
+    ui->statusControlCheckBox->setChecked( currentSettings.statusControlEnabled );
+    ui->requestRateSpinBox->setValue( currentSettings.requestRate );
+    ui->accessRateCheckBox->setEnabled( currentSettings.statusControlEnabled );
+    ui->requestRateSpinBox->setEnabled( currentSettings.statusControlEnabled );
 }
 
 //!
@@ -220,6 +224,16 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
     ui->serialPortInfoListBox->setEditable(isCustomPath);
     if (isCustomPath)
         ui->serialPortInfoListBox->clearEditText();
+}
+
+//!
+//! \brief SettingsDialog::on_statusControlCheckBox_clicked
+//! The slot receives the clicked signal and manages the associated user interface objects.
+//! \param checked of the type bool, clicked state?
+void SettingsDialog::on_statusControlCheckBox_clicked( bool checked )
+{
+    ui->accessRateCheckBox->setEnabled( checked );
+    ui->requestRateSpinBox->setEnabled( checked );
 }
 
 //!
@@ -317,6 +331,8 @@ void SettingsDialog::updateSettings()
 
 //    currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
     currentSettings.accessRateEnabled = ui->accessRateCheckBox->isChecked();
+    currentSettings.statusControlEnabled = ui->statusControlCheckBox->isChecked();
+    currentSettings.requestRate = ui->requestRateSpinBox->value();
     currentSettings.correctionFactor = static_cast<float>( ui->factorDoubleSpinBox->value() );
 }
 

@@ -82,7 +82,7 @@ RTC::RTC( const QString &portName, QObject *parent )
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
         if ( m_pTimerCheckConnection != nullptr ) {
-            m_pTimerCheckConnection->setInterval( 1111 );
+            m_pTimerCheckConnection->setInterval( 500 );
 
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
@@ -124,8 +124,8 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
 
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
-        if ( m_pTimerCheckConnection != nullptr ) {
-            m_pTimerCheckConnection->setInterval( 1111 );
+        if ( m_pTimerCheckConnection != nullptr && portSettings.statusControlEnabled ) {
+            m_pTimerCheckConnection->setInterval( portSettings.requestRate );
 
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
