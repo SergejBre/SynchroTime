@@ -2,8 +2,6 @@
 
 [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)[![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases)
 
-> ⚠️ This is **beta** software.
-
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 
 ## Motivation
@@ -128,7 +126,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 
 ## Using the GUI app
-All functionality is similar to the CLI application (see figure below). As an extra, there is the option of selecting the numerous serial port settings.
+All functionality is similar to the CLI application (see figure below). As an extra, there is the option of selecting the numerous serial port settings and three features: **Status Control**, **Access Rate** and **Correction Factor**. The **Correction Factor** is described in detail in the **Discussion** part. **Status Control** is an additional functionality to monitor the connection with a device with a **Request Rate** (from 500 to 10000 ms). The **Access Rate** feature allows you to display the approximate delay in the exchange of information with the device on the monitor. For the exchange rate of 115200 baud and the exchange of one pair of bytes with the Device, the delay usually should not exceed 3-4ms (depends mainly on the driver used and the HW UART device). Both features can be deactivated.
 
 ![PROJECT_IMAGE2](./images/guiApp_About2.png)
 
