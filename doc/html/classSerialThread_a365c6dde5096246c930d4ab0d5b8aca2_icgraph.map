@@ -1,5 +1,5 @@
 <map id="SerialThread::resultReady" name="SerialThread::resultReady">
-<area shape="rect" id="node2" href="$classTests.html#a652c4ba04db11de4be51de34ba383337" title="Tests::Case14 Info about all available in system serial ports. " alt="" coords="261,5,369,32"/>
+<area shape="rect" id="node2" href="$classTests.html#a652c4ba04db11de4be51de34ba383337" title="Tests::Case14 Info about all available in system serial ports. When using a separate thread..." alt="" coords="261,5,369,32"/>
 <area shape="rect" id="node3" href="$classSerialThread.html#ad775eb9eef3b8b4603c8f638082a46b0" title="SerialThread::run" alt="" coords="254,56,375,83"/>
 <area shape="rect" id="node4" href="$classSerialThread.html#ac3bb36e477c5874c6666d3426c420703" title="SerialThread::SerialThread" alt="" coords="227,107,403,133"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="SettingsDialog::serialPortSettings" name="SettingsDialog::serialPortSettings">
 <area shape="rect" id="node2" href="$classMainWindow.html#a44e687052bb326e5393fb878e9433581" title="MainWindow::readSettings The function reads the parameters necessary for the user interface that were..." alt="" coords="224,13,403,39"/>
-<area shape="rect" id="node3" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="451,13,631,39"/>
+<area shape="rect" id="node3" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="451,13,631,39"/>
 </map>

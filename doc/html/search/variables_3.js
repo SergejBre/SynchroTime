@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['flowcontrol',['flowControl',['../structSettings.html#a2540ec1bb66a8309c9a8b3fb89dbd68d',1,'Settings']]]
+  ['databits',['dataBits',['../structSettings.html#a29c9d32986b1a03f8bf8a466c6ac95b9',1,'Settings']]]
 ];

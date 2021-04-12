@@ -9,6 +9,7 @@ var searchData=
   ['getportbaudrate',['getPortBaudRate',['../classInterfaceSP.html#a5b925d134c154f41e8f34ce149a1799d',1,'InterfaceSP']]],
   ['getportname',['getPortName',['../classInterfaceSP.html#a3043d3eef41e70c9d51cd970b536b4c0',1,'InterfaceSP']]],
   ['getproductidentifier',['getProductIdentifier',['../classInterfaceSP.html#a77eb3dd86f99dfe3e8ffb40f868c98a0',1,'InterfaceSP']]],
+  ['getrate',['getRate',['../classRTC.html#a36a682c7de80f9cd213b0de55175d99d',1,'RTC']]],
   ['getreceivedbytes',['getReceivedBytes',['../classInterface.html#a9be1d097eec85eea87b25699dfe8a6af',1,'Interface']]],
   ['getreceiveddata',['getReceivedData',['../classInterface.html#a513446517c600c184f145308897f81bb',1,'Interface']]],
   ['getserialnumber',['getSerialNumber',['../classInterfaceSP.html#ab8375b0cef177665548a6cafb8ff9417',1,'InterfaceSP']]],

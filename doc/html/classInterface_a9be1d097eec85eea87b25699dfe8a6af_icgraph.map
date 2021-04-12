@@ -1,6 +1,6 @@
 <map id="Interface::getReceivedBytes" name="Interface::getReceivedBytes">
 <area shape="rect" id="node2" href="$classInterfaceSP.html#a219c5ee6c1c8268a342ad431258ee643" title="InterfaceSP::readTheData Reads all remaining data from the UART device. " alt="" coords="241,31,416,57"/>
 <area shape="rect" id="node3" href="$classInterfaceSP.html#af593dd6e938e6ddd8014cfe37d984d83" title="InterfaceSP::writeTheData Writes the content of byteArray to the Serial Port device. " alt="" coords="464,31,641,57"/>
-<area shape="rect" id="node4" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16. " alt="" coords="689,5,797,32"/>
-<area shape="rect" id="node5" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17. " alt="" coords="689,68,797,95"/>
+<area shape="rect" id="node4" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16 Checking communication with the device via the serial interface. " alt="" coords="689,5,797,32"/>
+<area shape="rect" id="node5" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17 Checking communication with the device via the serial interface. " alt="" coords="689,68,797,95"/>
 </map>

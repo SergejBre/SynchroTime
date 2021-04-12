@@ -23,5 +23,6 @@ var searchData=
   ['console_2ecpp',['console.cpp',['../console_8cpp.html',1,'']]],
   ['console_2eh',['console.h',['../console_8h.html',1,'']]],
   ['contextmenuevent',['contextMenuEvent',['../classConsole.html#a199dade448d3ae597d420dc65abca11c',1,'Console']]],
+  ['correctionfactor',['correctionFactor',['../structSettings.html#a918f4f101dfb9aabfb2841641ab7f0ec',1,'Settings']]],
   ['currentsettings',['currentSettings',['../classSettingsDialog.html#a9500689af503b7213b98d576ef8fa1e1',1,'SettingsDialog']]]
 ];

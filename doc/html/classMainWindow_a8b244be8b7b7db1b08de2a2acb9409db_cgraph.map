@@ -1,32 +1,34 @@
 <map id="MainWindow::MainWindow" name="MainWindow::MainWindow">
-<area shape="rect" id="node2" href="$classMainWindow.html#a7be6a5d98970ac1a6296c6f9aee1e9bb" title="MainWindow::about. " alt="" coords="272,5,409,32"/>
-<area shape="rect" id="node3" href="$classMainWindow.html#aa458310375250e7efdac64f011374c3c" title="MainWindow::actionsTrigger. " alt="" coords="1005,157,1192,184"/>
-<area shape="rect" id="node4" href="$classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="251,385,430,412"/>
-<area shape="rect" id="node21" href="$classMainWindow.html#a323fa790f37b65d177f0fc6fb4708c82" title="MainWindow::disconnectRTC. " alt="" coords="741,208,937,235"/>
-<area shape="rect" id="node23" href="$classSettingsDialog.html#a1cd11b641ae63b931292ca077a9fcd01" title="SettingsDialog::fillSettingsUi. " alt="" coords="246,436,435,463"/>
-<area shape="rect" id="node24" href="$classMainWindow.html#a185c3927a39f35758683d821fe16d3a7" title="MainWindow::help slot. " alt="" coords="276,487,405,513"/>
-<area shape="rect" id="node25" href="$classMainWindow.html#a44e687052bb326e5393fb878e9433581" title="MainWindow::readSettings The function reads the parameters necessary for the user interface that were..." alt="" coords="251,537,430,564"/>
-<area shape="rect" id="node27" href="$classMainWindow.html#a4518b0825236153c718fed07932260e2" title="MainWindow::selectConsoleFont Slot for the font selection dialog. " alt="" coords="233,588,448,615"/>
-<area shape="rect" id="node28" href="$classMainWindow.html#ac0202e27973a01c1a5e8895cb6375b14" title="MainWindow::setRegisterSlot. " alt="" coords="243,639,438,665"/>
-<area shape="rect" id="node29" href="$classSettingsDialog.html#af05fb4696b87c3696717c72fe4c6bf6a" title="SettingsDialog::show. " alt="" coords="267,689,414,716"/>
-<area shape="rect" id="node31" href="$classMainWindow.html#a38036859baf15042873261c6c88f7472" title="MainWindow::tickClock. " alt="" coords="261,740,421,767"/>
-<area shape="rect" id="node5" href="$classSettingsDialog.html#a191b3824beed0760f79854fa29882460" title="SettingsDialog::settings. " alt="" coords="514,461,675,488"/>
-<area shape="rect" id="node6" href="$classRTC.html#a6933f009d474ad8ec61dd57abb49e89a" title="RTC::isConnected. " alt="" coords="529,512,660,539"/>
-<area shape="rect" id="node7" href="$classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="497,563,692,589"/>
-<area shape="rect" id="node10" href="$classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="497,360,692,387"/>
-<area shape="rect" id="node12" href="$classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="500,411,689,437"/>
-<area shape="rect" id="node14" href="$classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="515,613,674,640"/>
-<area shape="rect" id="node16" href="$classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="496,664,693,691"/>
-<area shape="rect" id="node18" href="$classConsole.html#ab30d8818bb983bee377438bc2b1a8e63" title="Console::putData. " alt="" coords="533,309,657,336"/>
-<area shape="rect" id="node20" href="$classMainWindow.html#a8758b1d4dca6bf7cc89f25b4779f36ad" title="MainWindow::handleError. " alt="" coords="509,208,680,235"/>
-<area shape="rect" id="node22" href="$classMainWindow.html#ac1ecf8c980dc52be537faf38e57e101c" title="MainWindow::showStatusMessage. " alt="" coords="985,233,1212,260"/>
-<area shape="rect" id="node8" href="$classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. " alt="" coords="754,563,925,589"/>
-<area shape="rect" id="node9" href="$classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="1031,563,1166,589"/>
-<area shape="rect" id="node11" href="$classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27" title="RTC::adjustmentRequest. " alt="" coords="754,385,925,412"/>
-<area shape="rect" id="node13" href="$classRTC.html#a524f35df1a582d46c839290fbd105fe4" title="RTC::calibrationRequest. " alt="" coords="756,461,923,488"/>
-<area shape="rect" id="node15" href="$classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. " alt="" coords="771,613,907,640"/>
-<area shape="rect" id="node17" href="$classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e" title="RTC::setRegisterRequest. " alt="" coords="752,664,927,691"/>
-<area shape="rect" id="node19" href="$classConsole.html#af1ab240f6cc791d5e8912d89f54a8790" title="Console::formatHtml. " alt="" coords="768,309,911,336"/>
-<area shape="rect" id="node26" href="$classSettingsDialog.html#ac119d818100282cff13bed95d93abd44" title="SettingsDialog::serialPort\lSettings" alt="" coords="509,715,680,757"/>
-<area shape="rect" id="node30" href="$classSettingsDialog.html#a9e2b682d0cfe9f8a16b7912f495aa034" title="SettingsDialog::fillPortsInfo. " alt="" coords="504,781,685,808"/>
+<area shape="rect" id="node2" href="$classMainWindow.html#a7be6a5d98970ac1a6296c6f9aee1e9bb" title="MainWindow::about About the app. " alt="" coords="272,5,409,32"/>
+<area shape="rect" id="node3" href="$classMainWindow.html#a4710d90108bd39f7b80bdc6c3a1b1aef" title="MainWindow::aboutQt A slot for issuing information about the Qt&#45;Framework used. " alt="" coords="265,56,416,83"/>
+<area shape="rect" id="node4" href="$classMainWindow.html#aa458310375250e7efdac64f011374c3c" title="MainWindow::actionsTrigger. " alt="" coords="1005,208,1192,235"/>
+<area shape="rect" id="node5" href="$classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="251,436,430,463"/>
+<area shape="rect" id="node23" href="$classMainWindow.html#a323fa790f37b65d177f0fc6fb4708c82" title="MainWindow::disconnectRTC The procedure performs a correct disconnection from the device..." alt="" coords="741,259,937,285"/>
+<area shape="rect" id="node25" href="$classSettingsDialog.html#a1cd11b641ae63b931292ca077a9fcd01" title="SettingsDialog::fillSettingsUi. " alt="" coords="246,487,435,513"/>
+<area shape="rect" id="node26" href="$classMainWindow.html#a185c3927a39f35758683d821fe16d3a7" title="MainWindow::help slot Brief description of how to use the application. " alt="" coords="276,537,405,564"/>
+<area shape="rect" id="node27" href="$classMainWindow.html#a44e687052bb326e5393fb878e9433581" title="MainWindow::readSettings The function reads the parameters necessary for the user interface that were..." alt="" coords="251,588,430,615"/>
+<area shape="rect" id="node29" href="$classMainWindow.html#a4518b0825236153c718fed07932260e2" title="MainWindow::selectConsoleFont Slot for the font selection dialog. " alt="" coords="233,639,448,665"/>
+<area shape="rect" id="node30" href="$classMainWindow.html#ac0202e27973a01c1a5e8895cb6375b14" title="MainWindow::setRegisterSlot Slot for writing to the shift register. " alt="" coords="243,689,438,716"/>
+<area shape="rect" id="node31" href="$classSettingsDialog.html#af05fb4696b87c3696717c72fe4c6bf6a" title="SettingsDialog::show. " alt="" coords="267,740,414,767"/>
+<area shape="rect" id="node33" href="$classMainWindow.html#a38036859baf15042873261c6c88f7472" title="MainWindow::tickClock Slot for displaying the time of day. " alt="" coords="261,791,421,817"/>
+<area shape="rect" id="node6" href="$classSettingsDialog.html#a191b3824beed0760f79854fa29882460" title="SettingsDialog::settings. " alt="" coords="759,335,920,361"/>
+<area shape="rect" id="node7" href="$classRTC.html#a6933f009d474ad8ec61dd57abb49e89a" title="RTC::isConnected. " alt="" coords="529,461,660,488"/>
+<area shape="rect" id="node8" href="$classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="497,613,692,640"/>
+<area shape="rect" id="node11" href="$classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="497,664,692,691"/>
+<area shape="rect" id="node13" href="$classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="500,765,689,792"/>
+<area shape="rect" id="node15" href="$classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="515,512,674,539"/>
+<area shape="rect" id="node17" href="$classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="496,563,693,589"/>
+<area shape="rect" id="node19" href="$classConsole.html#ab30d8818bb983bee377438bc2b1a8e63" title="Console::putData. " alt="" coords="533,715,657,741"/>
+<area shape="rect" id="node21" href="$classMainWindow.html#a610930b34b1f360b2f510d0ef9ea13fa" title="MainWindow::putRate Displays the time of access to the device through the serial port. " alt="" coords="519,360,670,387"/>
+<area shape="rect" id="node22" href="$classMainWindow.html#a8758b1d4dca6bf7cc89f25b4779f36ad" title="MainWindow::handleError Slot for handling errors when communicating with a remote device..." alt="" coords="509,259,680,285"/>
+<area shape="rect" id="node24" href="$classMainWindow.html#ac1ecf8c980dc52be537faf38e57e101c" title="MainWindow::showStatusMessage. " alt="" coords="985,335,1212,361"/>
+<area shape="rect" id="node9" href="$classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. " alt="" coords="754,613,925,640"/>
+<area shape="rect" id="node10" href="$classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="1031,613,1166,640"/>
+<area shape="rect" id="node12" href="$classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27" title="RTC::adjustmentRequest. " alt="" coords="754,664,925,691"/>
+<area shape="rect" id="node14" href="$classRTC.html#a524f35df1a582d46c839290fbd105fe4" title="RTC::calibrationRequest. " alt="" coords="756,765,923,792"/>
+<area shape="rect" id="node16" href="$classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. " alt="" coords="771,512,907,539"/>
+<area shape="rect" id="node18" href="$classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e" title="RTC::setRegisterRequest. " alt="" coords="752,563,927,589"/>
+<area shape="rect" id="node20" href="$classConsole.html#af1ab240f6cc791d5e8912d89f54a8790" title="Console::formatHtml. " alt="" coords="768,715,911,741"/>
+<area shape="rect" id="node28" href="$classSettingsDialog.html#ac119d818100282cff13bed95d93abd44" title="SettingsDialog::serialPortSettings. " alt="" coords="509,817,680,858"/>
+<area shape="rect" id="node32" href="$classSettingsDialog.html#a9e2b682d0cfe9f8a16b7912f495aa034" title="SettingsDialog::fillPortsInfo. " alt="" coords="504,883,685,909"/>
 </map>

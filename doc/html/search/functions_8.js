@@ -9,5 +9,6 @@ var searchData=
   ['inittestcase',['initTestCase',['../classTests.html#acd597e6c1e68084447d6367215a71c73',1,'Tests']]],
   ['interface',['Interface',['../classInterface.html#a4bb75d3455e00618f075b1118dc691b6',1,'Interface']]],
   ['interfacesp',['InterfaceSP',['../classInterfaceSP.html#a19d658095a300e0a089a2252d955ca7d',1,'InterfaceSP::InterfaceSP(QObject *parent=0)'],['../classInterfaceSP.html#a95dd41204e3c465e3a70e67da3f3aac5',1,'InterfaceSP::InterfaceSP(QObject *parent, const QString &amp;portName)'],['../classInterfaceSP.html#ad32de4ed374ef20b1edc7e45f1edc5fd',1,'InterfaceSP::InterfaceSP(QObject *parent, QSerialPort *port)']]],
+  ['isbusy',['isBusy',['../classRTC.html#a2e0ab9f3644cfbe7d98799a9d12e90d6',1,'RTC']]],
   ['isconnected',['isConnected',['../classRTC.html#a6933f009d474ad8ec61dd57abb49e89a',1,'RTC']]]
 ];

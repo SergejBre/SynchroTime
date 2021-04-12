@@ -1,5 +1,5 @@
 <map id="RTC::calibrationRequest" name="RTC::calibrationRequest">
 <area shape="rect" id="node2" href="$classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="220,5,409,32"/>
-<area shape="rect" id="node3" href="$classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="457,5,636,32"/>
-<area shape="rect" id="node4" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="684,5,864,32"/>
+<area shape="rect" id="node3" href="$classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="457,5,636,32"/>
+<area shape="rect" id="node4" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="684,5,864,32"/>
 </map>

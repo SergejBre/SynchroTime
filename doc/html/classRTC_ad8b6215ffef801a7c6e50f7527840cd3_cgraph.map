@@ -1,6 +1,7 @@
 <map id="RTC::RTC" name="RTC::RTC">
-<area shape="rect" id="node2" href="$classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="140,5,287,32"/>
-<area shape="rect" id="node3" href="$classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="335,31,477,57"/>
-<area shape="rect" id="node5" href="$classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="151,107,275,133"/>
-<area shape="rect" id="node4" href="$classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="525,31,660,57"/>
+<area shape="rect" id="node2" href="$classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="150,5,297,32"/>
+<area shape="rect" id="node5" href="$classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="161,56,285,83"/>
+<area shape="rect" id="node6" href="$classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="140,107,307,133"/>
+<area shape="rect" id="node3" href="$classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="355,56,497,83"/>
+<area shape="rect" id="node4" href="$classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="545,56,680,83"/>
 </map>

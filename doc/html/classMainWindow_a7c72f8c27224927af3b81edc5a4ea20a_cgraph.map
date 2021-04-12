@@ -1,21 +1,22 @@
 <map id="MainWindow::connectRTC" name="MainWindow::connectRTC">
-<area shape="rect" id="node2" href="$classMainWindow.html#aa458310375250e7efdac64f011374c3c" title="MainWindow::actionsTrigger. " alt="" coords="741,43,928,70"/>
-<area shape="rect" id="node3" href="$classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="233,435,428,462"/>
-<area shape="rect" id="node6" href="$classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="236,486,425,513"/>
-<area shape="rect" id="node8" href="$classMainWindow.html#a8758b1d4dca6bf7cc89f25b4779f36ad" title="MainWindow::handleError. " alt="" coords="245,81,416,107"/>
-<area shape="rect" id="node10" href="$classMainWindow.html#ac1ecf8c980dc52be537faf38e57e101c" title="MainWindow::showStatusMessage. " alt="" coords="721,119,948,146"/>
-<area shape="rect" id="node11" href="$classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="233,233,428,259"/>
-<area shape="rect" id="node13" href="$classRTC.html#a6933f009d474ad8ec61dd57abb49e89a" title="RTC::isConnected. " alt="" coords="265,334,396,361"/>
-<area shape="rect" id="node14" href="$classConsole.html#ab30d8818bb983bee377438bc2b1a8e63" title="Console::putData. " alt="" coords="269,385,393,411"/>
-<area shape="rect" id="node16" href="$classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="251,283,410,310"/>
-<area shape="rect" id="node18" href="$classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="232,182,429,209"/>
-<area shape="rect" id="node20" href="$classSettingsDialog.html#a191b3824beed0760f79854fa29882460" title="SettingsDialog::settings. " alt="" coords="250,537,411,563"/>
-<area shape="rect" id="node4" href="$classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27" title="RTC::adjustmentRequest. " alt="" coords="490,435,661,462"/>
-<area shape="rect" id="node5" href="$classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="767,283,902,310"/>
-<area shape="rect" id="node7" href="$classRTC.html#a524f35df1a582d46c839290fbd105fe4" title="RTC::calibrationRequest. " alt="" coords="492,486,659,513"/>
-<area shape="rect" id="node9" href="$classMainWindow.html#a323fa790f37b65d177f0fc6fb4708c82" title="MainWindow::disconnectRTC. " alt="" coords="477,81,673,107"/>
-<area shape="rect" id="node12" href="$classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. " alt="" coords="490,233,661,259"/>
-<area shape="rect" id="node15" href="$classConsole.html#af1ab240f6cc791d5e8912d89f54a8790" title="Console::formatHtml. " alt="" coords="504,385,647,411"/>
-<area shape="rect" id="node17" href="$classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. " alt="" coords="507,283,643,310"/>
-<area shape="rect" id="node19" href="$classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e" title="RTC::setRegisterRequest. " alt="" coords="488,182,663,209"/>
+<area shape="rect" id="node2" href="$classMainWindow.html#aa458310375250e7efdac64f011374c3c" title="MainWindow::actionsTrigger. " alt="" coords="741,46,928,72"/>
+<area shape="rect" id="node3" href="$classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="233,590,428,616"/>
+<area shape="rect" id="node6" href="$classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="236,184,425,211"/>
+<area shape="rect" id="node8" href="$classMainWindow.html#a8758b1d4dca6bf7cc89f25b4779f36ad" title="MainWindow::handleError Slot for handling errors when communicating with a remote device..." alt="" coords="245,83,416,110"/>
+<area shape="rect" id="node10" href="$classMainWindow.html#ac1ecf8c980dc52be537faf38e57e101c" title="MainWindow::showStatusMessage. " alt="" coords="721,122,948,148"/>
+<area shape="rect" id="node11" href="$classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="233,286,428,312"/>
+<area shape="rect" id="node13" href="$classRTC.html#a6933f009d474ad8ec61dd57abb49e89a" title="RTC::isConnected. " alt="" coords="265,336,396,363"/>
+<area shape="rect" id="node14" href="$classConsole.html#ab30d8818bb983bee377438bc2b1a8e63" title="Console::putData. " alt="" coords="269,387,393,414"/>
+<area shape="rect" id="node16" href="$classMainWindow.html#a610930b34b1f360b2f510d0ef9ea13fa" title="MainWindow::putRate Displays the time of access to the device through the serial port. " alt="" coords="255,488,406,515"/>
+<area shape="rect" id="node17" href="$classSettingsDialog.html#a191b3824beed0760f79854fa29882460" title="SettingsDialog::settings. " alt="" coords="495,463,656,490"/>
+<area shape="rect" id="node18" href="$classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="251,539,410,566"/>
+<area shape="rect" id="node20" href="$classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="232,235,429,262"/>
+<area shape="rect" id="node4" href="$classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27" title="RTC::adjustmentRequest. " alt="" coords="490,583,661,610"/>
+<area shape="rect" id="node5" href="$classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="767,286,902,312"/>
+<area shape="rect" id="node7" href="$classRTC.html#a524f35df1a582d46c839290fbd105fe4" title="RTC::calibrationRequest. " alt="" coords="492,184,659,211"/>
+<area shape="rect" id="node9" href="$classMainWindow.html#a323fa790f37b65d177f0fc6fb4708c82" title="MainWindow::disconnectRTC The procedure performs a correct disconnection from the device..." alt="" coords="477,83,673,110"/>
+<area shape="rect" id="node12" href="$classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. " alt="" coords="490,286,661,312"/>
+<area shape="rect" id="node15" href="$classConsole.html#af1ab240f6cc791d5e8912d89f54a8790" title="Console::formatHtml. " alt="" coords="504,387,647,414"/>
+<area shape="rect" id="node19" href="$classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. " alt="" coords="507,526,643,552"/>
+<area shape="rect" id="node21" href="$classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e" title="RTC::setRegisterRequest. " alt="" coords="488,235,663,262"/>
 </map>

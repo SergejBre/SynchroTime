@@ -1,6 +1,6 @@
 <map id="MainWindow" name="MainWindow">
-<area shape="rect" id="node3" href="$classConsole.html" title="The Console class Provides the user with methods for the console interface. " alt="" coords="137,1185,322,1395"/>
-<area shape="rect" id="node5" href="$classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. " alt="" coords="275,717,467,1117"/>
-<area shape="rect" id="node9" href="$structSettings.html" title="The Settings class. " alt="" coords="415,132,553,693"/>
-<area shape="rect" id="node7" href="$classSettingsDialog.html" title="The SettingsDialog class. " alt="" coords="457,1141,679,1439"/>
+<area shape="rect" id="node3" href="$classConsole.html" title="The Console class. " alt="" coords="137,1200,322,1409"/>
+<area shape="rect" id="node5" href="$classRTC.html" title="The RTC class. " alt="" coords="275,688,467,1117"/>
+<area shape="rect" id="node9" href="$structSettings.html" title="The Settings class. " alt="" coords="425,132,549,664"/>
+<area shape="rect" id="node7" href="$classSettingsDialog.html" title="The SettingsDialog class. " alt="" coords="457,1141,679,1468"/>
 </map>

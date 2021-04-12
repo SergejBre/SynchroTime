@@ -1,6 +1,7 @@
 var searchData=
 [
   ['about',['about',['../classMainWindow.html#a7be6a5d98970ac1a6296c6f9aee1e9bb',1,'MainWindow']]],
+  ['aboutqt',['aboutQt',['../classMainWindow.html#a4710d90108bd39f7b80bdc6c3a1b1aef',1,'MainWindow']]],
   ['actionstrigger',['actionsTrigger',['../classMainWindow.html#aa458310375250e7efdac64f011374c3c',1,'MainWindow']]],
   ['adjustmentrequest',['adjustmentRequest',['../classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27',1,'RTC']]],
   ['adjustmentrequestslot',['adjustmentRequestSlot',['../classRTC.html#a40d35a6e1f964a424e74fac00933833d',1,'RTC']]],

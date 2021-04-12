@@ -1,5 +1,5 @@
 <map id="SettingsDialog::fillSettingsUi" name="SettingsDialog::fillSettingsUi">
 <area shape="rect" id="node2" href="$classSettingsDialog.html#af25f3f9b4143a513e2b83261252f8e4e" title="SettingsDialog::cansel. " alt="" coords="256,13,409,39"/>
-<area shape="rect" id="node4" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="243,63,423,90"/>
+<area shape="rect" id="node4" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="243,63,423,90"/>
 <area shape="rect" id="node3" href="$classSettingsDialog.html#a9933956b777b2c0451e9119581cc22fb" title="SettingsDialog::SettingsDialog. " alt="" coords="471,5,633,47"/>
 </map>

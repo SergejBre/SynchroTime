@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['parity',['parity',['../structSettings.html#a926d3ee14d66df5ca15b4ffa522dc7b5',1,'Settings']]]
+  ['name',['name',['../structSettings.html#aa54a31ec9a0ecf2fcb08147a7443c12f',1,'Settings']]],
+  ['numberofports',['numberOfPorts',['../classTests.html#a70f9e060da61970a135cbfe07197bbc1',1,'Tests']]]
 ];

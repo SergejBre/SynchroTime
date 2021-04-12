@@ -98,7 +98,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>The <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> class The class is responsible for communication with the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> device.  
+<p>The <a class="el" href="classRTC.html" title="The RTC class. ">RTC</a> class.  
  <a href="classRTC.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="rtc_8h_source.html">rtc.h</a>&gt;</code></p>
@@ -106,11 +106,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Inheritance diagram for RTC:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC__inherit__graph.png" border="0" usemap="#RTC_inherit__map" alt="Inheritance graph"/></div>
+<map name="RTC_inherit__map" id="RTC_inherit__map">
+</map>
 </div>
 <div class="dynheader">
 Collaboration diagram for RTC:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC__coll__graph.png" border="0" usemap="#RTC_coll__map" alt="Collaboration graph"/></div>
+<map name="RTC_coll__map" id="RTC_coll__map">
+</map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
@@ -136,6 +140,9 @@ Public Slots</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
+<tr class="memitem:a36a682c7de80f9cd213b0de55175d99d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRTC.html#a36a682c7de80f9cd213b0de55175d99d">getRate</a> (const float rate)</td></tr>
+<tr class="memdesc:a36a682c7de80f9cd213b0de55175d99d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signal function for determining the access rate via the serial interface.  <a href="#a36a682c7de80f9cd213b0de55175d99d">More...</a><br /></td></tr>
+<tr class="separator:a36a682c7de80f9cd213b0de55175d99d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a780780ce52f405cc38bec0c617730125"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData</a> (const QString &amp;data)</td></tr>
 <tr class="separator:a780780ce52f405cc38bec0c617730125"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab71d15e8b4084d591ab971c47988fc74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRTC.html#ab71d15e8b4084d591ab971c47988fc74">portError</a> (const QString &amp;error)</td></tr>
@@ -155,6 +162,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6933f009d474ad8ec61dd57abb49e89a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRTC.html#a6933f009d474ad8ec61dd57abb49e89a">isConnected</a> () const </td></tr>
 <tr class="memdesc:a6933f009d474ad8ec61dd57abb49e89a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classRTC.html#a6933f009d474ad8ec61dd57abb49e89a" title="RTC::isConnected. ">RTC::isConnected</a>.  <a href="#a6933f009d474ad8ec61dd57abb49e89a">More...</a><br /></td></tr>
 <tr class="separator:a6933f009d474ad8ec61dd57abb49e89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e0ab9f3644cfbe7d98799a9d12e90d6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRTC.html#a2e0ab9f3644cfbe7d98799a9d12e90d6">isBusy</a> () const </td></tr>
+<tr class="memdesc:a2e0ab9f3644cfbe7d98799a9d12e90d6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classRTC.html#a2e0ab9f3644cfbe7d98799a9d12e90d6" title="RTC::isBusy. ">RTC::isBusy</a>.  <a href="#a2e0ab9f3644cfbe7d98799a9d12e90d6">More...</a><br /></td></tr>
+<tr class="separator:a2e0ab9f3644cfbe7d98799a9d12e90d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-slots"></a>
 Private Slots</h2></td></tr>
@@ -202,9 +212,12 @@ Private Attributes</h2></td></tr>
 <tr class="separator:af83a6d3fc409c11c352265ff5c917990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06c8d1a8d78f047a7a32fae0d6eda0d0"><td class="memItemLeft" align="right" valign="top">QTimer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRTC.html#a06c8d1a8d78f047a7a32fae0d6eda0d0">m_pTimerCheckConnection</a></td></tr>
 <tr class="separator:a06c8d1a8d78f047a7a32fae0d6eda0d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17781571354fca7c377cc5e06c5d241d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRTC.html#a17781571354fca7c377cc5e06c5d241d">m_correctionFactor</a></td></tr>
+<tr class="separator:a17781571354fca7c377cc5e06c5d241d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> class The class is responsible for communication with the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> device. </p>
+<div class="textblock"><p>The <a class="el" href="classRTC.html" title="The RTC class. ">RTC</a> class. </p>
+<p>The class is responsible for communication with the <a class="el" href="classRTC.html" title="The RTC class. ">RTC</a> device. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ad8b6215ffef801a7c6e50f7527840cd3"></a>
 <div class="memitem">
@@ -246,19 +259,20 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>There is no need to specify the parent. The parent will be a thread when we move our <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> object into it. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>There is no need to specify the parent. The parent will be a thread when we move our <a class="el" href="classRTC.html" title="The RTC class. ">RTC</a> object into it. </dd></dl>
 
-<p>References <a class="el" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348">connectToRTC()</a>, <a class="el" href="classRTC.html#af55f2c666537302dbf359ec8970b3475">handleError()</a>, <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="classRTC.html#a06c8d1a8d78f047a7a32fae0d6eda0d0">m_pTimerCheckConnection</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>.</p>
+<p>References <a class="el" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348">connectToRTC()</a>, <a class="el" href="classRTC.html#af55f2c666537302dbf359ec8970b3475">handleError()</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="classRTC.html#a06c8d1a8d78f047a7a32fae0d6eda0d0">m_pTimerCheckConnection</a>, and <a class="el" href="classRTC.html#accd274cfef2134139716ac80e80d29ef">statusRequestSlot()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_ad8b6215ffef801a7c6e50f7527840cd3_cgraph.png" border="0" usemap="#classRTC_ad8b6215ffef801a7c6e50f7527840cd3_cgraph" alt=""/></div>
 <map name="classRTC_ad8b6215ffef801a7c6e50f7527840cd3_cgraph" id="classRTC_ad8b6215ffef801a7c6e50f7527840cd3_cgraph">
-<area shape="rect" id="node2" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="140,5,287,32"/>
-<area shape="rect" id="node3" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="335,31,477,57"/>
-<area shape="rect" id="node5" href="classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="151,107,275,133"/>
-<area shape="rect" id="node4" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="525,31,660,57"/>
+<area shape="rect" id="node2" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="150,5,297,32"/>
+<area shape="rect" id="node5" href="classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="161,56,285,83"/>
+<area shape="rect" id="node6" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="140,107,307,133"/>
+<area shape="rect" id="node3" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="355,56,497,83"/>
+<area shape="rect" id="node4" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="545,56,680,83"/>
 </map>
 </div>
 </p>
@@ -305,19 +319,20 @@ Here is the call graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>There is no need to specify the parent. The parent will be a thread when we move our <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> object into it. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>There is no need to specify the parent. The parent will be a thread when we move our <a class="el" href="classRTC.html" title="The RTC class. ">RTC</a> object into it. </dd></dl>
 
-<p>References <a class="el" href="structSettings.html#ab543ec88a491a1629a00adadf4214dfe">Settings::baudRate</a>, <a class="el" href="structSettings.html#a29c9d32986b1a03f8bf8a466c6ac95b9">Settings::dataBits</a>, <a class="el" href="structSettings.html#a2540ec1bb66a8309c9a8b3fb89dbd68d">Settings::flowControl</a>, <a class="el" href="classRTC.html#af55f2c666537302dbf359ec8970b3475">handleError()</a>, <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="classRTC.html#a06c8d1a8d78f047a7a32fae0d6eda0d0">m_pTimerCheckConnection</a>, <a class="el" href="structSettings.html#aa54a31ec9a0ecf2fcb08147a7443c12f">Settings::name</a>, <a class="el" href="classRTC.html#a6d22d11d6712695573cf7453240faaed">openSerialPort()</a>, <a class="el" href="structSettings.html#a926d3ee14d66df5ca15b4ffa522dc7b5">Settings::parity</a>, <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>, and <a class="el" href="structSettings.html#a23ad986fa9283d39bcaaa5692e0c10cf">Settings::stopBits</a>.</p>
+<p>References <a class="el" href="structSettings.html#ab543ec88a491a1629a00adadf4214dfe">Settings::baudRate</a>, <a class="el" href="structSettings.html#a29c9d32986b1a03f8bf8a466c6ac95b9">Settings::dataBits</a>, <a class="el" href="structSettings.html#a2540ec1bb66a8309c9a8b3fb89dbd68d">Settings::flowControl</a>, <a class="el" href="classRTC.html#af55f2c666537302dbf359ec8970b3475">handleError()</a>, <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="classRTC.html#a06c8d1a8d78f047a7a32fae0d6eda0d0">m_pTimerCheckConnection</a>, <a class="el" href="structSettings.html#aa54a31ec9a0ecf2fcb08147a7443c12f">Settings::name</a>, <a class="el" href="classRTC.html#a6d22d11d6712695573cf7453240faaed">openSerialPort()</a>, <a class="el" href="structSettings.html#a926d3ee14d66df5ca15b4ffa522dc7b5">Settings::parity</a>, <a class="el" href="structSettings.html#af2961ffd799aa021259fbfae78576f0b">Settings::requestRate</a>, <a class="el" href="structSettings.html#a361e61060444ad26be1706a4eaaccbbd">Settings::statusControlEnabled</a>, <a class="el" href="classRTC.html#accd274cfef2134139716ac80e80d29ef">statusRequestSlot()</a>, and <a class="el" href="structSettings.html#a23ad986fa9283d39bcaaa5692e0c10cf">Settings::stopBits</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_ac98157a18fc2cac1df62f7d88024c1a3_cgraph.png" border="0" usemap="#classRTC_ac98157a18fc2cac1df62f7d88024c1a3_cgraph" alt=""/></div>
 <map name="classRTC_ac98157a18fc2cac1df62f7d88024c1a3_cgraph" id="classRTC_ac98157a18fc2cac1df62f7d88024c1a3_cgraph">
-<area shape="rect" id="node2" href="classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="149,5,273,32"/>
-<area shape="rect" id="node3" href="classRTC.html#a6d22d11d6712695573cf7453240faaed" title="RTC::openSerialPort. " alt="" coords="140,56,283,83"/>
-<area shape="rect" id="node4" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="140,107,283,133"/>
-<area shape="rect" id="node5" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="331,107,465,133"/>
+<area shape="rect" id="node2" href="classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="161,5,285,32"/>
+<area shape="rect" id="node3" href="classRTC.html#a6d22d11d6712695573cf7453240faaed" title="RTC::openSerialPort. " alt="" coords="152,56,295,83"/>
+<area shape="rect" id="node4" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="140,107,307,133"/>
+<area shape="rect" id="node5" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="355,107,497,133"/>
+<area shape="rect" id="node6" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="545,107,680,133"/>
 </map>
 </div>
 </p>
@@ -367,7 +382,7 @@ Here is the call graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27" title="RTC::adjustmentRequest. ">RTC::adjustmentRequest</a>. </p>
 
-<p>References <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567af644a36b43113ccdce14397785a82d90">ADJUST</a>, <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, and <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>.</p>
+<p>References <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567af644a36b43113ccdce14397785a82d90">ADJUST</a>, <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, and <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>.</p>
 
 <p>Referenced by <a class="el" href="classRTC.html#a40d35a6e1f964a424e74fac00933833d">adjustmentRequestSlot()</a>.</p>
 
@@ -387,8 +402,8 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classRTC_aea2a81c8143d8bc9e74cd0737825ee27_icgraph.png" border="0" usemap="#classRTC_aea2a81c8143d8bc9e74cd0737825ee27_icgraph" alt=""/></div>
 <map name="classRTC_aea2a81c8143d8bc9e74cd0737825ee27_icgraph" id="classRTC_aea2a81c8143d8bc9e74cd0737825ee27_icgraph">
 <area shape="rect" id="node2" href="classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="224,5,419,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="467,5,645,32"/>
-<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="693,5,873,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="467,5,645,32"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="693,5,873,32"/>
 </map>
 </div>
 </p>
@@ -418,7 +433,7 @@ Here is the caller graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. ">RTC::adjustmentRequestSlot</a>. </p>
 
-<p>References <a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27">adjustmentRequest()</a>, and <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>.</p>
+<p>References <a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27">adjustmentRequest()</a>, <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, and <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>.</p>
 
 <p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>.</p>
 
@@ -438,8 +453,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_a40d35a6e1f964a424e74fac00933833d_icgraph.png" border="0" usemap="#classRTC_a40d35a6e1f964a424e74fac00933833d_icgraph" alt=""/></div>
 <map name="classRTC_a40d35a6e1f964a424e74fac00933833d_icgraph" id="classRTC_a40d35a6e1f964a424e74fac00933833d_icgraph">
-<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="248,5,427,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="475,5,655,32"/>
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="248,5,427,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="475,5,655,32"/>
 </map>
 </div>
 </p>
@@ -469,7 +484,7 @@ Here is the caller graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4" title="RTC::calibrationRequest. ">RTC::calibrationRequest</a>. </p>
 
-<p>References <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567afaa442a5c1e70a17eb4707b0ed051aa7">CALIBR</a>, <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, and <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>.</p>
+<p>References <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567afaa442a5c1e70a17eb4707b0ed051aa7">CALIBR</a>, <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, and <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>.</p>
 
 <p>Referenced by <a class="el" href="classRTC.html#ad846225b1927e161338836ce0b7e3192">calibrationRequestSlot()</a>.</p>
 
@@ -489,8 +504,8 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classRTC_a524f35df1a582d46c839290fbd105fe4_icgraph.png" border="0" usemap="#classRTC_a524f35df1a582d46c839290fbd105fe4_icgraph" alt=""/></div>
 <map name="classRTC_a524f35df1a582d46c839290fbd105fe4_icgraph" id="classRTC_a524f35df1a582d46c839290fbd105fe4_icgraph">
 <area shape="rect" id="node2" href="classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="220,5,409,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="457,5,636,32"/>
-<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="684,5,864,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="457,5,636,32"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="684,5,864,32"/>
 </map>
 </div>
 </p>
@@ -520,7 +535,7 @@ Here is the caller graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. ">RTC::calibrationRequestSlot</a>. </p>
 
-<p>References <a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4">calibrationRequest()</a>, and <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>.</p>
+<p>References <a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4">calibrationRequest()</a>, <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, and <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>.</p>
 
 <p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>.</p>
 
@@ -540,8 +555,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_ad846225b1927e161338836ce0b7e3192_icgraph.png" border="0" usemap="#classRTC_ad846225b1927e161338836ce0b7e3192_icgraph" alt=""/></div>
 <map name="classRTC_ad846225b1927e161338836ce0b7e3192_icgraph" id="classRTC_ad846225b1927e161338836ce0b7e3192_icgraph">
-<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="243,5,421,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="469,5,649,32"/>
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="243,5,421,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="469,5,649,32"/>
 </map>
 </div>
 </p>
@@ -628,21 +643,64 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classRTC_a780780ce52f405cc38bec0c617730125_icgraph.png" border="0" usemap="#classRTC_a780780ce52f405cc38bec0c617730125_icgraph" alt=""/></div>
 <map name="classRTC_a780780ce52f405cc38bec0c617730125_icgraph" id="classRTC_a780780ce52f405cc38bec0c617730125_icgraph">
 <area shape="rect" id="node2" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27" title="RTC::adjustmentRequest. " alt="" coords="159,5,330,32"/>
-<area shape="rect" id="node4" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="625,132,804,159"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="625,132,804,159"/>
 <area shape="rect" id="node6" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4" title="RTC::calibrationRequest. " alt="" coords="161,107,328,133"/>
 <area shape="rect" id="node8" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. " alt="" coords="159,157,330,184"/>
 <area shape="rect" id="node10" href="classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. " alt="" coords="177,208,313,235"/>
 <area shape="rect" id="node12" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e" title="RTC::setRegisterRequest. " alt="" coords="157,259,332,285"/>
-<area shape="rect" id="node14" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="173,335,316,361"/>
+<area shape="rect" id="node14" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="173,309,316,336"/>
 <area shape="rect" id="node3" href="classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="381,5,576,32"/>
-<area shape="rect" id="node5" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="852,132,1032,159"/>
+<area shape="rect" id="node5" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="852,132,1032,159"/>
 <area shape="rect" id="node7" href="classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="384,107,573,133"/>
 <area shape="rect" id="node9" href="classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="381,157,576,184"/>
 <area shape="rect" id="node11" href="classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="399,208,558,235"/>
 <area shape="rect" id="node13" href="classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="380,259,577,285"/>
-<area shape="rect" id="node15" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="671,360,758,387"/>
-<area shape="rect" id="node16" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="395,360,562,387"/>
-<area shape="rect" id="node17" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="405,411,552,437"/>
+<area shape="rect" id="node15" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="395,309,562,336"/>
+<area shape="rect" id="node17" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="405,360,552,387"/>
+<area shape="rect" id="node16" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="671,335,758,361"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a36a682c7de80f9cd213b0de55175d99d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RTC::getRate </td>
+          <td>(</td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>rate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Signal function for determining the access rate via the serial interface. </p>
+
+<p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classRTC_a36a682c7de80f9cd213b0de55175d99d_icgraph.png" border="0" usemap="#classRTC_a36a682c7de80f9cd213b0de55175d99d_icgraph" alt=""/></div>
+<map name="classRTC_a36a682c7de80f9cd213b0de55175d99d_icgraph" id="classRTC_a36a682c7de80f9cd213b0de55175d99d_icgraph">
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="157,5,336,32"/>
+<area shape="rect" id="node4" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="175,56,318,83"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="384,5,564,32"/>
+<area shape="rect" id="node5" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="391,56,557,83"/>
+<area shape="rect" id="node7" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="401,107,547,133"/>
+<area shape="rect" id="node6" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="612,81,699,108"/>
 </map>
 </div>
 </p>
@@ -718,7 +776,7 @@ Here is the caller graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. ">RTC::informationRequest</a>. </p>
 
-<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567a551b723eafd6a31d444fcb2f5920fbd3">INFO</a>, and <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>.</p>
+<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567a551b723eafd6a31d444fcb2f5920fbd3">INFO</a>, <a class="el" href="classRTC.html#a17781571354fca7c377cc5e06c5d241d">m_correctionFactor</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, and <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>.</p>
 
 <p>Referenced by <a class="el" href="classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40">informationRequestSlot()</a>.</p>
 
@@ -738,8 +796,8 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classRTC_ac288aefde9ad229ec9af09b9b64363b5_icgraph.png" border="0" usemap="#classRTC_ac288aefde9ad229ec9af09b9b64363b5_icgraph" alt=""/></div>
 <map name="classRTC_ac288aefde9ad229ec9af09b9b64363b5_icgraph" id="classRTC_ac288aefde9ad229ec9af09b9b64363b5_icgraph">
 <area shape="rect" id="node2" href="classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="224,5,419,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="467,5,645,32"/>
-<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="693,5,873,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="467,5,645,32"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="693,5,873,32"/>
 </map>
 </div>
 </p>
@@ -769,7 +827,7 @@ Here is the caller graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. ">RTC::informationRequestSlot</a>. </p>
 
-<p>References <a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5">informationRequest()</a>, and <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>.</p>
+<p>References <a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5">informationRequest()</a>, <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, and <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>.</p>
 
 <p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>.</p>
 
@@ -789,11 +847,31 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_a4fbe25c428f7d629ab38cd75db7aeb40_icgraph.png" border="0" usemap="#classRTC_a4fbe25c428f7d629ab38cd75db7aeb40_icgraph" alt=""/></div>
 <map name="classRTC_a4fbe25c428f7d629ab38cd75db7aeb40_icgraph" id="classRTC_a4fbe25c428f7d629ab38cd75db7aeb40_icgraph">
-<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="248,5,427,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="475,5,655,32"/>
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="248,5,427,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="475,5,655,32"/>
 </map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="a2e0ab9f3644cfbe7d98799a9d12e90d6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool RTC::isBusy </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classRTC.html#a2e0ab9f3644cfbe7d98799a9d12e90d6" title="RTC::isBusy. ">RTC::isBusy</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the Serial Port is busy, otherwise false. </dd></dl>
+
+<p>References <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>.</p>
 
 </div>
 </div>
@@ -811,7 +889,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p><a class="el" href="classRTC.html#a6933f009d474ad8ec61dd57abb49e89a" title="RTC::isConnected. ">RTC::isConnected</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>True if the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> device is connected, otherwise false. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the <a class="el" href="classRTC.html" title="The RTC class. ">RTC</a> device is connected, otherwise false. </dd></dl>
 
 <p>References <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>.</p>
 
@@ -822,8 +900,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_a6933f009d474ad8ec61dd57abb49e89a_icgraph.png" border="0" usemap="#classRTC_a6933f009d474ad8ec61dd57abb49e89a_icgraph" alt=""/></div>
 <map name="classRTC_a6933f009d474ad8ec61dd57abb49e89a_icgraph" id="classRTC_a6933f009d474ad8ec61dd57abb49e89a_icgraph">
-<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="184,5,363,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="411,5,591,32"/>
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="184,5,363,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="411,5,591,32"/>
 </map>
 </div>
 </p>
@@ -892,20 +970,31 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>, <a class="el" href="classRTC.html#af55f2c666537302dbf359ec8970b3475">handleError()</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>.</p>
+<p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>, <a class="el" href="classRTC.html#af55f2c666537302dbf359ec8970b3475">handleError()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_ab71d15e8b4084d591ab971c47988fc74_icgraph.png" border="0" usemap="#classRTC_ab71d15e8b4084d591ab971c47988fc74_icgraph" alt=""/></div>
 <map name="classRTC_ab71d15e8b4084d591ab971c47988fc74_icgraph" id="classRTC_ab71d15e8b4084d591ab971c47988fc74_icgraph">
-<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="161,5,340,32"/>
-<area shape="rect" id="node4" href="classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="189,56,313,83"/>
-<area shape="rect" id="node6" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="179,132,322,159"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="388,5,568,32"/>
-<area shape="rect" id="node5" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="616,107,703,133"/>
-<area shape="rect" id="node7" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="395,157,561,184"/>
-<area shape="rect" id="node8" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="405,208,551,235"/>
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="812,138,991,164"/>
+<area shape="rect" id="node4" href="classRTC.html#af55f2c666537302dbf359ec8970b3475" title="RTC::handleError. " alt="" coords="167,378,291,404"/>
+<area shape="rect" id="node6" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f" title="RTC::sendRequest. " alt="" coords="161,214,296,240"/>
+<area shape="rect" id="node17" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="360,315,503,342"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="1039,138,1219,164"/>
+<area shape="rect" id="node5" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="858,366,945,392"/>
+<area shape="rect" id="node7" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. " alt="" coords="346,112,517,139"/>
+<area shape="rect" id="node9" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27" title="RTC::adjustmentRequest. " alt="" coords="346,163,517,190"/>
+<area shape="rect" id="node11" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4" title="RTC::calibrationRequest. " alt="" coords="348,214,515,240"/>
+<area shape="rect" id="node13" href="classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. " alt="" coords="363,264,499,291"/>
+<area shape="rect" id="node15" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e" title="RTC::setRegisterRequest. " alt="" coords="344,62,519,88"/>
+<area shape="rect" id="node8" href="classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="568,112,763,139"/>
+<area shape="rect" id="node10" href="classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="568,163,763,190"/>
+<area shape="rect" id="node12" href="classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="571,214,760,240"/>
+<area shape="rect" id="node14" href="classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="586,264,745,291"/>
+<area shape="rect" id="node16" href="classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="567,62,764,88"/>
+<area shape="rect" id="node18" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="582,366,749,392"/>
+<area shape="rect" id="node19" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="592,315,739,342"/>
 </map>
 </div>
 </p>
@@ -935,7 +1024,7 @@ Here is the caller graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. ">RTC::resetRequest</a>. </p>
 
-<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567ab5859d8721cfdc0312b2838b9c985bc1">RESET</a>, and <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>.</p>
+<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567ab5859d8721cfdc0312b2838b9c985bc1">RESET</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, and <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>.</p>
 
 <p>Referenced by <a class="el" href="classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8">resetRequestSlot()</a>.</p>
 
@@ -955,8 +1044,8 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classRTC_add9fce70d0aad967c03413e60a449813_icgraph.png" border="0" usemap="#classRTC_add9fce70d0aad967c03413e60a449813_icgraph" alt=""/></div>
 <map name="classRTC_add9fce70d0aad967c03413e60a449813_icgraph" id="classRTC_add9fce70d0aad967c03413e60a449813_icgraph">
 <area shape="rect" id="node2" href="classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="189,5,348,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="396,5,575,32"/>
-<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="623,5,803,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="396,5,575,32"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="623,5,803,32"/>
 </map>
 </div>
 </p>
@@ -986,7 +1075,7 @@ Here is the caller graph for this function:</div>
 
 <p><a class="el" href="classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. ">RTC::resetRequestSlot</a>. </p>
 
-<p>References <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, and <a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813">resetRequest()</a>.</p>
+<p>References <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, and <a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813">resetRequest()</a>.</p>
 
 <p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>.</p>
 
@@ -1006,8 +1095,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_a2bf385f3fa2fa5d5238364d6328458e8_icgraph.png" border="0" usemap="#classRTC_a2bf385f3fa2fa5d5238364d6328458e8_icgraph" alt=""/></div>
 <map name="classRTC_a2bf385f3fa2fa5d5238364d6328458e8_icgraph" id="classRTC_a2bf385f3fa2fa5d5238364d6328458e8_icgraph">
-<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="212,5,391,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="439,5,619,32"/>
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="212,5,391,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="439,5,619,32"/>
 </map>
 </div>
 </p>
@@ -1063,7 +1152,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Data array of the type const QByteArray. </dd></dl>
 
-<p>References <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>, <a class="el" href="rtc_8cpp.html#ae7676cdfa371dfdcf6fb0687737c29a6">WAIT_TIME</a>, and <a class="el" href="rtc_8cpp.html#ae6928401a4ce61a49c288ffe907ad020">WAIT_TIME_W</a>.</p>
+<p>References <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="classRTC.html#ab71d15e8b4084d591ab971c47988fc74">portError()</a>, <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>, and <a class="el" href="rtc_8cpp.html#ae7676cdfa371dfdcf6fb0687737c29a6">WAIT_TIME</a>.</p>
 
 <p>Referenced by <a class="el" href="classRTC.html#aea2a81c8143d8bc9e74cd0737825ee27">adjustmentRequest()</a>, <a class="el" href="classRTC.html#a524f35df1a582d46c839290fbd105fe4">calibrationRequest()</a>, <a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5">informationRequest()</a>, <a class="el" href="classRTC.html#add9fce70d0aad967c03413e60a449813">resetRequest()</a>, <a class="el" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e">setRegisterRequest()</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>.</p>
 
@@ -1077,17 +1166,17 @@ Here is the caller graph for this function:</div>
 <area shape="rect" id="node8" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5" title="RTC::informationRequest. " alt="" coords="190,107,361,133"/>
 <area shape="rect" id="node10" href="classRTC.html#add9fce70d0aad967c03413e60a449813" title="RTC::resetRequest. " alt="" coords="207,157,343,184"/>
 <area shape="rect" id="node12" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e" title="RTC::setRegisterRequest. " alt="" coords="188,208,363,235"/>
-<area shape="rect" id="node14" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="204,284,347,311"/>
+<area shape="rect" id="node14" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="204,259,347,285"/>
 <area shape="rect" id="node3" href="classRTC.html#a40d35a6e1f964a424e74fac00933833d" title="RTC::adjustmentRequestSlot. " alt="" coords="412,5,607,32"/>
-<area shape="rect" id="node4" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="656,107,835,133"/>
-<area shape="rect" id="node5" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="883,107,1063,133"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="656,107,835,133"/>
+<area shape="rect" id="node5" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="883,107,1063,133"/>
 <area shape="rect" id="node7" href="classRTC.html#ad846225b1927e161338836ce0b7e3192" title="RTC::calibrationRequestSlot. " alt="" coords="415,56,604,83"/>
 <area shape="rect" id="node9" href="classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40" title="RTC::informationRequestSlot. " alt="" coords="412,107,607,133"/>
 <area shape="rect" id="node11" href="classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8" title="RTC::resetRequestSlot. " alt="" coords="430,157,589,184"/>
 <area shape="rect" id="node13" href="classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="411,208,608,235"/>
-<area shape="rect" id="node15" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="702,309,789,336"/>
-<area shape="rect" id="node16" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="426,309,593,336"/>
-<area shape="rect" id="node17" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="436,360,583,387"/>
+<area shape="rect" id="node15" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="426,259,593,285"/>
+<area shape="rect" id="node17" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="436,309,583,336"/>
+<area shape="rect" id="node16" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="702,284,789,311"/>
 </map>
 </div>
 </p>
@@ -1124,7 +1213,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, and <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567a2eb7d1400caf22b4fa3a24f350c0edb1">SETREG</a>.</p>
+<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="rtc_8cpp.html#a7ec58b2f36a753832366a52607e6dbae">ESC_WHITE</a>, <a class="el" href="rtc_8cpp.html#acbe055efc13db8cf90b0f7cb27bc0862">ESC_YELLOW</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567a2eb7d1400caf22b4fa3a24f350c0edb1">SETREG</a>, and <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>.</p>
 
 <p>Referenced by <a class="el" href="classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47">setRegisterRequestSlot()</a>.</p>
 
@@ -1144,8 +1233,8 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classRTC_a67aaf51f9a82fa6118b1b4d5a82c5e4e_icgraph.png" border="0" usemap="#classRTC_a67aaf51f9a82fa6118b1b4d5a82c5e4e_icgraph" alt=""/></div>
 <map name="classRTC_a67aaf51f9a82fa6118b1b4d5a82c5e4e_icgraph" id="classRTC_a67aaf51f9a82fa6118b1b4d5a82c5e4e_icgraph">
 <area shape="rect" id="node2" href="classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47" title="RTC::setRegisterRequestSlot. " alt="" coords="228,5,425,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="473,5,652,32"/>
-<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="700,5,880,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="473,5,652,32"/>
+<area shape="rect" id="node4" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="700,5,880,32"/>
 </map>
 </div>
 </p>
@@ -1182,7 +1271,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p>References <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, and <a class="el" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e">setRegisterRequest()</a>.</p>
+<p>References <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, and <a class="el" href="classRTC.html#a67aaf51f9a82fa6118b1b4d5a82c5e4e">setRegisterRequest()</a>.</p>
 
 <p>Referenced by <a class="el" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a">MainWindow::connectRTC()</a>.</p>
 
@@ -1202,8 +1291,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classRTC_a44e9c78f4a1aa5ab62c1f8edaf7c7a47_icgraph.png" border="0" usemap="#classRTC_a44e9c78f4a1aa5ab62c1f8edaf7c7a47_icgraph" alt=""/></div>
 <map name="classRTC_a44e9c78f4a1aa5ab62c1f8edaf7c7a47_icgraph" id="classRTC_a44e9c78f4a1aa5ab62c1f8edaf7c7a47_icgraph">
-<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC. " alt="" coords="251,5,429,32"/>
-<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow. " alt="" coords="477,5,657,32"/>
+<area shape="rect" id="node2" href="classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="251,5,429,32"/>
+<area shape="rect" id="node3" href="classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="477,5,657,32"/>
 </map>
 </div>
 </p>
@@ -1232,11 +1321,11 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p><a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. ">RTC::statusRequest</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>True if the <a class="el" href="classRTC.html" title="The RTC class The class is responsible for communication with the RTC device. ">RTC</a> status was successful, otherwise false. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the <a class="el" href="classRTC.html" title="The RTC class. ">RTC</a> status was successful, otherwise false. </dd></dl>
 
-<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="classRTC.html#ab71d15e8b4084d591ab971c47988fc74">portError()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567a5f241c8c8f985b3c51e05d39cf030f4c">STATUS</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a6f9f24c924396335135738c9f78f9751">STATUS_DISCONNECTION</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4ac01289a7e6e2f258f7de3f16399fd5f1">STATUS_ERROR</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a7973c243f856f506ff1a0465b4660611">STATUS_INPUT_DATA_TOLONG</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a6735b8b20e470c0d89d40803f4d18733">STATUS_INVALID_PARAMETER</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a7a7fd9c6f89e8c6e6d24f4c2d36f3ad7">STATUS_NOT_SUPPORTED</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a47768f6d3d56f8455845fb093ab0cf0e">STATUS_SUCCESS</a>, and <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4aa919b80bc5d255a5622a7c3260bef6a0">STATUS_UNKNOWN_ERROR</a>.</p>
+<p>References <a class="el" href="rtc_8cpp.html#a5c053f01ace5aafade2bca8a1727b522">ESC_RED</a>, <a class="el" href="rtc_8cpp.html#a7e1d760a68101231b8ebe6b63b72c437">ESC_RESET</a>, <a class="el" href="classRTC.html#a780780ce52f405cc38bec0c617730125">getData()</a>, <a class="el" href="classRTC.html#a36a682c7de80f9cd213b0de55175d99d">getRate()</a>, <a class="el" href="classRTC.html#a8863649eca22c2f2934ef3c1a5a8f412">m_pSerialPort</a>, <a class="el" href="classRTC.html#ab71d15e8b4084d591ab971c47988fc74">portError()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, <a class="el" href="rtc_8cpp.html#a72dd9b3f035ad3b905b099088eb154da">STARTBYTE</a>, <a class="el" href="rtc_8h.html#a08f056fcc0d67dc488da76413ff52567a5f241c8c8f985b3c51e05d39cf030f4c">STATUS</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a6f9f24c924396335135738c9f78f9751">STATUS_DISCONNECTION</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4ac01289a7e6e2f258f7de3f16399fd5f1">STATUS_ERROR</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a7973c243f856f506ff1a0465b4660611">STATUS_INPUT_DATA_TOLONG</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a6735b8b20e470c0d89d40803f4d18733">STATUS_INVALID_PARAMETER</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a7a7fd9c6f89e8c6e6d24f4c2d36f3ad7">STATUS_NOT_SUPPORTED</a>, <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4a47768f6d3d56f8455845fb093ab0cf0e">STATUS_SUCCESS</a>, and <a class="el" href="rtc_8h.html#aaee1243c28b5ebfde7fbcbd1991f85a4aa919b80bc5d255a5622a7c3260bef6a0">STATUS_UNKNOWN_ERROR</a>.</p>
 
-<p>Referenced by <a class="el" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348">connectToRTC()</a>, <a class="el" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3">RTC()</a>, and <a class="el" href="classRTC.html#accd274cfef2134139716ac80e80d29ef">statusRequestSlot()</a>.</p>
+<p>Referenced by <a class="el" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348">connectToRTC()</a>, and <a class="el" href="classRTC.html#accd274cfef2134139716ac80e80d29ef">statusRequestSlot()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -1254,8 +1343,8 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classRTC_ac4bade1db3bd421775869907b87ed9fa_icgraph.png" border="0" usemap="#classRTC_ac4bade1db3bd421775869907b87ed9fa_icgraph" alt=""/></div>
 <map name="classRTC_ac4bade1db3bd421775869907b87ed9fa_icgraph" id="classRTC_ac4bade1db3bd421775869907b87ed9fa_icgraph">
 <area shape="rect" id="node2" href="classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="206,5,353,32"/>
+<area shape="rect" id="node4" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="196,56,363,83"/>
 <area shape="rect" id="node3" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="411,31,497,57"/>
-<area shape="rect" id="node4" href="classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="196,107,363,133"/>
 </map>
 </div>
 </p>
@@ -1285,7 +1374,9 @@ Here is the caller graph for this function:</div>
 
 <p>RTC::versionRequestSlot. </p>
 
-<p>References <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>.</p>
+<p>References <a class="el" href="classRTC.html#af83a6d3fc409c11c352265ff5c917990">m_isBusy</a>, <a class="el" href="classRTC.html#a421c33aa3c50a8f7a2eac4389ad1e52d">m_isConnected</a>, and <a class="el" href="classRTC.html#ac4bade1db3bd421775869907b87ed9fa">statusRequest()</a>.</p>
+
+<p>Referenced by <a class="el" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3">RTC()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -1298,9 +1389,41 @@ Here is the call graph for this function:</div>
 </div>
 </p>
 
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classRTC_accd274cfef2134139716ac80e80d29ef_icgraph.png" border="0" usemap="#classRTC_accd274cfef2134139716ac80e80d29ef_icgraph" alt=""/></div>
+<map name="classRTC_accd274cfef2134139716ac80e80d29ef_icgraph" id="classRTC_accd274cfef2134139716ac80e80d29ef_icgraph">
+<area shape="rect" id="node2" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="220,5,307,32"/>
+</map>
+</div>
+</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a17781571354fca7c377cc5e06c5d241d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float RTC::m_correctionFactor</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classRTC.html#ac288aefde9ad229ec9af09b9b64363b5">informationRequest()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="af83a6d3fc409c11c352265ff5c917990"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1319,7 +1442,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3">RTC()</a>, and <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>.</p>
+<p>Referenced by <a class="el" href="classRTC.html#a40d35a6e1f964a424e74fac00933833d">adjustmentRequestSlot()</a>, <a class="el" href="classRTC.html#ad846225b1927e161338836ce0b7e3192">calibrationRequestSlot()</a>, <a class="el" href="classRTC.html#a4fbe25c428f7d629ab38cd75db7aeb40">informationRequestSlot()</a>, <a class="el" href="classRTC.html#a2e0ab9f3644cfbe7d98799a9d12e90d6">isBusy()</a>, <a class="el" href="classRTC.html#a2bf385f3fa2fa5d5238364d6328458e8">resetRequestSlot()</a>, <a class="el" href="classRTC.html#a5f5800a3676d8196060d9144c9e0f40f">sendRequest()</a>, <a class="el" href="classRTC.html#a44e9c78f4a1aa5ab62c1f8edaf7c7a47">setRegisterRequestSlot()</a>, and <a class="el" href="classRTC.html#accd274cfef2134139716ac80e80d29ef">statusRequestSlot()</a>.</p>
 
 </div>
 </div>
@@ -1396,7 +1519,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 16 2021 14:34:17 for SynchroTime by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 12 2021 14:05:25 for SynchroTime by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

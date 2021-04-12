@@ -1,6 +1,6 @@
 <map id="Interface::getReceivedData" name="Interface::getReceivedData">
-<area shape="rect" id="node2" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16. " alt="" coords="746,48,854,75"/>
-<area shape="rect" id="node3" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17. " alt="" coords="746,150,854,176"/>
+<area shape="rect" id="node2" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16 Checking communication with the device via the serial interface. " alt="" coords="746,48,854,75"/>
+<area shape="rect" id="node3" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17 Checking communication with the device via the serial interface. " alt="" coords="746,150,854,176"/>
 <area shape="rect" id="node4" href="$helper_8h.html#aab3e153f54786f53d750e965d190c8a1" title="Request for the Adjustment of the device. " alt="" coords="252,251,427,278"/>
 <area shape="rect" id="node5" href="$helper_8h.html#a7c28bb38d1f8dde09dd59e32edcc69f8" title="Request for the Calibration of the device. " alt="" coords="254,302,425,328"/>
 <area shape="rect" id="node6" href="$helper_8h.html#a4c9d894a31536848ea3ffff2f3002379" title="Request for the Information of the device. " alt="" coords="252,352,427,379"/>

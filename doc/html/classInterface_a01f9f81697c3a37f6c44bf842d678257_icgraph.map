@@ -7,6 +7,6 @@
 <area shape="rect" id="node4" href="$classInterfaceSP.html#ab2f9c36700c9bbd032fb4431fa9c5e29" title="InterfaceSP::initSerialPort Prepare a instance of the Serial Port. " alt="" coords="455,56,628,83"/>
 <area shape="rect" id="node5" href="$classInterfaceSP.html#a95dd41204e3c465e3a70e67da3f3aac5" title="InterfaceSP::InterfaceSP Constructor of the class InterfaceSP for creating objects with default value..." alt="" coords="676,56,844,83"/>
 <area shape="rect" id="node8" href="$classInterfaceSP.html#a19d658095a300e0a089a2252d955ca7d" title="InterfaceSP::InterfaceSP Constructor of the class InterfaceSP for creating objects with default value..." alt="" coords="676,119,844,145"/>
-<area shape="rect" id="node10" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16. " alt="" coords="487,176,595,203"/>
-<area shape="rect" id="node11" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17. " alt="" coords="487,227,595,253"/>
+<area shape="rect" id="node10" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16 Checking communication with the device via the serial interface. " alt="" coords="487,176,595,203"/>
+<area shape="rect" id="node11" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17 Checking communication with the device via the serial interface. " alt="" coords="487,227,595,253"/>
 </map>

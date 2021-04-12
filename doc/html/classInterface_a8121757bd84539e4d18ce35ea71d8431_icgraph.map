@@ -1,5 +1,5 @@
 <map id="Interface::getBlockSize" name="Interface::getBlockSize">
 <area shape="rect" id="node2" href="$classInterfaceSP.html#af593dd6e938e6ddd8014cfe37d984d83" title="InterfaceSP::writeTheData Writes the content of byteArray to the Serial Port device. " alt="" coords="212,31,389,57"/>
-<area shape="rect" id="node3" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16. " alt="" coords="437,5,545,32"/>
-<area shape="rect" id="node4" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17. " alt="" coords="437,56,545,83"/>
+<area shape="rect" id="node3" href="$classTests.html#a91d29f00e48dc590539498d888b09a79" title="Tests::Case16 Checking communication with the device via the serial interface. " alt="" coords="437,5,545,32"/>
+<area shape="rect" id="node4" href="$classTests.html#ac3afbb77a5deb5b93edd75e13bddaf70" title="Tests::Case17 Checking communication with the device via the serial interface. " alt="" coords="437,56,545,83"/>
 </map>
