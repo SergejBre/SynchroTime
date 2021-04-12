@@ -1,0 +1,8 @@
+<map id="RTC::getRate" name="RTC::getRate">
+<area shape="rect" id="node2" href="$classMainWindow.html#a7c72f8c27224927af3b81edc5a4ea20a" title="MainWindow::connectRTC Procedure for creating a separate thread for communication with a device..." alt="" coords="157,5,336,32"/>
+<area shape="rect" id="node4" href="$classRTC.html#ac4bade1db3bd421775869907b87ed9fa" title="RTC::statusRequest. " alt="" coords="175,56,318,83"/>
+<area shape="rect" id="node3" href="$classMainWindow.html#a8b244be8b7b7db1b08de2a2acb9409db" title="MainWindow::MainWindow Constructor of the main application window. " alt="" coords="384,5,564,32"/>
+<area shape="rect" id="node5" href="$classRTC.html#accd274cfef2134139716ac80e80d29ef" title="RTC::versionRequestSlot. " alt="" coords="391,56,557,83"/>
+<area shape="rect" id="node7" href="$classRTC.html#a7579d2bf58a798fa2b8b1bc5288ec348" title="RTC::connectToRTC. " alt="" coords="401,107,547,133"/>
+<area shape="rect" id="node6" href="$classRTC.html#ad8b6215ffef801a7c6e50f7527840cd3" title="RTC::RTC Constructor for test purposes. " alt="" coords="612,81,699,108"/>
+</map>
