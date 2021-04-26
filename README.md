@@ -27,7 +27,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ![synchroTime -h](./images/consoleApp_About.png)
 
 ## Using the CLI app
-1. First, you need to load a sketch into Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory and connect the RTC DS3231 module according to the circuit shown in the specification.
+1. First, you need to upload the sketch to Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory, if you have a **DS3231 ZS-042** module or [arduino/synchro_RTC_MINI.ino](arduino/synchro_RTC_MINI.ino), if you have a **DS3231 MINI** module, then connect the RTC DS3231 module according to the circuit shown in the specification.
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be `/dev/ttyUSBx`, under Windows - `COMx`).
  To find the name of this port, call the application with the `-d (--discovery)` switch:
 ```bash
@@ -118,7 +118,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
  Request for reset completed successfully. 
 ```
 
-7. Use the `-s (--setreg)` command to add a new value (e.g. `-12.8`) to the offset register of the DS3231. The new value will be added arithmetically to the old register value. The result will be limited to the values 12.7 and -12.8. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
+7. Use the `-s (--setreg)` command to add a new value (e.g. `-12.8`) to the offset register of the DS3231. The new value will overwrite the old register value. The result will be limited to the values 12.7 and -12.8. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
 ```bash
  $ ./synchroTime -s -12.8
 
