@@ -3,38 +3,41 @@
 //  Nürnberg, Germany
 //  E-Mail: sergej1@email.ua
 //
-//  Copyright (C) 2020 free Project SynchroTime. All rights reserved.
+//  Copyright (C) 2021 free Project SynchroTime. All rights reserved.
 //------------------------------------------------------------------------------
 /*
-This sketch performs as a server on an arduino controller for connecting a computer
-  with an RTC DS3231 module via a serial port.Built-in server functions allow you to:
+This sketch performs as a server on an arduino controller for connecting the PC with an RTC DS3231 ZS-042 module via a serial port.
+  Built-in server functions allow you to:
   - adjust the RTC DS3231 time in accordance with the reference time of your computer;
-  - correct the time drift of the RTC DS3231 clock;
+  - correct the frequency drift of the RTC DS3231 oscillator;
   - evaluate the accuracy and reliability of the RTC oscillator for a specific sample,
-    as well as the chances of a successful correction in the event of a significant time drift;
-  - save parameters and calibration data to the energy-independent flash memory;
-  - read from the Aging offset register;
-  - write to the Aging offset register;
-  - etc.
+    as well as the chances of a successful correction in the event of a significant frequency drift;
+  - save parameters and calibration data to the energy-independent flash memory AT24C256;
+  - read value from the Aging register;
+  - write value to the Aging register.
 The settings are:
   - The selection of the time zone, which is determined as the local local time on the worker computer.
     time_zone = Difference of the UTC-time. A value from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
     +1/+2 for Europe, depending on which season is winter (+1) or summer time (+2).
-  - MIN_TIME_SPAN the minimum time required for a stable calculation of the time drift.
+  - MIN_TIME_SPAN the minimum time required for a stable calculation of the frequency drift.
 Dependencies:
   - Arduino IDE version >= 1.8.13 (!Replace compilation flags from -Os to -O2);
-  - Adafruit RTC library for Arduino RTClib version >= 1.12.5 (https://github.com/adafruit/RTClib).
+  - Adafruit RTC library for Arduino RTClib version >= 1.13 (https://github.com/adafruit/RTClib).
+Connecting DS3231 MINI module to arduino board:
+  - VCC and GND of RTC DS3231 module should be connected to some power source +5V
+  - SDA, SCL of RTC DS3231 module should be connected to SDA - data line, SCL - clock line of arduino (for arduino Nano this are A4 and A5)
+  - SQW should be connected to INTERRUPT_PIN
+  - INTERRUPT_PIN needs to work with interrupts
 */
 #include <Wire.h>
 #include "RTClib.h"
 
-#define TIME_ZONE 1           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
+#define TIME_ZONE 2           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
 #define STARTBYTE 0x40        // The starting byte of the data set from the communication protocol.
 #define OFFSET_REGISTER 0x10  // Aging offset register address
-#define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
-#define MIN_TIME_SPAN 200000  // The minimum time required for a stable calculation of the time drift.
+#define MIN_TIME_SPAN 100000  // The minimum time required for a stable calculation of the frequency drift [in secs]. Default value 200000.
 typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG } task_t;
 typedef struct time_s {
   uint32_t utc;
@@ -47,20 +50,18 @@ uint8_t buff[4];  // temporary buffer
 // Function Prototypes
 int8_t readFromOffsetReg( void ); // read from offset register
 bool writeToOffsetReg( const int8_t value ); // write to offset register
-bool setControlRegTo1Hz( void ); // Control Register to 1 Hz Out (SQW-pin)
 inline void intToHex( uint8_t* const buff, const uint32_t value );
 inline void floatToHex( uint8_t* const buff, const float value );
 uint32_t hexToInt( const uint8_t* const buff );
 uint32_t getUTCtime( const uint32_t localTimeSecs );
-bool adjustTime( const uint32_t utcTimeSecs );
-bool adjustTimeDrift( float drift_in_ppm );
+inline void adjustTime( const uint32_t utcTimeSecs );
 float calculateDrift_ppm( const time_t* const ref, const time_t* const t );
+int8_t roundUpDrift( float drift_in_ppm );
 uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
   while ( !Serial );      // wait for serial port to connect. Needed for native USB
-//  Serial.setTimeout(0);   // timeout in ms
 
   if ( !rtc.begin() ) {
     Serial.println( F( "Couldn't find DS3231 modul" ) );
@@ -78,12 +79,12 @@ void setup () {
     const uint32_t newtime = DateTime( F(__DATE__), F(__TIME__) ).unixtime();
     // offset value from -128 to +127, default is 0
     uint8_t offset_val = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
-    adjustTime( newtime - TIME_ZONE * 3600 );
+    rtc.adjust( newtime );
+    intToHex( buff, newtime - TIME_ZONE * 3600 ); // write time to buffer
+    i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
 
     if ( offset_val != 0xFF ) {
         writeToOffsetReg( int8_t( offset_val ) );
-//        Serial.print( F( "Set Offset Reg: " ) );
-//        Serial.println( offset_val, DEC );
     }
   }
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
@@ -103,12 +104,13 @@ void loop () {
   uint8_t set = 0U;
   uint8_t numberOfBytes = 0U;
   float drift_in_ppm = 0;
+  int8_t drift_val;
   time_t t, ref;
 
   if ( Serial.available() > 1 && Serial.read() == STARTBYTE ) {       // if there is data available
 
     while ( millis() - tickCounter > 998 );
-    t.milliSecs = millis() - tickCounter;
+    t.milliSecs = (millis() - tickCounter);// % 1000;
     DateTime now = rtc.now();       // reading clock time
     t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
 
@@ -180,8 +182,9 @@ void loop () {
   switch ( task )
   {
     case TASK_ADJUST:               // adjust time
-//      oneHz();
-      ok = adjustTime( ref.utc );
+      adjustTime( ref.utc );
+      intToHex( buff, ref.utc ); // write time to buffer
+      ok = i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
       byteBuffer[set] = ok;
       set++;
       task = TASK_IDLE;
@@ -205,10 +208,21 @@ void loop () {
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
       floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
       set += sizeof(drift_in_ppm);
-      ok = adjustTimeDrift( drift_in_ppm );
-      if ( ok ) {
-        ok &= adjustTime( ref.utc ); // adjust time
-        byteBuffer[set] = readFromOffsetReg();  // read new value from the offset register
+      drift_val = roundUpDrift( drift_in_ppm );
+      if ( drift_val != 0 ) {
+        ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, drift_val );  // write drift value to EEPROM of AT24C256
+        ok &= writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
+        if ( ok ) {
+          adjustTime( ref.utc ); // adjust time
+          intToHex( buff, ref.utc ); // write time to buffer
+          ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
+        }
+        byteBuffer[set] = drift_val;  // read new value from the offset register
+        set++;
+      }
+      else {
+        ok = true;
+        byteBuffer[set] = byteBuffer[1];  // read value from the offset register
         set++;
       }
       byteBuffer[set] = ok;
@@ -227,7 +241,10 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_SETREG:               // set register
-      ok = adjustTimeDrift( drift_in_ppm );
+      drift_in_ppm *= 10;
+      drift_val = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
+      ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, drift_val );  // write drift value to EEPROM of AT24C256
+      ok &= writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
       byteBuffer[set] = ok;
       set++;
       task = TASK_IDLE;
@@ -254,8 +271,8 @@ int8_t readFromOffsetReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
   Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
   Wire.endTransmission();
-  int8_t offset_val = 0x00;
-  Wire.requestFrom( DS3231_ADDRESS, 1 ); // Read a byte from register
+  int8_t offset_val = 0;
+  Wire.requestFrom( uint8_t( DS3231_ADDRESS ), uint8_t(1) ); // Read a byte from register
   offset_val = int8_t( Wire.read() );
   return offset_val;
 }
@@ -264,13 +281,6 @@ bool writeToOffsetReg( const int8_t value ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
   Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
   Wire.write( value ); // Write value to register
-  return ( Wire.endTransmission() == 0 );
-}
-
-bool setControlRegTo1Hz( void ) {
-  Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( CONRTOL_REGISTER ) ); // sets the Control Register address
-  Wire.write( B01000000 ); // sets 1 Hz Out (SQW-pin)
   return ( Wire.endTransmission() == 0 );
 }
 
@@ -291,27 +301,24 @@ uint32_t getUTCtime( const uint32_t localTimeSecs ) {
   return ( localTimeSecs - TIME_ZONE * 3600 ); // UTC_time = local_Time - TIME_ZONE*3600 sec
 }
 
-bool adjustTime( const uint32_t utcTimeSecs ) {
+inline void adjustTime( const uint32_t utcTimeSecs ) {
   rtc.adjust( DateTime( utcTimeSecs + TIME_ZONE * 3600 ) );
-  intToHex( buff, utcTimeSecs ); // data to write
-  return i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
 }
 
-// the result is rounded to the maximum possible values of type uint8_t
-bool adjustTimeDrift( float drift_in_ppm ) {
+// the result is rounded to the maximum possible values of type int8_t
+int8_t roundUpDrift( float drift_in_ppm ) {
   drift_in_ppm *= 10;
-  int offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
-  if ( offset == 0 ) return true;  // if offset is 0, nothing needs to be done
+  int32_t offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
+  if ( offset == 0 ) {
+    return offset;  // if offset is 0, nothing needs to be done
+  }
   const int8_t last_offset_reg = readFromOffsetReg();
-  const int8_t last_offset_ee = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+  const int8_t last_offset_ee = (int8_t)i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
   if ( last_offset_reg == last_offset_ee ) {
     drift_in_ppm += last_offset_reg;
     offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
   }
-  offset = (offset > 127) ? 127 : (offset < -128) ? -128 : offset;
-  bool ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, offset );  // write offset value to EEPROM of AT24C256
-  ok &= writeToOffsetReg( offset );  // write offset value to Offset Reg. of DS3231
-  return ok;
+  return (offset > 127) ? 127 : (offset < -128) ? -128 : offset;
 }
 
 /*
@@ -326,25 +333,23 @@ float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const
   if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
     return 0;
   }
-  uint32_t last_set_timeUTC = hexToInt( buff );
-  int32_t diff = referenceTime->utc - last_set_timeUTC;
+  const uint32_t last_set_timeUTC = hexToInt( buff );
+  const int32_t diff = referenceTime->utc - last_set_timeUTC;
   // verification is needed because the var. last_set_timeSecs can reach the overflow value
   if ( referenceTime->utc < last_set_timeUTC || diff < MIN_TIME_SPAN ) {
     return 0;
   }
-  int32_t time_driftSecs = clockTime->utc - referenceTime->utc;
-  int16_t time_driftMs = clockTime->milliSecs - referenceTime->milliSecs;
-  float time_drift = time_driftSecs * 1000 + time_driftMs;
+  const int32_t time_driftSecs = clockTime->utc - referenceTime->utc;
+  const int16_t time_driftMs = clockTime->milliSecs - referenceTime->milliSecs;
+  const float time_drift = time_driftSecs * 1000 + time_driftMs;
   return time_drift * 1000 / diff;
 }
 
 uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength ) {
   uint8_t sum = 0U;
-//  if ( blength <= sizeof(bbuffer) ) {
-    for ( uint8_t idx = 0U; idx < blength; idx++ ) {
-      sum += bbuffer[idx];
-    }
-//  }
+  for ( uint8_t idx = 0U; idx < blength; idx++ ) {
+    sum += bbuffer[idx];
+  }
   return sum;
 }
 
