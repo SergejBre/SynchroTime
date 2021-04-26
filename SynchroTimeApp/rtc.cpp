@@ -416,7 +416,7 @@ void RTC::informationRequest()
     const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
     {
         quint32 localTimeSecs = localTimeMSecs/1000;
-        quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
+        quint16 milliSecs = localTimeMSecs % 1000;
         localTimeSecs = qToLittleEndian<quint32>( localTimeSecs );
         memcpy( sentData, &localTimeSecs, sizeof(localTimeSecs) );
         milliSecs = qToLittleEndian<quint16>( milliSecs );
@@ -484,7 +484,7 @@ void RTC::adjustmentRequest()
     quint8 sentData[6];
     const qint64 localTimeMSecs = QDateTime::currentDateTime().toMSecsSinceEpoch(); //local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
-    const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
+    const quint16 milliSecs = localTimeMSecs % 1000;
     quint32 le_localTimeSecs = qToLittleEndian<quint32>( ++localTimeSecs );
     memcpy( sentData, &le_localTimeSecs, sizeof(le_localTimeSecs) );
     sentData[4] = sentData[5] = 0U;
@@ -525,7 +525,7 @@ void RTC::calibrationRequest()
     QDateTime local( QDateTime::currentDateTime() );
     const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
-    const quint16 milliSecs = localTimeMSecs - localTimeSecs * 1000;
+    const quint16 milliSecs = localTimeMSecs % 1000;
     quint32 le_localTimeSecs = qToLittleEndian<quint32>( ++localTimeSecs );
     memcpy( sentData, &le_localTimeSecs, sizeof( le_localTimeSecs ) );
     sentData[4] = sentData[5] = 0U;
