@@ -249,8 +249,20 @@ For the detailed API documentation, see [link](https://sergejbre.github.io/Synch
 | Qt lib 32bit | >= 5.5.1                          | Didn't test with older versions, but it may work|
 | Qt lib 64bit | >= 5.6.3                          | Didn't test with older versions, but it may work|
 | C++ compiler | supporting C++11 (i.e. gcc 4.8.1+)|                                                 |
-| Arduino IDE  | >= 1.8.13                         | !Replace compilation flags from -Os to -O2      |
+| Arduino IDE  | >= 1.8.13                         | !Replace compilation flags from -Os to -O2 (*)  |
 | RTC library  | >= 1.13.0                         | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
+
+(*) To do this, you need to edit the `platform.txt` file, which is located in the following path `[directory of the installed Arduino IDE]/hardware/arduino/avr/platform.txt`, find and edit these lines:
+```
+...
+# compiler.c.flags=-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects
+# compiler.c.elf.flags={compiler.warning_flags} -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections
+compiler.c.flags=-c -g -O2 {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects
+compiler.c.elf.flags={compiler.warning_flags} -O2 -g -flto -fuse-linker-plugin -Wl,--gc-sections
+...
+# compiler.cpp.flags=-c -g -Os {compiler.warning_flags} -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto
+compiler.cpp.flags=-c -g -O2 {compiler.warning_flags} -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto
+```
 
 Dependencies on Qt libraries in case of dynamic application build:
 ```bash
