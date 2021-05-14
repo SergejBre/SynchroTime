@@ -244,14 +244,15 @@ A graph showing the approximate dependence of the Frequency Deviation on the Agi
 For the detailed API documentation, see [link](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
 
 ## Dependencies
-| Name         | Version                          | Comment                                         |
-|--------------|----------------------------------|-------------------------------------------------|
-| Qt lib 32bit | >= 5.5.1                         | Didn't test with older versions, but it may work|
-| Qt lib 64bit | >= 5.6                           | Didn't test with older versions, but it may work|
-| C++ compiler | supporting C++11 (i.e. gcc 4.6+) |                                                 |
-| Arduino IDE  | >= 1.8.13                        | !Replace compilation flags from -Os to -O2      |
-| RTC library  | >= 1.12.5                        | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
+| Name         | Version                           | Comment                                         |
+|--------------|-----------------------------------|-------------------------------------------------|
+| Qt lib 32bit | >= 5.5.1                          | Didn't test with older versions, but it may work|
+| Qt lib 64bit | >= 5.6.3                          | Didn't test with older versions, but it may work|
+| C++ compiler | supporting C++11 (i.e. gcc 4.8.1+)|                                                 |
+| Arduino IDE  | >= 1.8.13                         | !Replace compilation flags from -Os to -O2      |
+| RTC library  | >= 1.13.0                         | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
 
+Dependencies on Qt libraries in case of dynamic application build:
 ```bash
  $ ldd synchroTime
 	libQt5SerialPort.so.5 => ./lib/libQt5SerialPort.so.5
