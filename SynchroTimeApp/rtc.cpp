@@ -17,12 +17,12 @@
 // Includes
 //------------------------------------------------------------------------------
 #include "rtc.h"
+#include "serialportsettings.h"
 #include <QDebug>
 #include <QThread>
 #include <QDateTime>
 #include <QElapsedTimer>
 #include <QTimer>
-#include <QSerialPort>
 #include <QtEndian>
 #include <cmath>
 
@@ -40,7 +40,7 @@
 #define STARTBYTE 0x40   //!< The starting byte of the data set from the communication protocol.
 #define DEVICE_ID 0x00   //!< ID of the RTC device.
 #define WAIT_REBOOT 2500 //!< Interval for a time-out in milliseconds
-#define WAIT_TIME 50     //!< The waiting time for the reading or written in milliseconds
+#define WAIT_TIME 100    //!< The waiting time for the reading or written in milliseconds
 #define ESC_RED QStringLiteral("\x1b[31m")    //!< ESCAPE sequence for red.
 #define ESC_YELLOW QStringLiteral("\x1b[33m") //!< ESCAPE sequence for yellow.
 #define ESC_BLUE QStringLiteral("\x1b[36m")   //!< ESCAPE sequence for blue.
@@ -96,26 +96,26 @@ RTC::RTC( const QString &portName, QObject *parent )
 
 //! \brief RTC::RTC
 //! Default Constructor.
-//! \param portSettings of the type const Settings_t&. Reference to an parameters of the serial port.
-//! \param parent of the type *QObject - pThread.
+//! \param portSettings of the type const Settings *const. Reference to an parameters of the serial port.
+//! \param parent of the type QObject* - pThread.
 //! \note There is no need to specify the parent.
 //! The parent will be a thread when we move our RTC object into it.
-RTC::RTC( const Settings_t &portSettings, QObject *parent )
+RTC::RTC( const Settings *const portSettings, QObject *parent )
     : QObject( parent ),
       m_pSerialPort( nullptr ),
       m_isBusy( false ),
       m_pTimerCheckConnection( nullptr ),
-      m_correctionFactor( portSettings.correctionFactor )
+      m_correctionFactor( portSettings->correctionFactor )
 {
     // Initialization of the serial interface.
     m_pSerialPort = ::new( std::nothrow ) QSerialPort( this );
     if ( m_pSerialPort != nullptr ) {
-        m_pSerialPort->setPortName( portSettings.name );
-        m_pSerialPort->setBaudRate( portSettings.baudRate );
-        m_pSerialPort->setDataBits( portSettings.dataBits );
-        m_pSerialPort->setParity( portSettings.parity );
-        m_pSerialPort->setStopBits( portSettings.stopBits );
-        m_pSerialPort->setFlowControl( portSettings.flowControl );
+        m_pSerialPort->setPortName( portSettings->name );
+        m_pSerialPort->setBaudRate( portSettings->baudRate );
+        m_pSerialPort->setDataBits( portSettings->dataBits );
+        m_pSerialPort->setParity( portSettings->parity );
+        m_pSerialPort->setStopBits( portSettings->stopBits );
+        m_pSerialPort->setFlowControl( portSettings->flowControl );
 
         QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
                           this, &RTC::handleError );
@@ -124,8 +124,8 @@ RTC::RTC( const Settings_t &portSettings, QObject *parent )
 
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
-        if ( m_pTimerCheckConnection != nullptr && portSettings.statusControlEnabled ) {
-            m_pTimerCheckConnection->setInterval( portSettings.requestRate );
+        if ( m_pTimerCheckConnection != nullptr && portSettings->statusControlEnabled ) {
+            m_pTimerCheckConnection->setInterval( portSettings->requestRate );
 
             // After a time of 1 s, the statusRequest() command is called.
             // This is where the lambda function is used to avoid creating a slot.
@@ -392,11 +392,16 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     // Sleep 50 ms, waiting for the microcontroller to process the data and respond
 //    thread()->msleep( WAIT_TIME );
     // Reading data from RTC.
-    if ( ready && m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
-        m_isBusy = false;
+    if ( ready ) {
+        if ( m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
+            m_isBusy = false;
+        }
+        else {
+            emit portError( QStringLiteral( "No response received from the device: " ) + m_pSerialPort->errorString() );
+        }
     }
     else {
-        emit portError( QStringLiteral( "No response received from the device: " ) + m_pSerialPort->errorString() );
+        emit portError( QStringLiteral( "Failed to send data to device: " ) + m_pSerialPort->errorString() );
     }
     return m_pSerialPort->readAll();
 }

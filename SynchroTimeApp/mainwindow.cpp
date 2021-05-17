@@ -58,6 +58,7 @@ MainWindow::MainWindow( QWidget *parent ) :
     QMainWindow( parent ),
     ui( new Ui::MainWindow ),
     m_pConsole( nullptr ),
+    m_pSettings( nullptr ),
     m_pSettingsDialog( nullptr ),
     m_pThread( nullptr ),
     m_pRTC( nullptr )
@@ -70,10 +71,10 @@ MainWindow::MainWindow( QWidget *parent ) :
     m_pConsole = new Console;
     m_pConsole->setEnabled( false );
     setCentralWidget( m_pConsole );
-    m_pSettingsDialog = new SettingsDialog( this );
+    m_pSettings = new Settings();
     this->readSettings();
-    // Here, the settings of the serial interface is retrieved from the configuration file.
-    m_pSettingsDialog->fillSettingsUi();
+    m_pSettingsDialog = new SettingsDialog( m_pSettings, this );
+    QObject::connect( m_pSettingsDialog, &SettingsDialog::settingsError, this, &MainWindow::handleSettingsError );
 
     rate = new QLabel;
     ui->statusBar->addPermanentWidget( rate, 0 );
@@ -116,6 +117,9 @@ MainWindow::~MainWindow()
         m_pThread->quit();
         m_pThread->wait( WAIT_FOR_STREAM );
     }
+    if ( m_pSettings != nullptr ) {
+        delete m_pSettings;
+    }
 
     delete ui;
 }
@@ -151,23 +155,26 @@ void MainWindow::readSettings()
     settings.beginGroup( QStringLiteral( "ULayout" ));
     settings.endGroup();
 
-    Q_ASSERT( m_pSettingsDialog != nullptr );
-    Settings_t *const p = m_pSettingsDialog->serialPortSettings();
+    Q_ASSERT( m_pSettings != nullptr );
     settings.beginGroup( QStringLiteral( "SerialPort" ));
-    p->name = settings.value( QStringLiteral( "portName" ), QStringLiteral( "ttyUSB0" )).toString();
-    p->baudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toUInt();
-    p->stringBaudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toString();
-    p->stringDataBits = settings.value( QStringLiteral( "dataBits" ), 8 ).toString();
-    p->stringParity = settings.value( QStringLiteral( "parity" ), QStringLiteral( "NoParity" )).toString();
-    p->stringStopBits = settings.value( QStringLiteral( "stopBits" ), 1 ).toString();
-    p->stringFlowControl = settings.value( QStringLiteral( "flowControl" ), QStringLiteral( "None" )).toString();
+#ifdef Q_OS_WIN
+    m_pSettings->name = settings.value( QStringLiteral( "portName" ), QStringLiteral( "COM5" )).toString();
+#else
+    m_pSettings->name = settings.value( QStringLiteral( "portName" ), QStringLiteral( "ttyUSB0" )).toString();
+#endif
+    m_pSettings->baudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toUInt();
+    m_pSettings->stringBaudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toString();
+    m_pSettings->stringDataBits = settings.value( QStringLiteral( "dataBits" ), 8 ).toString();
+    m_pSettings->stringParity = settings.value( QStringLiteral( "parity" ), QStringLiteral( "NoParity" )).toString();
+    m_pSettings->stringStopBits = settings.value( QStringLiteral( "stopBits" ), 1 ).toString();
+    m_pSettings->stringFlowControl = settings.value( QStringLiteral( "flowControl" ), QStringLiteral( "None" )).toString();
     settings.endGroup();
 
     settings.beginGroup( QStringLiteral( "AdditionalOptions" ));
-    p->correctionFactor = settings.value( QStringLiteral( "correctionFactor" ), -12.8 ).toFloat();
-    p->accessRateEnabled = settings.value( QStringLiteral( "accessRateEnabled" ), true ).toBool();
-    p->statusControlEnabled = settings.value( QStringLiteral( "statusControlEnabled" ), true ).toBool();
-    p->requestRate = settings.value( QStringLiteral( "requestRate" ), 500 ).toInt();
+    m_pSettings->correctionFactor = settings.value( QStringLiteral( "correctionFactor" ), -12.8 ).toFloat();
+    m_pSettings->accessRateEnabled = settings.value( QStringLiteral( "accessRateEnabled" ), true ).toBool();
+    m_pSettings->statusControlEnabled = settings.value( QStringLiteral( "statusControlEnabled" ), true ).toBool();
+    m_pSettings->requestRate = settings.value( QStringLiteral( "requestRate" ), 500 ).toInt();
     settings.endGroup();
 }
 
@@ -198,25 +205,24 @@ void MainWindow::writeSettings() const
     settings.beginGroup( QStringLiteral( "ULayot" ));
     settings.endGroup();
 
-    Q_ASSERT( m_pSettingsDialog != nullptr );
-    const Settings p = m_pSettingsDialog->settings();
+    Q_ASSERT( m_pSettings != nullptr );
     settings.beginGroup( QStringLiteral( "SerialPort" ));
-    if ( p.isChanged ) {
-        settings.setValue( QStringLiteral( "PortName" ), p.name );
-        settings.setValue( QStringLiteral( "baudRate" ), p.baudRate );
-        settings.setValue( QStringLiteral( "dataBits" ), p.stringDataBits );
-        settings.setValue( QStringLiteral( "parity" ), p.stringParity );
-        settings.setValue( QStringLiteral( "stopBits" ), p.stringStopBits );
-        settings.setValue( QStringLiteral( "flowControl" ), p.stringFlowControl );
+    if ( m_pSettings->isChanged ) {
+        settings.setValue( QStringLiteral( "PortName" ), m_pSettings->name );
+        settings.setValue( QStringLiteral( "baudRate" ), m_pSettings->baudRate );
+        settings.setValue( QStringLiteral( "dataBits" ), m_pSettings->stringDataBits );
+        settings.setValue( QStringLiteral( "parity" ), m_pSettings->stringParity );
+        settings.setValue( QStringLiteral( "stopBits" ), m_pSettings->stringStopBits );
+        settings.setValue( QStringLiteral( "flowControl" ), m_pSettings->stringFlowControl );
     }
     settings.endGroup();
 
     settings.beginGroup( QStringLiteral( "AdditionalOptions" ));
-    if ( p.isChanged ) {
-        settings.setValue( QStringLiteral( "correctionFactor" ), QString::number( p.correctionFactor ) );
-        settings.setValue( QStringLiteral( "accessRateEnabled" ), QString::number( p.accessRateEnabled ) );
-        settings.setValue( QStringLiteral( "statusControlEnabled" ), QString::number( p.statusControlEnabled ) );
-        settings.setValue( QStringLiteral( "requestRate" ), QString::number( p.requestRate ) );
+    if ( m_pSettings->isChanged ) {
+        settings.setValue( QStringLiteral( "correctionFactor" ), QString::number( m_pSettings->correctionFactor ) );
+        settings.setValue( QStringLiteral( "accessRateEnabled" ), QString::number( m_pSettings->accessRateEnabled ) );
+        settings.setValue( QStringLiteral( "statusControlEnabled" ), QString::number( m_pSettings->statusControlEnabled ) );
+        settings.setValue( QStringLiteral( "requestRate" ), QString::number( m_pSettings->requestRate ) );
     }
     settings.endGroup();
 }
@@ -228,8 +234,8 @@ void MainWindow::writeSettings() const
 void MainWindow::about()
 {
     QMessageBox::about(this, QObject::tr("About SynchroTime App"),
-                       QObject::tr("The <b>SynchroTime</b> application is used for fine tuning "
-                                   "and calibration of the <b>RTC DS3231</b> module."
+                       QObject::tr("The <b>SynchroTime</b> application is used to adjust "
+                                   "and calibration the <b>RTC DS3231</b> module."
                                    "<br /><b>Version</b> %1"
                                    "<br /><b>Copyright</b> © 2021 sergej1@email.ua"
                                    "<br /><br />For more information follow the link to the "
@@ -243,9 +249,9 @@ void MainWindow::about()
 //!
 void MainWindow::putRate( const float rate )
 {
-    Q_ASSERT( this->m_pSettingsDialog != nullptr );
+    Q_ASSERT( this->m_pSettings != nullptr );
     Q_ASSERT( this->rate != nullptr );
-    if ( this->m_pSettingsDialog->settings().accessRateEnabled )
+    if ( this->m_pSettings->accessRateEnabled )
         this->rate->setText( QString::number( rate, 'f', 3 ).prepend( QStringLiteral("Access rate, ms ")) );
 }
 
@@ -261,6 +267,16 @@ void MainWindow::handleError( const QString &error )
     QMessageBox::critical( this, QObject::tr( "Serial Port Error" ), error, QMessageBox::Ok );
 }
 
+//! \brief MainWindow::handleSettingsError
+//!
+//! Slot for handling errors that occurred when changing the settings of the serial port interface.
+//!
+//! \param error of the type QString&
+void MainWindow::handleSettingsError( const QString &error )
+{
+    showStatusMessage( error );
+}
+
 //!
 //! \brief MainWindow::connectRTC
 //! Procedure for creating a separate thread for communication with a device.
@@ -268,9 +284,9 @@ void MainWindow::handleError( const QString &error )
 void MainWindow::connectRTC()
 {
     m_pThread = ::new( std::nothrow ) QThread( this );
-    auto p = m_pSettingsDialog->settings();
     // There is no need to specify the parent. The parent will be a thread when we move our RTC object into it.
-    m_pRTC = ::new( std::nothrow ) RTC( p );
+    Q_ASSERT( m_pSettings != nullptr );
+    m_pRTC = ::new( std::nothrow ) RTC( m_pSettings );
     if ( m_pThread != nullptr && m_pRTC != nullptr ) {
         // We move the RTC object to a separate thread so that synchronous pending operations do not block the main GUI thread.
         // Create a connection: Delete the RTC object when the stream ends. start the thread.
@@ -295,11 +311,11 @@ void MainWindow::connectRTC()
             QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
             showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 / %3–%4–%5" )
-                               .arg(p.name)
-                               .arg(p.stringBaudRate)
-                               .arg(p.dataBits)
-                               .arg(p.parity == QSerialPort::NoParity ? 'N' : p.parity == QSerialPort::EvenParity ? 'E' : p.parity == QSerialPort::OddParity ? 'O' : p.parity == QSerialPort::SpaceParity ? 'S' : 'M')
-                               .arg(p.stopBits) );
+                               .arg(m_pSettings->name)
+                               .arg(m_pSettings->stringBaudRate)
+                               .arg(m_pSettings->dataBits)
+                               .arg(m_pSettings->parity == QSerialPort::NoParity ? 'N' : m_pSettings->parity == QSerialPort::EvenParity ? 'E' : m_pSettings->parity == QSerialPort::OddParity ? 'O' : m_pSettings->parity == QSerialPort::SpaceParity ? 'S' : 'M')
+                               .arg(m_pSettings->stopBits) );
         }
         else {
             m_pThread->quit();
@@ -385,8 +401,8 @@ void MainWindow::tickClock()
 void MainWindow::help()
 {
     QMessageBox::information( this, QObject::tr( "Help" ),
-                              QObject::tr("<h4>The Application is used for fine tuning "
-                                          "and calibration of the RTC DS3231 module</h4>"
+                              QObject::tr("<h4>The Application is used to adjust "
+                                          "and calibration the RTC DS3231 module</h4>"
                                           "<ol><li>To select the correct <b>serial port</b>, "
                                           "you need to go to the Port Settings and select its name and parameters.</li>"
                                           "<li>Use the <b>information request</b> to get the information from DS3231 module. "

@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
-
+#include "serialportsettings.h"
 #include <QtSerialPort/QSerialPortInfo>
 #include <QIntValidator>
 #include <QLineEdit>
@@ -42,22 +42,28 @@ static const char blankString[] = QT_TRANSLATE_NOOP( "SettingsDialog", "N/A" );
 // Function definitions
 //------------------------------------------------------------------------------
 
-//!
 //! \brief SettingsDialog::SettingsDialog
-//! \param parent
 //!
-SettingsDialog::SettingsDialog( QWidget *parent ) :
+//! Standard constructor for the SettingsDialog class.
+//!
+//! \param settings of the type Settings *const
+//! \param parent of the type QWidget *
+SettingsDialog::SettingsDialog( Settings *const settings, QWidget *parent ) :
     QDialog( parent ),
-    ui( new Ui::SettingsDialog )
+    ui( new Ui::SettingsDialog ),
+    m_pSettings( settings ),
+    m_ErrorFlag( false )
 {
     ui->setupUi( this );
 
-    intValidator = new QIntValidator( 0, 4000000, this );
+    m_pIntValidator = new QIntValidator( 1200, 4000000, this );
 
     ui->baudRateBox->setInsertPolicy( QComboBox::NoInsert );
 
-    QObject::connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::apply);
-    QObject::connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::cansel);
+    QObject::connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    QObject::connect(this, &QDialog::accepted, this, &SettingsDialog::apply);
+    QObject::connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    QObject::connect(this, &QDialog::rejected, this, &SettingsDialog::cansel);
     QObject::connect(ui->resetButton, &QPushButton::clicked, this, &SettingsDialog::reset);
     QObject::connect(ui->serialPortInfoListBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
                      this, &SettingsDialog::showPortInfo);
@@ -68,92 +74,80 @@ SettingsDialog::SettingsDialog( QWidget *parent ) :
 
     fillPortsParameters();
     fillPortsInfo();
-
+    fillSettingsUi();
     updateSettings();
 }
 
-//!
 //! \brief SettingsDialog::~SettingsDialog
 //!
+//! Destructor of the SettingsDialog class.
 SettingsDialog::~SettingsDialog()
 {
     delete ui;
 }
 
-//!
-//! \brief SettingsDialog::settings
-//! \return currentSettings of the type Settings_t
-//!
-Settings_t SettingsDialog::settings() const
-{
-    return currentSettings;
-}
-
-//!
-//! \brief SettingsDialog::serialPortSettings
-//! \return currentSettings ot the type Settings_t*
-//!
-Settings_t *SettingsDialog::serialPortSettings()
-{
-    return &currentSettings;
-}
-
-//!
 //! \brief SettingsDialog::fillSettingsUi
 //!
+//! The function initializes the ui form using the stored parameters.
 void SettingsDialog::fillSettingsUi()
 {
-    int index = ui->serialPortInfoListBox->findText( currentSettings.name );
+    int index = ui->serialPortInfoListBox->findText( m_pSettings->name );
     if ( index > -1 ) {
         ui->serialPortInfoListBox->setCurrentIndex( index );
     }
-    index = ui->baudRateBox->findText( currentSettings.stringBaudRate );
+    index = ui->baudRateBox->findText( m_pSettings->stringBaudRate );
     if ( index > -1 ) {
         ui->baudRateBox->setCurrentIndex( index );
     }
-    else if ( currentSettings.baudRate > 0 )
+    else
     {
-        int currentIndex = ui->baudRateBox->count() - 1;
-        ui->baudRateBox->setCurrentIndex( currentIndex );
-        ui->baudRateBox->setItemText( currentIndex, currentSettings.stringBaudRate );
+        int pos = 0;
+        if ( m_pIntValidator->validate( m_pSettings->stringBaudRate, pos ) == QValidator::Acceptable ) {
+            index = ui->baudRateBox->count() - 1;
+            ui->baudRateBox->setCurrentIndex( index );
+            ui->baudRateBox->setItemText( index, m_pSettings->stringBaudRate );
+        }
+        else {
+            index = ui->baudRateBox->findData( QSerialPort::Baud115200 );
+            ui->baudRateBox->setCurrentIndex( index );
+        }
     }
-    index = ui->dataBitsBox->findText( currentSettings.stringDataBits );
+    index = ui->dataBitsBox->findText( m_pSettings->stringDataBits );
     if ( index > -1 ) {
         ui->dataBitsBox->setCurrentIndex( index );
     }
-    index = ui->parityBox->findText( currentSettings.stringParity );
+    index = ui->parityBox->findText( m_pSettings->stringParity );
     if ( index > -1 ) {
         ui->parityBox->setCurrentIndex( index );
     }
-    index = ui->stopBitsBox->findText( currentSettings.stringStopBits );
+    index = ui->stopBitsBox->findText( m_pSettings->stringStopBits );
     if ( index > -1 ) {
         ui->stopBitsBox->setCurrentIndex( index );
     }
-    index = ui->flowControlBox->findText( currentSettings.stringFlowControl );
+    index = ui->flowControlBox->findText( m_pSettings->stringFlowControl );
     if ( index > -1 ) {
         ui->flowControlBox->setCurrentIndex( index );
     }
-    ui->factorDoubleSpinBox->setValue( currentSettings.correctionFactor );
-    ui->accessRateCheckBox->setChecked( currentSettings.accessRateEnabled );
-    ui->statusControlCheckBox->setChecked( currentSettings.statusControlEnabled );
-    ui->requestRateSpinBox->setValue( currentSettings.requestRate );
-    ui->accessRateCheckBox->setEnabled( currentSettings.statusControlEnabled );
-    ui->requestRateSpinBox->setEnabled( currentSettings.statusControlEnabled );
+    ui->factorDoubleSpinBox->setValue( m_pSettings->correctionFactor );
+    ui->accessRateCheckBox->setChecked( m_pSettings->accessRateEnabled );
+    ui->statusControlCheckBox->setChecked( m_pSettings->statusControlEnabled );
+    ui->requestRateSpinBox->setValue( m_pSettings->requestRate );
+    ui->accessRateCheckBox->setEnabled( m_pSettings->statusControlEnabled );
+    ui->requestRateSpinBox->setEnabled( m_pSettings->statusControlEnabled );
 }
 
-//!
 //! \brief SettingsDialog::show
 //!
+//! Shows the widget and its child widgets.
 void SettingsDialog::show()
 {
     fillPortsInfo();
     QWidget::show();
 }
 
-//!
 //! \brief SettingsDialog::showPortInfo
-//! \param idx
 //!
+//! \param idx of the type int
 void SettingsDialog::showPortInfo(int idx)
 {
     if (idx == -1)
@@ -168,56 +162,78 @@ void SettingsDialog::showPortInfo(int idx)
     ui->pidLabel->setText( QObject::tr( "Product Identifier: %1" ).arg( list.count() > 6 ? list.at(6) : tr(blankString) ));
 }
 
-//!
 //! \brief SettingsDialog::apply
 //!
+//! Changes to settings will be accepted.
 void SettingsDialog::apply()
 {
     updateSettings();
-    currentSettings.isChanged = true;
-    QWidget::hide();
+    m_pSettings->isChanged = true;
+    if ( m_ErrorFlag ) {
+        m_ErrorFlag = false;
+    }
+    else {
+        emit settingsError( QObject::tr( "The settings have been successfully updated" ));
+    }
+    QWidget::close();
 }
 
-//!
 //! \brief SettingsDialog::cansel
 //!
+//! Changes to settings have been reset to previous.
 void SettingsDialog::cansel()
 {
     fillSettingsUi();
-    QWidget::hide();
+    emit settingsError( QObject::tr( "The settings have not been updated" ) );
+    QWidget::close();
 }
 
 //!
 //! \brief SettingsDialog::reset
 //!
+//! The function sets the parameters of the UART interface by default:
+//! - QSerialPort::BaudRate     Baud115200
+//! - QSerialPort::DataBits     Data8
+//! - QQSerialPort::Parity      NoParity
+//! - QSerialPort::StopBits     OneStop
+//! - QSerialPort::FlowControl  NoFlowControl
+//! .
 void SettingsDialog::reset()
 {
-    ui->baudRateBox->setCurrentIndex(3);
-    ui->dataBitsBox->setCurrentIndex(3);
-    ui->parityBox->setCurrentIndex(0);
-    ui->stopBitsBox->setCurrentIndex(0);
-    ui->flowControlBox->setCurrentIndex(0);
+    int index = ui->baudRateBox->findData( QSerialPort::Baud115200 );
+    ui->baudRateBox->setCurrentIndex( index );
+
+    index = ui->dataBitsBox->findData( QSerialPort::Data8 );
+    ui->dataBitsBox->setCurrentIndex( index );
+
+    index = ui->parityBox->findData( QSerialPort::NoParity );
+    ui->parityBox->setCurrentIndex( index );
+
+    index = ui->stopBitsBox->findData( QSerialPort::OneStop );
+    ui->stopBitsBox->setCurrentIndex( index );
+
+    index = ui->flowControlBox->findData( QSerialPort::NoFlowControl );
+    ui->flowControlBox->setCurrentIndex( index );
 }
 
-//!
 //! \brief SettingsDialog::checkCustomBaudRatePolicy
-//! \param idx
 //!
+//! \param idx of the type int
 void SettingsDialog::checkCustomBaudRatePolicy(int idx)
 {
+    int index = ui->baudRateBox->count() - 1;
     bool isCustomBaudRate = !ui->baudRateBox->itemData(idx).isValid();
     ui->baudRateBox->setEditable(isCustomBaudRate);
-    if (isCustomBaudRate) {
+    if ( isCustomBaudRate && idx == index ) {
         ui->baudRateBox->clearEditText();
         QLineEdit *edit = ui->baudRateBox->lineEdit();
-        edit->setValidator(intValidator);
+        edit->setValidator(m_pIntValidator);
     }
 }
 
-//!
 //! \brief SettingsDialog::checkCustomDevicePathPolicy
-//! \param idx
 //!
+//! \param idx ot the type int
 void SettingsDialog::checkCustomDevicePathPolicy(int idx)
 {
     bool isCustomPath = !ui->serialPortInfoListBox->itemData(idx).isValid();
@@ -226,9 +242,10 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
         ui->serialPortInfoListBox->clearEditText();
 }
 
-//!
 //! \brief SettingsDialog::on_statusControlCheckBox_clicked
+//!
 //! The slot receives the clicked signal and manages the associated user interface objects.
+//!
 //! \param checked of the type bool, clicked state?
 void SettingsDialog::on_statusControlCheckBox_clicked( bool checked )
 {
@@ -236,14 +253,15 @@ void SettingsDialog::on_statusControlCheckBox_clicked( bool checked )
     ui->requestRateSpinBox->setEnabled( checked );
 }
 
-//!
 //! \brief SettingsDialog::fillPortsParameters
 //!
+//! Filling the lists of parameters of the serial port.
 void SettingsDialog::fillPortsParameters()
 {
     ui->baudRateBox->addItem( QStringLiteral( "9600" ), QSerialPort::Baud9600 );
     ui->baudRateBox->addItem( QStringLiteral( "19200" ), QSerialPort::Baud19200 );
     ui->baudRateBox->addItem( QStringLiteral( "38400" ), QSerialPort::Baud38400 );
+    ui->baudRateBox->addItem( QStringLiteral( "57600" ), QSerialPort::Baud57600 );
     ui->baudRateBox->addItem( QStringLiteral( "115200" ), QSerialPort::Baud115200 );
     ui->baudRateBox->addItem( QObject::tr( "Custom" ) );
 
@@ -251,7 +269,6 @@ void SettingsDialog::fillPortsParameters()
     ui->dataBitsBox->addItem( QStringLiteral( "6" ), QSerialPort::Data6 );
     ui->dataBitsBox->addItem( QStringLiteral( "7" ), QSerialPort::Data7 );
     ui->dataBitsBox->addItem( QStringLiteral( "8" ), QSerialPort::Data8 );
-    ui->dataBitsBox->setCurrentIndex(3);
 
     ui->parityBox->addItem( QStringLiteral( "NoParity" ), QSerialPort::NoParity );
     ui->parityBox->addItem( QStringLiteral( "EvenParity" ), QSerialPort::EvenParity );
@@ -270,9 +287,10 @@ void SettingsDialog::fillPortsParameters()
     ui->flowControlBox->addItem( QStringLiteral( "XON/XOFF" ), QSerialPort::SoftwareControl );
 }
 
-//!
 //! \brief SettingsDialog::fillPortsInfo
 //!
+//! Search for all available serial ports on the system.
+//! Search for the information about the serial port.
 void SettingsDialog::fillPortsInfo()
 {
     ui->serialPortInfoListBox->clear();
@@ -298,41 +316,55 @@ void SettingsDialog::fillPortsInfo()
     ui->serialPortInfoListBox->addItem( QObject::tr( "Custom" ));
 }
 
-//!
 //! \brief SettingsDialog::updateSettings
 //!
+//! Updates all parameters of the serial port.
 void SettingsDialog::updateSettings()
 {
-    currentSettings.name = ui->serialPortInfoListBox->currentText();
+    m_pSettings->name = ui->serialPortInfoListBox->currentText();
 
-    if (ui->baudRateBox->currentIndex() == 4) {
-        currentSettings.baudRate = ui->baudRateBox->currentText().toInt();
-    } else {
-        currentSettings.baudRate = static_cast<QSerialPort::BaudRate>(
+    int index = ui->baudRateBox->count() - 1;
+    if ( ui->baudRateBox->currentIndex() == index ) {
+        int pos = 0;
+        QString str = ui->baudRateBox->currentText();
+        if ( m_pIntValidator->validate( str, pos ) == QValidator::Acceptable ) {
+            m_pSettings->baudRate = ui->baudRateBox->currentText().toInt();
+        }
+        else {
+            index = ui->baudRateBox->findData( QSerialPort::Baud115200 );
+            ui->baudRateBox->setCurrentIndex( index );
+            m_pSettings->baudRate = static_cast<QSerialPort::BaudRate>(
+                        ui->baudRateBox->itemData(ui->baudRateBox->currentIndex()).toInt());
+            m_ErrorFlag = true;
+            emit settingsError( QObject::tr( "Invalid serial port baud rate! The setting is reset to default" ));
+        }
+    }
+    else {
+        m_pSettings->baudRate = static_cast<QSerialPort::BaudRate>(
                     ui->baudRateBox->itemData(ui->baudRateBox->currentIndex()).toInt());
     }
-    currentSettings.stringBaudRate = QString::number(currentSettings.baudRate);
+    m_pSettings->stringBaudRate = QString::number(m_pSettings->baudRate);
 
-    currentSettings.dataBits = static_cast<QSerialPort::DataBits>(
+    m_pSettings->dataBits = static_cast<QSerialPort::DataBits>(
                 ui->dataBitsBox->itemData(ui->dataBitsBox->currentIndex()).toInt());
-    currentSettings.stringDataBits = ui->dataBitsBox->currentText();
+    m_pSettings->stringDataBits = ui->dataBitsBox->currentText();
 
-    currentSettings.parity = static_cast<QSerialPort::Parity>(
+    m_pSettings->parity = static_cast<QSerialPort::Parity>(
                 ui->parityBox->itemData(ui->parityBox->currentIndex()).toInt());
-    currentSettings.stringParity = ui->parityBox->currentText();
+    m_pSettings->stringParity = ui->parityBox->currentText();
 
-    currentSettings.stopBits = static_cast<QSerialPort::StopBits>(
+    m_pSettings->stopBits = static_cast<QSerialPort::StopBits>(
                 ui->stopBitsBox->itemData(ui->stopBitsBox->currentIndex()).toInt());
-    currentSettings.stringStopBits = ui->stopBitsBox->currentText();
+    m_pSettings->stringStopBits = ui->stopBitsBox->currentText();
 
-    currentSettings.flowControl = static_cast<QSerialPort::FlowControl>(
+    m_pSettings->flowControl = static_cast<QSerialPort::FlowControl>(
                 ui->flowControlBox->itemData(ui->flowControlBox->currentIndex()).toInt());
-    currentSettings.stringFlowControl = ui->flowControlBox->currentText();
+    m_pSettings->stringFlowControl = ui->flowControlBox->currentText();
 
-//    currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
-    currentSettings.accessRateEnabled = ui->accessRateCheckBox->isChecked();
-    currentSettings.statusControlEnabled = ui->statusControlCheckBox->isChecked();
-    currentSettings.requestRate = ui->requestRateSpinBox->value();
-    currentSettings.correctionFactor = static_cast<float>( ui->factorDoubleSpinBox->value() );
+//    m_pSettings->localEchoEnabled = ui->localEchoCheckBox->isChecked();
+    m_pSettings->accessRateEnabled = ui->accessRateCheckBox->isChecked();
+    m_pSettings->statusControlEnabled = ui->statusControlCheckBox->isChecked();
+    m_pSettings->requestRate = ui->requestRateSpinBox->value();
+    m_pSettings->correctionFactor = static_cast<float>( ui->factorDoubleSpinBox->value() );
 }
 

@@ -15,7 +15,7 @@
 // Includes
 //------------------------------------------------------------------------------
 #include <QObject>
-#include "serialportsettings.h"
+#include <QtSerialPort/QSerialPort>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -59,8 +59,8 @@ enum class StatusMessages : quint8
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
-class QSerialPort;
 class QTimer;
+struct Settings;
 
 //! \class RTC
 //!
@@ -73,7 +73,7 @@ class RTC : public QObject
 
 public:
     explicit RTC( const QString &portName, QObject *parent = 0 );
-    explicit RTC( const Settings_t &portSettings, QObject *parent = 0 );
+    explicit RTC( const Settings *const portSettings, QObject *parent = 0 );
     ~RTC();
 
     // Connection check function.

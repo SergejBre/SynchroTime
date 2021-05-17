@@ -34,6 +34,7 @@ class QLabel;
 class QThread;
 class QTimer;
 class RTC;
+struct Settings;
 
 namespace Ui {
 class MainWindow;
@@ -70,6 +71,7 @@ private slots:
 
     void putRate( const float rate );
     void handleError( const QString &error );
+    void handleSettingsError( const QString &error );
 
 private:
     Ui::MainWindow *ui;
@@ -78,6 +80,7 @@ private:
     QLCDNumber *clock;
     QTimer *m_pTimer;
     Console *m_pConsole;
+    Settings *m_pSettings;
     SettingsDialog *m_pSettingsDialog;
     // RTC and a separate thread in which it will work.
     QThread *m_pThread;

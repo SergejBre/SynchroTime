@@ -15,7 +15,6 @@
 // Includes
 //------------------------------------------------------------------------------
 #include <QDialog>
-#include "serialportsettings.h"
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -33,6 +32,7 @@ namespace Ui {
 class SettingsDialog;
 }
 class QIntValidator;
+struct Settings;
 
 //! \class SettingsDialog
 //!
@@ -45,12 +45,11 @@ class SettingsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SettingsDialog( QWidget *parent = 0 );
+    explicit SettingsDialog( Settings *const settings, QWidget *parent = 0 );
     ~SettingsDialog();
 
-    Settings settings() const;
-    Settings *serialPortSettings();
-    void fillSettingsUi();
+signals:
+    void settingsError( const QString &error );
 
 public slots:
     void show();
@@ -67,11 +66,13 @@ private slots:
 private:
     void fillPortsParameters();
     void fillPortsInfo();
+    void fillSettingsUi();
     void updateSettings();
 
     Ui::SettingsDialog *ui;
-    Settings currentSettings;
-    QIntValidator *intValidator;
+    Settings *m_pSettings;
+    QIntValidator *m_pIntValidator;
+    bool m_ErrorFlag;
 };
 
 #endif // SETTINGSDIALOG_H
