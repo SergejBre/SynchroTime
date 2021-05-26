@@ -103,6 +103,7 @@ RTC::RTC( const QString &portName, QObject *parent )
 RTC::RTC( const Settings *const portSettings, QObject *parent )
     : QObject( parent ),
       m_pSerialPort( nullptr ),
+      m_isConnected( false ),
       m_isBusy( false ),
       m_pTimerCheckConnection( nullptr ),
       m_correctionFactor( portSettings->correctionFactor )
@@ -146,9 +147,11 @@ RTC::~RTC()
         delete m_pTimerCheckConnection;
     }
     if ( m_pSerialPort != nullptr ) {
+        if ( m_pSerialPort->isOpen() ) {
+            m_pSerialPort->close();
+        }
         delete m_pSerialPort;
     }
-    qDebug() << QStringLiteral( "Obj RTC destroyed." );
 }
 
 //!
@@ -237,6 +240,19 @@ void RTC::statusRequestSlot()
 }
 
 //!
+//! \brief RTC::infoFromDevice
+//!
+void RTC::infoFromDevice()
+{
+    Q_ASSERT( m_pSerialPort != nullptr );
+    if ( m_isConnected && !m_isBusy )
+    {
+        thread()->msleep( WAIT_TIME/10 );
+        emit getData( m_pSerialPort->readLine(40) );
+    }
+}
+
+//!
 //! \brief RTC::handleError
 //! \param error of the type enum QSerialPort::SerialPortError.
 //!
@@ -311,11 +327,12 @@ bool RTC::openSerialPort() const
     if ( m_pSerialPort->open( QSerialPort::ReadWrite ) && m_pSerialPort->clear( QSerialPort::AllDirections ) )
     {
         thread()->msleep( WAIT_REBOOT );
+        m_pSerialPort->setBreakEnabled( false );
         return true;
     }
     else
     {
-        qDebug() << QStringLiteral( "Failed to open the serial interface" );
+        qCritical() << QStringLiteral( "Failed to open the serial interface" );
     }
     return false;
 }
@@ -359,7 +376,7 @@ void RTC::connectToRTC()
 //!
 const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const data )
 {
-    // Data that are sent to the serial interface.
+    // Data that are sent to the serial port.
     QByteArray sentData;
     sentData.resize(size + 3);
     sentData[0] = STARTBYTE;
@@ -372,8 +389,7 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     // If there are data bytes, then they are also added to the checksum.
     if ( size > 0 && data != nullptr )
     {
-        int i;
-        for ( i = 0; i < size; ++i)
+        for ( quint8 i = 0U; i < size; ++i )
         {
             crc += sentData[i + 2] = data[i];
         }
@@ -389,20 +405,16 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     m_pSerialPort->write( sentData );
     ready = m_pSerialPort->waitForBytesWritten( WAIT_TIME );
 
-    // Sleep 50 ms, waiting for the microcontroller to process the data and respond
-//    thread()->msleep( WAIT_TIME );
     // Reading data from RTC.
     if ( ready ) {
-        if ( m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
-            m_isBusy = false;
-        }
-        else {
-            emit portError( QStringLiteral( "No response received from the device: " ) + m_pSerialPort->errorString() );
+        if ( !m_pSerialPort->waitForReadyRead( WAIT_TIME*2 ) ) {
+            qCritical() << QStringLiteral( "No response received from the device: " ) + m_pSerialPort->errorString();
         }
     }
     else {
-        emit portError( QStringLiteral( "Failed to send data to device: " ) + m_pSerialPort->errorString() );
+        qCritical() << QStringLiteral( "Failed to send data to device: " ) + m_pSerialPort->errorString();
     }
+    m_isBusy = false;
     return m_pSerialPort->readAll();
 }
 
@@ -432,7 +444,7 @@ void RTC::informationRequest()
     const qint8 blength = receivedData.size();
 
     // Check of the received response to the request
-    if ( blength > 6 && receivedData.at(0) == STARTBYTE )
+    if ( blength > 6 && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
     {
         qint64 numberOfMSec = 0LL;
         quint16 numberOfSec = 0U;
@@ -500,7 +512,7 @@ void RTC::adjustmentRequest()
     auto receivedData = sendRequest( Request::ADJUST, sizeof( sentData ), sentData );
 
     // Check of the received response to the request.
-    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
     {
         const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
@@ -541,7 +553,7 @@ void RTC::calibrationRequest()
     auto receivedData = sendRequest( Request::CALIBR, sizeof( sentData ), sentData );
 
     // Check of the received response to the request
-    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
     {
         const qint8 blength = receivedData.size();
         auto byteBuffer = receivedData.constData();
@@ -579,7 +591,7 @@ void RTC::resetRequest()
     auto receivedData = sendRequest( Request::RESET );
 
     // Check of the received response to the request
-    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
     {
         const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
@@ -608,7 +620,7 @@ void RTC::setRegisterRequest( const float newValue )
     auto receivedData = sendRequest( Request::SETREG, sizeof( sentData ), sentData );
 
     // Check of the Received request
-    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
     {
         const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
@@ -638,7 +650,7 @@ bool RTC::statusRequest()
     const float rate = m_eTimer.nsecsElapsed()/1000000.0;
 
     // Check of the received response to the request
-    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE )
+    if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
     {
         StatusMessages status = static_cast<StatusMessages>( receivedData.at(1) );
         switch ( status ) {
@@ -676,5 +688,49 @@ bool RTC::statusRequest()
     if ( !result ) emit getData( output );
     else emit getRate( rate );
     return result;
+}
+
+//! \brief RTC::sumOfBytes
+//!
+//! \param bufferArray of the type QByteArray
+//!
+//! \return crc a checksum of the type quint8 (1 byte)
+//!
+quint8 RTC::sumOfBytes( const QByteArray &bufferArray ) const
+{
+    Q_ASSERT( bufferArray  != nullptr );
+    quint8 crc = 0U;
+    if ( !bufferArray.isEmpty() )
+    {
+        for ( uint idx = 1U; idx < bufferArray.size() - 1U; ++idx )
+        {
+            crc += static_cast<quint8>( bufferArray.at(idx) );
+        }
+    }
+    return crc;
+}
+
+//! \brief RTC::checkCRC
+//!
+//! The function compares the calculated and passed hash sums.
+//! The passed hash sum is in the last place in the array.
+//!
+//! \param bufferArray of the type QByteArray
+//!
+//! \retval true if the hash sums match, otherwise false
+//! \retval false
+//!
+bool RTC::checkCRC( const QByteArray &bufferArray ) const
+{
+    Q_ASSERT( bufferArray  != nullptr );
+    if ( bufferArray.isEmpty() )
+    {
+        return false;
+    }
+    else
+    {
+        int last = bufferArray.size() - 1;
+        return ( sumOfBytes( bufferArray ) == static_cast<quint8>( bufferArray.at(last)) );
+    }
 }
 

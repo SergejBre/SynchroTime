@@ -99,6 +99,8 @@ public slots:
     void setRegisterRequestSlot( const float newValue );
     // Status request slot.
     void statusRequestSlot();
+    // Information from the device
+    void infoFromDevice();
 
 private slots:
     void handleError( QSerialPort::SerialPortError error );
@@ -122,6 +124,9 @@ private:
     void setRegisterRequest( const float newValue );
     // Status request.
     bool statusRequest();
+    // The function calculates the checksum.
+    quint8 sumOfBytes( const QByteArray &bufferArray ) const;
+    bool checkCRC( const QByteArray &bufferArray ) const;
 
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
