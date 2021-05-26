@@ -168,14 +168,14 @@ where:
 * `t` - status request.
 
 ### Protocol table
-| Request Name        | Head | Request Data        | Size b| Expected response on request              |
-|---------------------|------|---------------------|-------|-------------------------------------------|
-| Time adjustment     | `@a` | `<local time> [CRC]`| 2+6+1 | `<successful/failed>`                     |
-| Calibrating         | `@c` | `<local time> [CRC]`| 2+6+1 | `<old Val> <drift> <new Val> <succ/fail>` |
-| Information         | `@i` | `<local time> [CRC]`| 2+6+1 | `<RTC time> <Val> <drift> <Last Set time>`|
-| Set offset Register | `@s` | `<value> [CRC]`     | 2+4+1 | `<successful/failed>`                     |
-| Reset               | `@r` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
-| Status              | `@t` | `[CRC]`             | 2+1   | `<successful/failed>`                     |
+| Request Name       | Head | Request Data        | Size b| Expected response on request                    |
+|--------------------|------|---------------------|-------|-------------------------------------------------|
+| Time adjustment    | `@a` | `<local time> [CRC]`| 2+6+1 | `<successful/failed> [CRC]`                     |
+| Calibrating        | `@c` | `<local time> [CRC]`| 2+6+1 | `<old Val> <drift> <new Val> <succ/fail> [CRC]` |
+| Information        | `@i` | `<local time> [CRC]`| 2+6+1 | `<RTC time> <Val> <drift> <Last Set time> [CRC]`|
+| Set offset Register| `@s` | `<value> [CRC]`     | 2+4+1 | `<successful/failed> [CRC]`                     |
+| Reset              | `@r` | `[CRC]`             | 2+1   | `<successful/failed> [CRC]`                     |
+| Status             | `@t` | `[CRC]`             | 2+1   | `<successful/failed> [CRC]`                     |
 
 ## System Requirements
 * For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
