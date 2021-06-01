@@ -14,11 +14,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = ../build
 MOC_DIR = ../moc
-CONFIG += qt c++11
 CONFIG += debug_and_release
+greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
+lessThan(QT_MAJOR_VERSION, 5): QMAKE_CXXFLAGS += -std=c++11
 QMAKE_CFLAGS_RELEASE += -O3
 QMAKE_CXXFLAGS_RELEASE += -O3
-QMAKE_CXXFLAGS += -std=c++11
 
 CONFIG(debug, debug|release) {
     TARGET = synchroTimeAppd

@@ -16,9 +16,9 @@ DESTDIR = ../build
 MOC_DIR = ../moc
 OBJECTS_DIR = obj
 CONFIG += console
-CONFIG += qt c++11
 CONFIG -= app_bundle
-QMAKE_CXXFLAGS += -std=c++11
+greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
+lessThan(QT_MAJOR_VERSION, 5): QMAKE_CXXFLAGS += -std=c++11
 
 TEMPLATE = app
 LANGUAGE = C++
