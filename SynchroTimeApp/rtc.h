@@ -131,6 +131,7 @@ private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
     bool m_isBusy;
+    bool m_isAccessRateEnabled;
     QTimer *m_pTimerCheckConnection;
     float m_correctionFactor;
 };
