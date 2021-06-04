@@ -1,20 +1,21 @@
-# SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 module
+# SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 modules
 
 [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)[![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases)
 
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 
 ## Motivation
-The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/MisterBotBreak/how-to-use-a-real-time-clock-module-ds3231-bc90fe) chip has proven itself well in work with microcontrollers Arduino, Raspberry Pi, etc. According to the declared specification, it is an extremely accurate RTC with a guaranteed accuracy ±2 ppm (from 0°C to +40°C), which translates into an error of just 1 minute over the course of a year under the worst case scenario. But a large number of modules on the market do not meet the accuracy declared by the manufacturer, which is undoubtedly upsetting. Nevertheless, the manufacturer has provided for the possibility of correcting the drift of the clock time, which is associated with the aging of the oscillator crystal in the range from -12.8 to +12.7 ppm. This correction value can be written to one of the registers on the DS3231 (See part **Discussion** for exact ppm values). In addition, the manufacturer has provided a the energy-independent flash memory AT24C256 in the module, into which calibration parameters and correction factors can be placed. The tool below can automatically calibrate the DS3231 module.
+The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/MisterBotBreak/how-to-use-a-real-time-clock-module-ds3231-bc90fe) chip has proven itself well in work with microcontrollers Arduino, Raspberry Pi, etc. According to the declared specification, it is an extremely accurate RTC with a guaranteed accuracy ±2 ppm (from 0°C to +40°C), which translates into an error of just 1 minute over the course of a year under the worst case scenario. But a large number of modules on the market do not meet the accuracy declared by the manufacturer, which is undoubtedly upsetting. Nevertheless, the manufacturer has provided for the possibility of correcting the drift of the frequency, which is associated with the aging of the oscillator crystal in the range from -12.8 to +12.7 ppm. This correction value can be written to one of the registers on the DS3231 (See part **Discussion** for exact ppm values). In addition, the manufacturer has provided a the energy-independent flash memory AT24C256 in the module, into which calibration parameters and correction factors can be placed. The tool below can automatically calibrate the DS3231 module.
 
 ## About the app
 * CLI and GUI applications are used for fine adjust and calibrating the DS3231 RTC module.
 
 * The application allows you to:
-  * Synchronize the time of the RTC DS3231 with your computer time;
-  * Correct the time drift of the DS3231-RTC clock. The algorithm performs correction in the range from -12.8 to +12.7 ppm;
+  * adjust the time of the RTC DS3231 with your computer time;
+  * correct the frequency drift of the RTC DS3231. The algorithm performs correction in the range from -12.8 to +12.7 ppm.
   * The application allows you to evaluate the accuracy and reliability of the RTC oscillator for a particular sample, as well as the chances of successful correction in case of significant time drift;
-  * Automatically save parameters and calibration data to the energy-independent flash memory of the type AT24C256. In case there is a power failure to the module.
+  * automatically save parameters and calibration data to the energy-independent flash memory of the type AT24C256. In case there is a power failure to the module.
+  * The application allows you to estimate the response time over a serial port using a dynamic moving average method (Simple Moving Average).
 
 * Developed in pure Qt, no third party libraries.
 
@@ -168,14 +169,14 @@ where:
 * `t` - status request.
 
 ### Protocol table
-| Request Name       | Head | Request Data        | Size b| Expected response on request                    |
-|--------------------|------|---------------------|-------|-------------------------------------------------|
-| Time adjustment    | `@a` | `<local time> [CRC]`| 2+6+1 | `<successful/failed> [CRC]`                     |
-| Calibrating        | `@c` | `<local time> [CRC]`| 2+6+1 | `<old Val> <drift> <new Val> <succ/fail> [CRC]` |
-| Information        | `@i` | `<local time> [CRC]`| 2+6+1 | `<RTC time> <Val> <drift> <Last Set time> [CRC]`|
-| Set offset Register| `@s` | `<value> [CRC]`     | 2+4+1 | `<successful/failed> [CRC]`                     |
-| Reset              | `@r` | `[CRC]`             | 2+1   | `<successful/failed> [CRC]`                     |
-| Status             | `@t` | `[CRC]`             | 2+1   | `<successful/failed> [CRC]`                     |
+|Request Name   |Head|Request Data        |Size b|Expected response on request                   |
+|---------------|----|--------------------|------|-----------------------------------------------|
+|Time adjustment|`@a`|`<local time> [CRC]`|2+6+1 |`<successful/failed> [CRC]`                    |
+|Calibrating    |`@c`|`<local time> [CRC]`|2+6+1 |`<old Val> <drift> <new Val> <succ/fail> [CRC]`|
+|Information    |`@i`|`<local time> [CRC]`|2+6+1 |`<RTC time> <Val> <drift> <Last setTime> [CRC]`|
+|Set Register   |`@s`|`<value> [CRC]`     |2+4+1 |`<successful/failed> [CRC]`                    |
+|Reset          |`@r`|`[CRC]`             |2+1   |`<successful/failed> [CRC]`                    |
+|Status         |`@t`|`[CRC]`             |2+1   |`<successful/failed> [CRC]`                    |
 
 ## System Requirements
 * For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
@@ -230,7 +231,7 @@ Manipulation with the Aging Register within LBS values ​​affects the thermal
 
 ![Frequency deviation](./images/frequency_deviation.png)
 
-Having a graph of the dependence of the Oscillator Frequency Deviation on the Aging Register Values, the user can independently enter the correction factor k into the calculation. By choosing this factor in an appropriate way, you can get a better approximation for calculating the new value of the Aging register `v` from the frequency deviation `Δf`, i.e.
+Having a graph of the dependence of the Oscillator Frequency Deviation on the Aging Register Values, the user can independently enter the correction factor `k` into the calculation. By choosing this factor in an appropriate way, you can get a better approximation for calculating the new value of the Aging register `v` from the frequency deviation `Δf`, i.e.
 ```
 v(Δf) = k * Δf,
 ```
@@ -251,6 +252,7 @@ For the detailed API documentation, see [link](https://sergejbre.github.io/Synch
 | C++ compiler | supporting C++11 (i.e. gcc 4.8.1+)|                                                 |
 | Arduino IDE  | >= 1.8.13                         | !Replace compilation flags from -Os to -O2 (*)  |
 | RTC library  | >= 1.13.0                         | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
+| QCustomPlot  | >= 2.1.0                          | [QCustomPlot](https://gitlab.com/DerManu/QCustomPlot) |
 
 (*) To do this, you need to edit the `platform.txt` file, which is located in the following path `[directory of the installed Arduino IDE]/hardware/arduino/avr/platform.txt`, find and edit these lines:
 ```
