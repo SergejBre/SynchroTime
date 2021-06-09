@@ -55,7 +55,7 @@ typedef struct Settings {
     float correctionFactor;                 //!< Additional parameter: Correction factor between frequency deviation and Aging register value.
     int requestRate;                        //!< Additional parameter: The interval, in milliseconds, between requests for device status.
     bool statusControlEnabled;              //!< Additional parameter: This is a flag that allows periodic requests for device status.
-    bool accessRateEnabled;                 //!< Additional parameter: This is a flag that allows determining access rate via the serial interface.
+    bool detectDelayEnabled;                //!< Additional parameter: This is a flag that allows determining access delay via the serial interface.
     bool localEchoEnabled;                  //!< Additional parameter: This is a flag that allows console input.
     bool isChanged = false;                 //!< This is a flag to save changes to the serial port parameters.
 } Settings_t;

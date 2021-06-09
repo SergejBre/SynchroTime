@@ -129,10 +129,10 @@ void SettingsDialog::fillSettingsUi()
         ui->flowControlBox->setCurrentIndex( index );
     }
     ui->factorDoubleSpinBox->setValue( m_pSettings->correctionFactor );
-    ui->accessRateCheckBox->setChecked( m_pSettings->accessRateEnabled );
+    ui->detectDelayCheckBox->setChecked( m_pSettings->detectDelayEnabled );
     ui->statusControlCheckBox->setChecked( m_pSettings->statusControlEnabled );
     ui->requestRateSpinBox->setValue( m_pSettings->requestRate );
-    ui->accessRateCheckBox->setEnabled( m_pSettings->statusControlEnabled );
+    ui->detectDelayCheckBox->setEnabled( m_pSettings->statusControlEnabled );
     ui->requestRateSpinBox->setEnabled( m_pSettings->statusControlEnabled );
 }
 
@@ -249,7 +249,7 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
 //! \param checked of the type bool, clicked state?
 void SettingsDialog::on_statusControlCheckBox_clicked( bool checked )
 {
-    ui->accessRateCheckBox->setEnabled( checked );
+    ui->detectDelayCheckBox->setEnabled( checked );
     ui->requestRateSpinBox->setEnabled( checked );
 }
 
@@ -362,7 +362,7 @@ void SettingsDialog::updateSettings()
     m_pSettings->stringFlowControl = ui->flowControlBox->currentText();
 
 //    m_pSettings->localEchoEnabled = ui->localEchoCheckBox->isChecked();
-    m_pSettings->accessRateEnabled = ui->accessRateCheckBox->isChecked();
+    m_pSettings->detectDelayEnabled = ui->detectDelayCheckBox->isChecked();
     m_pSettings->statusControlEnabled = ui->statusControlCheckBox->isChecked();
     m_pSettings->requestRate = ui->requestRateSpinBox->value();
     m_pSettings->correctionFactor = static_cast<float>( ui->factorDoubleSpinBox->value() );

@@ -110,7 +110,7 @@ MainWindow::MainWindow( QWidget *parent ) :
     m_pThread( nullptr ),
     m_pRTC( nullptr ),
     m_pCPBars( nullptr ),
-    m_rateFlag( true )
+    m_detectDelayFlag( true )
 {
     ui->setupUi( this );
     actionsTrigger( false );
@@ -126,7 +126,7 @@ MainWindow::MainWindow( QWidget *parent ) :
 
     m_pCPBars = new QCPBars(ui->customPlotBars->xAxis, ui->customPlotBars->yAxis);
     initBars();
-    if ( !this->m_pSettings->accessRateEnabled ) {
+    if ( !this->m_pSettings->detectDelayEnabled ) {
         ui->customPlotBars->hide();
     }
 
@@ -224,7 +224,7 @@ void MainWindow::readSettings()
 
     settings.beginGroup( QStringLiteral( "AdditionalOptions" ));
     m_pSettings->correctionFactor = settings.value( QStringLiteral( "correctionFactor" ), -12.8 ).toFloat();
-    m_pSettings->accessRateEnabled = settings.value( QStringLiteral( "accessRateEnabled" ), true ).toBool();
+    m_pSettings->detectDelayEnabled = settings.value( QStringLiteral( "detectDelayEnabled" ), true ).toBool();
     m_pSettings->statusControlEnabled = settings.value( QStringLiteral( "statusControlEnabled" ), true ).toBool();
     m_pSettings->requestRate = settings.value( QStringLiteral( "requestRate" ), 500 ).toInt();
     settings.endGroup();
@@ -272,7 +272,7 @@ void MainWindow::writeSettings() const
     settings.beginGroup( QStringLiteral( "AdditionalOptions" ));
     if ( m_pSettings->isChanged ) {
         settings.setValue( QStringLiteral( "correctionFactor" ), QString::number( m_pSettings->correctionFactor ) );
-        settings.setValue( QStringLiteral( "accessRateEnabled" ), QString::number( m_pSettings->accessRateEnabled ) );
+        settings.setValue( QStringLiteral( "detectDelayEnabled" ), QString::number( m_pSettings->detectDelayEnabled ) );
         settings.setValue( QStringLiteral( "statusControlEnabled" ), QString::number( m_pSettings->statusControlEnabled ) );
         settings.setValue( QStringLiteral( "requestRate" ), QString::number( m_pSettings->requestRate ) );
     }
@@ -294,28 +294,28 @@ void MainWindow::about()
                                    "<a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.").arg(qApp->applicationVersion()));
 }
 
-//! \brief MainWindow::putRate
+//! \brief MainWindow::putDelay
 //!
-//! Displays the time of access to the device through the serial port.
+//! Displays the delay of access to the device through the serial port.
 //!
-//! \param rate of the type const float
-void MainWindow::putRate( const float rate )
+//! \param delay of the type const float
+void MainWindow::putDelay( const float delay )
 {
     static float max = 0;
     Q_ASSERT( this->m_pSettings != nullptr );
-    if ( m_rateFlag ) {
+    if ( m_detectDelayFlag ) {
         fill( m_Stack, 0 );
-        m_rateFlag = false;
+        m_detectDelayFlag = false;
         max = 0;
     }
     else {
-        push( m_Stack, rate );
+        push( m_Stack, delay );
     }
 
     m_pCPBars->setData( QVector<double>(1, 1), QVector<double>(1, mean(m_Stack)) );
 
-    if ( rate > max ) {
-        max = rate;
+    if ( delay > max ) {
+        max = delay;
         m_pCPBars->rescaleAxes();
         ui->customPlotBars->yAxis->setRange(0, max);
     }
@@ -340,10 +340,10 @@ void MainWindow::handleError( const QString &error )
 //! \param error of the type QString&
 void MainWindow::handleSettingsError( const QString &error )
 {
-    if ( m_pSettings->accessRateEnabled && ui->customPlotBars->isHidden() ) {
+    if ( m_pSettings->detectDelayEnabled && ui->customPlotBars->isHidden() ) {
         ui->customPlotBars->setVisible( true );
     }
-    else if ( !m_pSettings->accessRateEnabled && ui->customPlotBars->isVisible() ) {
+    else if ( !m_pSettings->detectDelayEnabled && ui->customPlotBars->isVisible() ) {
         ui->customPlotBars->hide();
     }
     showStatusMessage( error );
@@ -368,7 +368,7 @@ void MainWindow::initBars()
     ui->customPlotBars->axisRect()->setBackground(plotGradient);
 
     ui->customPlotBars->plotLayout()->insertRow(0);
-    ui->customPlotBars->plotLayout()->addElement(0, 0, new QCPTextElement(ui->customPlotBars, "Max/Average\nAccess rate\n[ms]", QFont(font().family(), 8)));
+    ui->customPlotBars->plotLayout()->addElement(0, 0, new QCPTextElement(ui->customPlotBars, "Max/Average\nAccess delay\n[ms]", QFont(font().family(), 8)));
     ui->customPlotBars->xAxis->setVisible( false );
     ui->customPlotBars->yAxis->grid()->setPen( QPen( Qt::gray, 1, Qt::DotLine ));
     ui->customPlotBars->yAxis->setTickLabelFont( QFont(font().family(), 8) );
@@ -408,7 +408,7 @@ void MainWindow::connectRTC()
             QObject::connect(this, &MainWindow::setRegister, m_pRTC, &RTC::setRegisterRequestSlot);
 
             QObject::connect(m_pRTC, &RTC::getData, m_pConsole, &Console::putData);
-            QObject::connect(m_pRTC, &RTC::getRate, this, &MainWindow::putRate);
+            QObject::connect(m_pRTC, &RTC::getDelay, this, &MainWindow::putDelay);
             QObject::connect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
 
             showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 / %3–%4–%5" )
@@ -439,10 +439,9 @@ void MainWindow::connectRTC()
     }
 }
 
-//!
 //! \brief MainWindow::disconnectRTC
-//! The procedure performs a correct disconnection from the device.
 //!
+//! The procedure performs a correct disconnection from the device.
 void MainWindow::disconnectRTC()
 {
     Q_ASSERT( m_pConsole != nullptr );
@@ -456,7 +455,7 @@ void MainWindow::disconnectRTC()
     }
 
     showStatusMessage( QObject::tr( "Disconnected" ) );
-    m_rateFlag = true;
+    m_detectDelayFlag = true;
 }
 
 //!

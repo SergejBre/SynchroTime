@@ -120,9 +120,9 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="accessRateCheckBox">
+       <widget class="QCheckBox" name="detectDelayCheckBox">
         <property name="text">
-         <string>Access Rate</string>
+         <string>Detect delay</string>
         </property>
        </widget>
       </item>

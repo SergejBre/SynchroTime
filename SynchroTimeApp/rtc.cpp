@@ -105,7 +105,7 @@ RTC::RTC( const Settings *const portSettings, QObject *parent )
       m_pSerialPort( nullptr ),
       m_isConnected( false ),
       m_isBusy( false ),
-      m_isAccessRateEnabled( false ),
+      m_isDetectDelayEnabled( false ),
       m_pTimerCheckConnection( nullptr ),
       m_correctionFactor( portSettings->correctionFactor )
 {
@@ -127,7 +127,7 @@ RTC::RTC( const Settings *const portSettings, QObject *parent )
         // Create a timer with 1 second intervals.
         m_pTimerCheckConnection = ::new( std::nothrow ) QTimer( this );
         if ( m_pTimerCheckConnection != nullptr && portSettings->statusControlEnabled ) {
-            m_isAccessRateEnabled = portSettings->accessRateEnabled;
+            m_isDetectDelayEnabled = portSettings->detectDelayEnabled;
             m_pTimerCheckConnection->setInterval( portSettings->requestRate );
 
             // After a time of 1 s, the statusRequest() command is called.
@@ -649,7 +649,7 @@ bool RTC::statusRequest()
 
     // Send a request to the RTC device
     auto receivedData = sendRequest( Request::STATUS );
-    const float rate = m_eTimer.nsecsElapsed()/1000000.0;
+    const float delay = m_eTimer.nsecsElapsed()/1000000.0;
 
     // Check of the received response to the request
     if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
@@ -688,7 +688,7 @@ bool RTC::statusRequest()
         emit portError( QStringLiteral( "Not received a response to the device status request: " ) + m_pSerialPort->errorString() );
     }
     if ( !result ) emit getData( output );
-    else if ( m_isAccessRateEnabled ) emit getRate( rate );
+    else if ( m_isDetectDelayEnabled ) emit getDelay( delay );
     return result;
 }
 

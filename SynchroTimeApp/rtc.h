@@ -81,8 +81,8 @@ public:
     bool isBusy() const;
 
 signals:
-    //! Signal function for determining the access rate via the serial interface
-    void getRate( const float rate );
+    //! Signal function for determining the access delay via the serial interface
+    void getDelay( const float delay );
     void getData( const QString &data );
     void portError( const QString &error );
 
@@ -131,7 +131,7 @@ private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
     bool m_isBusy;
-    bool m_isAccessRateEnabled;
+    bool m_isDetectDelayEnabled;
     QTimer *m_pTimerCheckConnection;
     float m_correctionFactor;
 };

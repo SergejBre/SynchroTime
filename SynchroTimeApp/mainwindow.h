@@ -77,7 +77,7 @@ private slots:
     void aboutQt();
     void about();
 
-    void putRate( const float rate );
+    void putDelay( const float delay );
     void handleError( const QString &error );
     void handleSettingsError( const QString &error );
     void initBars();
@@ -94,7 +94,7 @@ private:
     QThread *m_pThread;
     RTC *m_pRTC;
     QCPBars *m_pCPBars;
-    bool m_rateFlag;
+    bool m_detectDelayFlag;
 
     void readSettings( void );
     void writeSettings( void ) const;
