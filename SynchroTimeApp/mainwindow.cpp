@@ -22,6 +22,7 @@
 #include "serialportsettings.h"
 #include "settingsdialog.h"
 #include "rtc.h"
+#include "../../qcustomplot/qcustomplot.h"
 #include <QMessageBox>
 #include <QLCDNumber>
 #include <QLabel>
@@ -45,9 +46,55 @@
 //------------------------------------------------------------------------------
 #define WAIT_FOR_STREAM 1000 //!< Wait 1s for the stream
 #define SETTINGS_FILE QStringLiteral( "synchroTimeApp.ini" ) //!< The name of the settings file.
+#define  NUMBER_OF_REPRESENT 5
+static float m_Stack[NUMBER_OF_REPRESENT];  //!< FIFO working stack of N representatives.
+
 //------------------------------------------------------------------------------
 // Function definitions
 //------------------------------------------------------------------------------
+//! \brief MainWindow::push
+//!
+//! Function for pushing a new value onto the FIFO stack
+//!
+//! \param stack a Container (of the type float Array, vector<float>, ect.)
+//!
+//! \param value of the type const float
+template <typename Container>
+void MainWindow::push( Container &stack, const float value )
+{
+    for ( auto it = std::begin(stack); it != std::end(stack) - 1; ++it ) {
+        *(it) = *(it+1);
+    }
+    *(std::end(stack) - 1) = value;
+}
+
+//! \brief MainWindow::fill
+//!
+//! The function fills the stack with a value.
+//!
+//! \param stack a Container (of the type float Array, vector<float>, ect.)
+//!
+//! \param value of the type const float
+template <typename Container>
+void MainWindow::fill( Container &stack, const float value )
+{
+    for ( auto it = std::begin(stack); it != std::end(stack); ++it ) {
+        *(it) = value;
+    }
+}
+
+//! \brief MainWindow::mean - Moving average method.
+//!
+//! The essence of the method is to calculate the averaged data over a certain period of time.
+//!
+//! \param stack a Container (of the type float Array, vector<float>, ect.)
+//!
+//! \return mean of the type float
+template <typename Container>
+float MainWindow::mean( const Container &stack )
+{
+    return std::accumulate(std::begin(stack), std::end(stack), .0) / (std::end(stack) - std::begin(stack));
+}
 
 //!
 //! \brief MainWindow::MainWindow
@@ -61,23 +108,28 @@ MainWindow::MainWindow( QWidget *parent ) :
     m_pSettings( nullptr ),
     m_pSettingsDialog( nullptr ),
     m_pThread( nullptr ),
-    m_pRTC( nullptr )
+    m_pRTC( nullptr ),
+    m_pCPBars( nullptr ),
+    m_rateFlag( true )
 {
     ui->setupUi( this );
     actionsTrigger( false );
     ui->actionSettings->setEnabled( false );
     ui->actionQuit->setEnabled( true );
 
-    m_pConsole = new Console;
+    m_pConsole = ui->console;
     m_pConsole->setEnabled( false );
-    setCentralWidget( m_pConsole );
     m_pSettings = new Settings();
     this->readSettings();
     m_pSettingsDialog = new SettingsDialog( m_pSettings, this );
     QObject::connect( m_pSettingsDialog, &SettingsDialog::settingsError, this, &MainWindow::handleSettingsError );
 
-    rate = new QLabel;
-    ui->statusBar->addPermanentWidget( rate, 0 );
+    m_pCPBars = new QCPBars(ui->customPlotBars->xAxis, ui->customPlotBars->yAxis);
+    initBars();
+    if ( !this->m_pSettings->accessRateEnabled ) {
+        ui->customPlotBars->hide();
+    }
+
     clock = new QLCDNumber;
     clock->setDigitCount(8);
     clock->setPalette( Qt::green );
@@ -234,25 +286,40 @@ void MainWindow::writeSettings() const
 void MainWindow::about()
 {
     QMessageBox::about(this, QObject::tr("About SynchroTime App"),
-                       QObject::tr("The <b>SynchroTime</b> application is used to adjust "
-                                   "and calibration the <b>RTC DS3231</b> module."
+                       QObject::tr("The application is used to adjust the exact time "
+                                   "and to calibrate the <b>RTC DS3231</b> modules."
                                    "<br /><b>Version</b> %1"
                                    "<br /><b>Copyright</b> © 2021 sergej1@email.ua"
                                    "<br /><br />For more information follow the link to the "
                                    "<a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.").arg(qApp->applicationVersion()));
 }
 
-//!
 //! \brief MainWindow::putRate
-//! Displays the time of access to the device through the serial port.
-//! \param rate of the type const float
 //!
+//! Displays the time of access to the device through the serial port.
+//!
+//! \param rate of the type const float
 void MainWindow::putRate( const float rate )
 {
+    static float max = 0;
     Q_ASSERT( this->m_pSettings != nullptr );
-    Q_ASSERT( this->rate != nullptr );
-    if ( this->m_pSettings->accessRateEnabled )
-        this->rate->setText( QString::number( rate, 'f', 3 ).prepend( QStringLiteral("Access rate, ms ")) );
+    if ( m_rateFlag ) {
+        fill( m_Stack, 0 );
+        m_rateFlag = false;
+        max = 0;
+    }
+    else {
+        push( m_Stack, rate );
+    }
+
+    m_pCPBars->setData( QVector<double>(1, 1), QVector<double>(1, mean(m_Stack)) );
+
+    if ( rate > max ) {
+        max = rate;
+        m_pCPBars->rescaleAxes();
+        ui->customPlotBars->yAxis->setRange(0, max);
+    }
+    ui->customPlotBars->replot();
 }
 
 //!
@@ -262,7 +329,6 @@ void MainWindow::putRate( const float rate )
 //!
 void MainWindow::handleError( const QString &error )
 {
-//    QObject::disconnect(m_pRTC, &RTC::portError, this, &MainWindow::handleError);
     disconnectRTC();
     QMessageBox::critical( this, QObject::tr( "Serial Port Error" ), error, QMessageBox::Ok );
 }
@@ -274,7 +340,42 @@ void MainWindow::handleError( const QString &error )
 //! \param error of the type QString&
 void MainWindow::handleSettingsError( const QString &error )
 {
+    if ( m_pSettings->accessRateEnabled && ui->customPlotBars->isHidden() ) {
+        ui->customPlotBars->setVisible( true );
+    }
+    else if ( !m_pSettings->accessRateEnabled && ui->customPlotBars->isVisible() ) {
+        ui->customPlotBars->hide();
+    }
     showStatusMessage( error );
+}
+
+//! \brief MainWindow::initBars
+//!
+void MainWindow::initBars()
+{
+    Q_ASSERT( m_pCPBars != nullptr );
+    m_pCPBars->setAntialiased( false );
+    m_pCPBars->setPen( QPen( QColor(0, 168, 140).lighter(130)) );
+    m_pCPBars->setBrush( QColor(0, 168, 140) );
+    m_pCPBars->setData( QVector<double>(1, 1), QVector<double>(1, 0) );
+    m_pCPBars->rescaleAxes();
+
+    QLinearGradient plotGradient;
+    plotGradient.setStart(0, 128);
+    plotGradient.setFinalStop(0, 350);
+    plotGradient.setColorAt(1, Qt::white);
+    plotGradient.setColorAt(0, QColor(135, 206, 235).lighter(135) );
+    ui->customPlotBars->axisRect()->setBackground(plotGradient);
+
+    ui->customPlotBars->plotLayout()->insertRow(0);
+    ui->customPlotBars->plotLayout()->addElement(0, 0, new QCPTextElement(ui->customPlotBars, "Max/Average\nAccess rate\n[ms]", QFont(font().family(), 8)));
+    ui->customPlotBars->xAxis->setVisible( false );
+    ui->customPlotBars->yAxis->grid()->setPen( QPen( Qt::gray, 1, Qt::DotLine ));
+    ui->customPlotBars->yAxis->setTickLabelFont( QFont(font().family(), 8) );
+    ui->customPlotBars->yAxis->setPadding(-2); // a bit more space to the left border
+    ui->customPlotBars->xAxis->setRange(0, 1);
+    ui->customPlotBars->yAxis->setRange(0, 10);
+    ui->customPlotBars->replot();
 }
 
 //!
@@ -355,7 +456,7 @@ void MainWindow::disconnectRTC()
     }
 
     showStatusMessage( QObject::tr( "Disconnected" ) );
-    rate->clear();
+    m_rateFlag = true;
 }
 
 //!

@@ -35,6 +35,7 @@ class QThread;
 class QTimer;
 class RTC;
 struct Settings;
+class QCPBars;
 
 namespace Ui {
 class MainWindow;
@@ -52,6 +53,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    template <typename Container>
+    static void push( Container &stack, const float value );
+    template <typename Container>
+    static void fill( Container &stack, const float value );
+    template <typename Container>
+    static float mean( const Container &stack );
 
 signals:
     void setRegister( const float value );
@@ -72,10 +80,10 @@ private slots:
     void putRate( const float rate );
     void handleError( const QString &error );
     void handleSettingsError( const QString &error );
+    void initBars();
 
 private:
     Ui::MainWindow *ui;
-    QLabel *rate;
     QLabel *status;
     QLCDNumber *clock;
     QTimer *m_pTimer;
@@ -85,6 +93,8 @@ private:
     // RTC and a separate thread in which it will work.
     QThread *m_pThread;
     RTC *m_pRTC;
+    QCPBars *m_pCPBars;
+    bool m_rateFlag;
 
     void readSettings( void );
     void writeSettings( void ) const;
