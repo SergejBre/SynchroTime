@@ -10,7 +10,7 @@
 #------------------------------------------------------------------------------
 QT += core gui serialport
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 DESTDIR = ../build
 MOC_DIR = ../moc
@@ -40,13 +40,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     rtc.cpp \
     console.cpp \
-    settingsdialog.cpp
+    settingsdialog.cpp \
+    ../../qcustomplot/qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
     rtc.h \
     console.h \
     settingsdialog.h \
-    serialportsettings.h
+    serialportsettings.h \
+    ../../qcustomplot/qcustomplot.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui
