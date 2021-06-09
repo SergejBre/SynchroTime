@@ -15,13 +15,13 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
   * correct the frequency drift of the RTC DS3231. The algorithm performs correction in the range from -12.8 to +12.7 ppm.
   * The application allows you to evaluate the accuracy and reliability of the RTC oscillator for a particular sample, as well as the chances of successful correction in case of significant time drift;
   * automatically save parameters and calibration data to the energy-independent flash memory of the type AT24C256. In case there is a power failure to the module.
-  * The application allows you to estimate the response time over a serial port using a dynamic moving average method (Simple Moving Average).
+  * The application allows you to estimate the response delay over a serial port using a dynamic moving average method (Simple Moving Average).
 
 * Developed in pure Qt, no third party libraries.
 
 * Cross-platform application implementation (Linux and Windows).
 
-* The client communicates with the Arduino server via the serial interface (UART). The application allows you to easily select a serial port for communication with the server and save the port number in the program settings.
+* The client communicates with the Arduino server via the serial interface (UART). The application allows you to easily select a serial port for communication with the server and save the port name in the program settings.
 
 * Command Help `$ ./synchroTime -h`
 
@@ -142,7 +142,7 @@ All functionality is similar to the CLI application (see figure below). As an ex
 
 * Calibration by Offset Register is stable over the operating temperature range from 0°C to +40°C (see part **Discussion**).
 
-* The application communicates with the Arduino server through any virtual serial interface (UART). The Baud Rate is assumed unchanged and equals 115200 bps.
+* The application communicates with the Arduino server through any virtual serial interface (UART). The recommended UART baud rate is 115200 bps. The recommended parameters for serial port are 8-N-1.
 
 * The Arduino is in turn connected to the Precision RTC DS3231 module via the I²C-interface: A4 (SDA), A5 (SCL) pins (SDA - data line and SCL - clock line).
 
