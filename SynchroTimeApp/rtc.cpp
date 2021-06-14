@@ -40,7 +40,7 @@
 #define STARTBYTE 0x40   //!< The starting byte of the data set from the communication protocol.
 #define DEVICE_ID 0x00   //!< ID of the RTC device.
 #define WAIT_REBOOT 2500 //!< Interval for a time-out in milliseconds
-#define WAIT_TIME 100    //!< The waiting time for the reading or written in milliseconds
+#define WAIT_TIME 200    //!< The waiting time for the reading of data in milliseconds.
 #define ESC_RED QStringLiteral("\x1b[31m")    //!< ESCAPE sequence for red.
 #define ESC_YELLOW QStringLiteral("\x1b[33m") //!< ESCAPE sequence for yellow.
 #define ESC_BLUE QStringLiteral("\x1b[36m")   //!< ESCAPE sequence for blue.
@@ -329,7 +329,6 @@ bool RTC::openSerialPort() const
     if ( m_pSerialPort->open( QSerialPort::ReadWrite ) && m_pSerialPort->clear( QSerialPort::AllDirections ) )
     {
         thread()->msleep( WAIT_REBOOT );
-        m_pSerialPort->setBreakEnabled( false );
         return true;
     }
     else
@@ -401,16 +400,15 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     sentData[size + 2] = crc;
 
     Q_ASSERT( m_pSerialPort->isOpen() );
-    bool ready;
     m_isBusy = true;
-    // Send data to the serial port and wait up to 50 ms until the write is done
+    // Send data to the serial port
     m_pSerialPort->write( sentData );
-    ready = m_pSerialPort->waitForBytesWritten( WAIT_TIME );
+    bool ready = m_pSerialPort->flush();
 
     // Reading data from RTC.
     if ( ready ) {
-        if ( !m_pSerialPort->waitForReadyRead( WAIT_TIME*2 ) ) {
-            qCritical() << QStringLiteral( "No response received from the device: " ) + m_pSerialPort->errorString();
+        if ( !m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
+            qCritical() << QStringLiteral( "Failed to received a response from device: " ) + m_pSerialPort->errorString();
         }
     }
     else {
@@ -704,7 +702,7 @@ quint8 RTC::sumOfBytes( const QByteArray &bufferArray ) const
     quint8 crc = 0U;
     if ( !bufferArray.isEmpty() )
     {
-        for ( uint idx = 1U; idx < bufferArray.size() - 1U; ++idx )
+        for ( uint idx = 0U; idx < bufferArray.size() - 1U; ++idx )
         {
             crc += static_cast<quint8>( bufferArray.at(idx) );
         }
@@ -714,8 +712,8 @@ quint8 RTC::sumOfBytes( const QByteArray &bufferArray ) const
 
 //! \brief RTC::checkCRC
 //!
-//! The function compares the calculated and passed hash sums.
-//! The passed hash sum is in the last place in the array.
+//! The function compares a calculated and a received hash sums.
+//! The received hash sum is in the last place in the array.
 //!
 //! \param bufferArray of the type QByteArray
 //!
