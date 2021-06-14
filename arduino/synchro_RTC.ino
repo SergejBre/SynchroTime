@@ -45,7 +45,8 @@ typedef struct time_s {
 } time_t;
 
 RTC_DS3231 rtc;
-uint8_t buff[4];  // temporary buffer
+static uint8_t buff[4];  // temporary buffer
+static uint8_t byteBuffer[18];
 
 // Function Prototypes
 int8_t readFromOffsetReg( void ); // read from offset register
@@ -64,7 +65,7 @@ void setup () {
   while ( !Serial );      // wait for serial port to connect. Needed for native USB
 
   if ( !rtc.begin() ) {
-    Serial.println( F( "Couldn't find DS3231 modul" ) );
+    Serial.print( F( "Couldn't find DS3231 modul" ) );
     Serial.flush();
     abort();
   }
@@ -73,6 +74,7 @@ void setup () {
   if ( mode != DS3231_SquareWave1Hz ) {
     rtc.writeSqwPinMode( DS3231_SquareWave1Hz );
   }
+  rtc.disable32K();  //we don't need the 32K Pin, so disable it
 
   if ( rtc.lostPower() ) {
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
@@ -89,6 +91,7 @@ void setup () {
   }
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
   attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
+  Serial.print( F( "Boot.. Ok" ));
 }
 
 volatile uint32_t tickCounter;
@@ -98,10 +101,9 @@ void oneHz( void ) {
 }
 
 void loop () {
-  uint8_t byteBuffer[16];
   task_t task = TASK_IDLE;
   bool ok = false;
-  uint8_t set = 0U;
+  uint8_t byteCounter = 0U;
   uint8_t numberOfBytes = 0U;
   float drift_in_ppm = 0;
   int8_t drift_val;
@@ -174,40 +176,41 @@ void loop () {
       Serial.print( F("Invalid Data") );
     }
     else if ( task != TASK_IDLE ) {
-      byteBuffer[set] = STARTBYTE;
-      set++;
+      byteBuffer[byteCounter] = STARTBYTE;
+      byteCounter++;
     }
   }
 
   switch ( task )
   {
     case TASK_ADJUST:               // adjust time
+      oneHz();
       adjustTime( ref.utc );
       intToHex( buff, ref.utc ); // write time to buffer
       ok = i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
-      byteBuffer[set] = ok;
-      set++;
+      byteBuffer[byteCounter] = ok;
+      byteCounter++;
       task = TASK_IDLE;
       break;
     case TASK_INFO:                 // information
-      memcpy( byteBuffer + set, &t, sizeof( t ) );  // write time to buffer bytes
-      set += sizeof( t );
-      byteBuffer[set] = readFromOffsetReg();  // reading offset value
-      set++;
+      memcpy( byteBuffer + byteCounter, &t, sizeof( t ) );  // write time to buffer bytes
+      byteCounter += sizeof( t );
+      byteBuffer[byteCounter] = readFromOffsetReg();  // reading offset value
+      byteCounter++;
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
-      floatToHex( byteBuffer + set, drift_in_ppm );
-      set += sizeof( drift_in_ppm );
-      if ( i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, byteBuffer + set, sizeof( uint32_t )) ) {
-        set += sizeof( uint32_t );
+      floatToHex( byteBuffer + byteCounter, drift_in_ppm );
+      byteCounter += sizeof( drift_in_ppm );
+      if ( i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, byteBuffer + byteCounter, sizeof( uint32_t )) ) {
+        byteCounter += sizeof( uint32_t );
       }
       task = TASK_IDLE;
       break;
     case TASK_CALIBR:               // calibrating
-      byteBuffer[set] = readFromOffsetReg();  // read last value from the offset register
-      set++;
+      byteBuffer[byteCounter] = readFromOffsetReg();  // read last value from the offset register
+      byteCounter++;
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
-      floatToHex( byteBuffer + set, drift_in_ppm ); // read drift as float value
-      set += sizeof(drift_in_ppm);
+      floatToHex( byteBuffer + byteCounter, drift_in_ppm ); // read drift as float value
+      byteCounter += sizeof(drift_in_ppm);
       drift_val = roundUpDrift( drift_in_ppm );
       if ( drift_val != 0 ) {
         ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, drift_val );  // write drift value to EEPROM of AT24C256
@@ -217,16 +220,16 @@ void loop () {
           intToHex( buff, ref.utc ); // write time to buffer
           ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
         }
-        byteBuffer[set] = drift_val;  // read new value from the offset register
-        set++;
+        byteBuffer[byteCounter] = drift_val;  // read new value from the offset register
+        byteCounter++;
       }
       else {
         ok = true;
-        byteBuffer[set] = byteBuffer[1];  // read value from the offset register
-        set++;
+        byteBuffer[byteCounter] = byteBuffer[1];  // read value from the offset register
+        byteCounter++;
       }
-      byteBuffer[set] = ok;
-      set++;
+      byteBuffer[byteCounter] = ok;
+      byteCounter++;
       task = TASK_IDLE;
       break;
     case TASK_RESET:                // reset
@@ -236,8 +239,8 @@ void loop () {
         for (numberOfBytes = 0; numberOfBytes < sizeof(buff5b); numberOfBytes++ ) buff5b[numberOfBytes] = 0xFF;
         ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff5b, sizeof( buff5b ) );
       }
-      byteBuffer[set] = ok;
-      set++;
+      byteBuffer[byteCounter] = ok;
+      byteCounter++;
       task = TASK_IDLE;
       break;
     case TASK_SETREG:               // set register
@@ -245,25 +248,27 @@ void loop () {
       drift_val = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
       ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, drift_val );  // write drift value to EEPROM of AT24C256
       ok &= writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
-      byteBuffer[set] = ok;
-      set++;
+      byteBuffer[byteCounter] = ok;
+      byteCounter++;
       task = TASK_IDLE;
       break;
     case TASK_STATUS:               // get status
-      byteBuffer[set] = 0x00;
-      set++;
+      byteBuffer[byteCounter] = 0x00;
+      byteCounter++;
       task = TASK_IDLE;
       break;
     case TASK_IDLE:                 // idle task
       break;
     default:
       Serial.print( F("Unknown Task ") );
-      Serial.println( task, HEX );
+      Serial.print( task, HEX );
       task = TASK_IDLE;
   }
-
-  if ( set > 0 ) {
-    Serial.write( byteBuffer, set );
+// Response to the request
+  if ( byteCounter > 0 ) {
+    byteBuffer[byteCounter] = sumOfBytes( byteBuffer, byteCounter );
+    Serial.write( byteBuffer, ++byteCounter );
+    Serial.flush();
   }
 }
 
