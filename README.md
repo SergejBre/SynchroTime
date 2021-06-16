@@ -127,10 +127,9 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 
 ## Using the GUI app
+![PROJECT_IMAGE2](./images/app.gif)
+
 All functionality is similar to the CLI application (see figure below). As an extra, there is the option of selecting the numerous serial port settings and three features: **Status Control**, **Detect Delay** and **Correction Factor**. The **Correction Factor** is described in detail in the **Discussion** part. **Status Control** is an additional functionality to monitor the connection with a device with a **Request Rate** (from 500 to 10000 ms). The **Detect Delay** feature allows you to display the approximate delay in the exchange of information with the device on the monitor. For the exchange rate of 115200 baud and the exchange of one pair of bytes with the Device, the delay usually should not exceed 4-5ms (depends mainly on the driver used and the HW UART device). Both features can be deactivated.
-
-![PROJECT_IMAGE2](./images/guiApp_About2.png)
-
 ![SERIAL_PORT_SETTINGS](./images/serial_port_settings.png)
 
 ## Specification
