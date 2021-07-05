@@ -28,7 +28,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ![synchroTime -h](./images/consoleApp_About.png)
 
 ## Using the CLI app
-1. First, you need to upload the sketch to Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory, if you have a **DS3231 ZS-042** module or [arduino/synchro_RTC_MINI.ino](arduino/synchro_RTC_MINI.ino), if you have a **DS3231 MINI** module, then connect the RTC DS3231 module according to the circuit shown in the specification.
+1. First, you need to upload the sketch to Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory, if you have a **DS3231 ZS-042** module or [arduino/synchro_RTC_MINI.ino](arduino/synchro_RTC_MINI.ino), if you have a **DS3231 MINI** module, then connect the RTC DS3231 module according to the circuit shown in the part **Specification**.
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be `/dev/ttyUSBx`, under Windows - `COMx`).
  To find the name of this port, call the application with the `-d (--discovery)` switch:
 ```bash
@@ -103,6 +103,7 @@ The real-time clock module on the [DS3231](https://create.arduino.cc/projecthub/
 ```
 
 5. To calibrate the clock of the DS3231 module, enter the `-c (--calibration)` command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (ca 55 hours or 2.3 days, see part **Discussion**). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the offset register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
+⚠️ Note: This method is slow, but has the advantage of not requiring any manual effort other than setting and reading the clock. Letting it run quietly on a shelf for a day or two is pretty easy. It also means that the clock goes through many day/night cycles and is subject to temperature changes, so it helps measure the long-term stability of the clock.
 ```bash
  $ ./synchroTime -c
  System local time	Mo. 31 Aug. 2020 20:04:14.000
@@ -137,8 +138,6 @@ All functionality is similar to the CLI application (see figure below). As an ex
 
 * The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms (guaranteed only for the Linux OS) (*).
 
-(*)⚠️ **Note that the accuracy depends on the accuracy of the underlying operating system; not all systems provide 1-millisecond accuracy!**
-
 * The application allows you to calibrate the module clock within the range from -12.8 to +12.7 ppm.
 
 * Calibration by Offset Register is stable over the operating temperature range from 0°C to +40°C (see part **Discussion**).
@@ -151,6 +150,8 @@ All functionality is similar to the CLI application (see figure below). As an ex
 
 * The suggested connection to the DS3231 module is according to the Circuit below.
 ![CIRCUIT](images/Steckplatine_DS3231.png)
+
+(*)⚠️ Note that the accuracy depends on the accuracy of the underlying operating system; not all systems provide 1-millisecond accuracy!
 
 ## Description of the request protocol
 The computer is a client. The client is always the first to send a request. Upon receipt of each request, the microprocessor must send back the appropriate response.
@@ -180,7 +181,7 @@ where:
 |Status         |`@t`|`[CRC]`             |2+1   |`<successful/failed> [CRC]`                    |
 
 ## System Requirements
-* For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. Under Linux, the ntp service is installed by the following command
+* For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. The syncing to a nearby, reliable NTP server should get you within a few milliseconds. It doesn’t need to be on all the time, but it does need to be on, synced, and stable when setting the DS3231 and later when you decide to check the drift. In the intervening time it can be turned off, if you wish. The DS3231 must have continuous power and be uninterrupted at all times through the measurement. Under Linux, the ntp service is installed by the following command
 ```bash
  $ sudo apt-get install ntp 
 ```
@@ -228,11 +229,11 @@ The aging offset register is at address 0x10 and the valid values for the input 
 
 Manipulation with the Aging Register within LBS values ​​affects the thermal stabilization of the oscillator. This is reflected in the graph from the DS3231 [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) below. According to the curves of the dependences of Frequency Deviation on Temperature and LBS Values, it is seen that there is a stability interval where frequency deviation remains quite stable. This range is between 0°C and +40°C. And according to the [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf), at room temperature +25°C for each LSB change Aging Register corresponds approximately 0.1ppm Frequency Deviation (i.e. 1 ≈ 0.1ppm). We use this data in our further calculations.
 
-⚠️ **Please note that this will limit the operating temperature range!**
-
 ![Frequency deviation](./images/frequency_deviation.png)
 
-Having a graph of the dependence of the Oscillator Frequency Deviation on the Aging Register Values, the user can independently enter the correction factor `k` into the calculation. By choosing this factor in an appropriate way, you can get a better approximation for calculating the new value of the Aging register `v` from the frequency deviation `Δf`, i.e.
+⚠️ Note: If you look at the “FREQUENCY DEVIATION vs. TEMPERATURE vs. AGING VALUE” plot in the datasheet, you’ll see that the clock is calibrated to run within 2ppm across its full temperature range if the aging register is set to zero. But if you set the aging register to a non-zero value while it’s at a particular temperature, the performance of the clock may be improved at that specific temperature, but if the temperature changes the clock may behave significantly differently (particularly if the aging offset and temperature changes are large). However, if you’re tuning the clock for specific performance requirements within a narrow range of temperatures, such as 0°C to +40°C, the aging offset can be used to improve its performance.
+
+Let's consider another related feature. Having a graph of the dependence of the Oscillator Frequency Deviation on the Aging Register Values, the user can independently enter the correction factor `k` into the calculation. By choosing this factor in an appropriate way, you can get a better approximation for calculating the new value of the Aging register `v` from the frequency deviation `Δf`, i.e.
 ```
 v(Δf) = k * Δf,
 ```
