@@ -133,9 +133,11 @@ All functionality is similar to the CLI application (see figure below). As an ex
 ![SERIAL_PORT_SETTINGS](./images/serial_port_settings.png)
 
 ## Specification
-* The application allows you to adjust the time with an accuracy of ±1 ms (under Linux OS).
+* The application allows you to adjust the time with an accuracy of ±1 ms (guaranteed only for the Linux OS) (*).
 
-* The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms (under Linux OS).
+* The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms (guaranteed only for the Linux OS) (*).
+
+(*)⚠️ **Note that the accuracy depends on the accuracy of the underlying operating system; not all systems provide 1-millisecond accuracy!**
 
 * The application allows you to calibrate the module clock within the range from -12.8 to +12.7 ppm.
 
@@ -226,7 +228,7 @@ The aging offset register is at address 0x10 and the valid values for the input 
 
 Manipulation with the Aging Register within LBS values ​​affects the thermal stabilization of the oscillator. This is reflected in the graph from the DS3231 [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) below. According to the curves of the dependences of Frequency Deviation on Temperature and LBS Values, it is seen that there is a stability interval where frequency deviation remains quite stable. This range is between 0°C and +40°C. And according to the [datasheet](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf), at room temperature +25°C for each LSB change Aging Register corresponds approximately 0.1ppm Frequency Deviation (i.e. 1 ≈ 0.1ppm). We use this data in our further calculations.
 
-> ⚠️ **Please note that this will limit the operating temperature range!**
+⚠️ **Please note that this will limit the operating temperature range!**
 
 ![Frequency deviation](./images/frequency_deviation.png)
 
