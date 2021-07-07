@@ -51,6 +51,7 @@ static uint8_t byteBuffer[18];
 // Function Prototypes
 int8_t readFromOffsetReg( void ); // read from offset register
 bool writeToOffsetReg( const int8_t value ); // write to offset register
+static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict__ srcp, uint16_t len );
 inline void intToHex( uint8_t* const buff, const uint32_t value );
 inline void floatToHex( uint8_t* const buff, const float value );
 uint32_t hexToInt( const uint8_t* const buff );
@@ -155,14 +156,14 @@ void loop () {
     uint8_t sum = uint8_t( thisChar );
     if ( numberOfBytes > sizeof( ref ) ) {
       // reading reference time if data is available. in the form [sec|ms] = 4+2 bytes
-      memcpy( &ref, byteBuffer, sizeof( ref ));
+      memcpy_byte( &ref, byteBuffer, sizeof( ref ));
       crc = byteBuffer[ sizeof( ref )];
       sum += sumOfBytes( byteBuffer, sizeof( ref ));
     }
     else if ( numberOfBytes > sizeof( drift_in_ppm ) ) {
       // reading new value for the offset reg. in the form [float] = 4 bytes
       
-      memcpy( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ));
+      memcpy_byte( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ));
       crc = byteBuffer[ sizeof( drift_in_ppm )];
       sum += sumOfBytes( byteBuffer, sizeof( drift_in_ppm ));
     }
@@ -184,7 +185,7 @@ void loop () {
   switch ( task )
   {
     case TASK_ADJUST:               // adjust time
-      oneHz();
+      oneHz();                   // reset milliseconds
       adjustTime( ref.utc );
       intToHex( buff, ref.utc ); // write time to buffer
       ok = i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
@@ -193,7 +194,7 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_INFO:                 // information
-      memcpy( byteBuffer + byteCounter, &t, sizeof( t ) );  // write time to buffer bytes
+      memcpy_byte( byteBuffer + byteCounter, &t, sizeof( t ) );  // write time to buffer bytes
       byteCounter += sizeof( t );
       byteBuffer[byteCounter] = readFromOffsetReg();  // reading offset value
       byteCounter++;
@@ -290,11 +291,11 @@ bool writeToOffsetReg( const int8_t value ) {
 }
 
 inline void intToHex( uint8_t* const buff, const uint32_t value ) {
-  memcpy( buff, &value, sizeof(value) );
+  memcpy_byte( buff, &value, sizeof(value) );
 }
 
 inline void floatToHex( uint8_t* const buff, const float value ) {
-  memcpy( buff, &value, sizeof(value) );
+  memcpy_byte( buff, &value, sizeof(value) );
 }
 
 uint32_t hexToInt( const uint8_t* const buff ) {
@@ -406,4 +407,12 @@ bool i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, const
     Wire.write( data[i] );
   }
   return ( Wire.endTransmission() == 0 );
+}
+
+static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict__ srcp, uint16_t len ) {
+    uint8_t *dst = ( uint8_t *) dstp;
+    uint8_t *src = ( uint8_t *) srcp;
+    uint16_t idx;
+    for( idx = 0U; idx < len; idx++ )
+        *(dst++) = *(src++);
 }
