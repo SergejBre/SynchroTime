@@ -1,5 +1,6 @@
 # SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 modules
 [![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)[![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases)
+
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 ____
 
@@ -16,11 +17,11 @@ ____
   * [Protocol table](#Protocol-table)
 * [System Requirements](#System-Requirements)
 * [Installing the CLI and GUI apps](#Installing-the-CLI-and-GUI-apps)
-* [Discussion](Discussion)
-* [Documentation](Documentation)
-* [Dependencies](Dependencies)
-* [Compilation on Linux](Compilation-on-Linux)
-* [License](License)
+* [Discussion](#Discussion)
+* [Documentation](#Documentation)
+* [Dependencies](#Dependencies)
+* [Compilation on Linux](#Compilation-on-Linux)
+* [License](#License)
 ____
 
 ## About the app
@@ -122,6 +123,7 @@ ____
 ```
 
 5. To calibrate the clock of the DS3231 module, enter the `-c (--calibration)` command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (ca 55 hours or 2.3 days, see part [Discussion](#Discussion)). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the aging register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
+
 ⚠️ Note: This method is slow, but has the advantage of not requiring any manual effort other than setting and reading the clock. Letting it run quietly on a shelf for a day or two is pretty easy. It also means that the clock goes through many day/night cycles and is subject to temperature changes, so it helps measure the long-term stability of the clock.
 ```bash
  $ ./synchroTime -c
