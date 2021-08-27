@@ -56,9 +56,11 @@ inline void floatToHex( uint8_t* const buff, const float value );
 uint32_t hexToInt( const uint8_t* const buff );
 uint32_t getUTCtime( const uint32_t localTimeSecs );
 inline void adjustTime( const uint32_t utcTimeSecs );
-float calculateDrift_ppm( const time_t* const ref, const time_t* const t );
-int8_t roundUpDrift( float drift_in_ppm );
-uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
+static float calculateDrift_ppm( const time_t* const ref, const time_t* const t );
+static int8_t roundUpDrift( float drift_in_ppm );
+static uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
+static int16_t read_Temperature( void );
+static time_t getTime( void );
 
 void setup () {
   Serial.begin( 115200 ); // initialization serial port with 115200 baud (_standard_)
@@ -96,7 +98,9 @@ void setup () {
 
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
   attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
-  Serial.print( F( "Boot.. Ok" ));
+  Serial.print( F( "Boot.. Ok, T[°С]=" ));
+  const int16_t temp = read_Temperature();
+  Serial.print( float( temp >> 8 ) + ( (temp & 0xFF) >> 6 ) * 0.25f );
 }
 
 volatile uint32_t tickCounter;
@@ -110,17 +114,12 @@ void loop () {
   bool ok = false;
   uint8_t byteCounter = 0U;
   uint8_t numberOfBytes = 0U;
-  float drift_in_ppm = 0;
+  float drift_in_ppm = .0f;
   int8_t drift_val;
   time_t t, ref;
 
   if ( Serial.available() > 1 && Serial.read() == STARTBYTE ) {       // if there is data available
-
-    while ( millis() - tickCounter > 998 );
-    t.milliSecs = (millis() - tickCounter);// % 1000;
-    DateTime now = rtc.now();       // reading clock time
-    t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
-
+    t = getTime();
     // Command Parser
     char thisChar = Serial.read();  // read the byte of request
     switch ( thisChar )
@@ -219,6 +218,7 @@ void loop () {
       if ( drift_val != 0 ) {
         ok = writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
         if ( ok ) {
+          oneHz();                   // reset milliseconds
           adjustTime( ref.utc ); // adjust time
           ok &= i2c_write_value( ref.utc );   // write last_set_time to the Alarm1 Registers
         }
@@ -245,7 +245,7 @@ void loop () {
       break;
     case TASK_SETREG:               // set register
       drift_in_ppm *= 10;
-      drift_val = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
+      drift_val = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
       ok = writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
       byteBuffer[byteCounter] = ok;
       byteCounter++;
@@ -310,15 +310,15 @@ inline void adjustTime( const uint32_t utcTimeSecs ) {
 }
 
 // the result is rounded to the maximum possible values of type int8_t
-int8_t roundUpDrift( float drift_in_ppm ) {
+static int8_t roundUpDrift( float drift_in_ppm ) {
   drift_in_ppm *= 10;
-  int32_t offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
+  int32_t offset = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
   if ( offset == 0 ) {
     return offset;  // if offset is 0, nothing needs to be done
   }
   const int8_t last_offset_reg = readFromOffsetReg();
   drift_in_ppm += last_offset_reg;
-  offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
+  offset = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
   return (offset > 127) ? 127 : (offset < -128) ? -128 : offset;
 }
 
@@ -330,7 +330,7 @@ int8_t roundUpDrift( float drift_in_ppm ) {
    number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
    drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
 */
-float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const clockTime ) {
+static float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const clockTime ) {
   if ( !i2c_read_buffer( buff, sizeof(buff)) ) {
     return 0;
   }
@@ -346,7 +346,7 @@ float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const
   return time_drift * 1000 / diff;
 }
 
-uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength ) {
+static uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength ) {
   uint8_t sum = 0U;
   for ( uint8_t idx = 0U; idx < blength; idx++ ) {
     sum += bbuffer[idx];
@@ -387,4 +387,25 @@ static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict_
     uint16_t idx;
     for( idx = 0U; idx < len; idx++ )
         *(dst++) = *(src++);
+}
+
+static int16_t read_Temperature() {
+  int16_t temp = 0;
+  Wire.beginTransmission( DS3231_ADDRESS );
+  Wire.write( DS3231_TEMPERATUREREG );
+  Wire.endTransmission();
+
+  Wire.requestFrom( DS3231_ADDRESS, 2 );
+  temp = Wire.read();
+  temp = (temp << 8) | Wire.read();
+  return temp;
+}
+
+static time_t getTime() {
+  time_t t;
+  while ( millis() - tickCounter > 998 );
+  t.milliSecs = (millis() - tickCounter);// % 1000;
+  DateTime now = rtc.now();       // reading clock time
+  t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
+  return t;
 }

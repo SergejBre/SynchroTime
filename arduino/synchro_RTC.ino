@@ -435,5 +435,5 @@ static time_t getTime() {
   t.milliSecs = (millis() - tickCounter);// % 1000;
   DateTime now = rtc.now();       // reading clock time
   t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
-  return t;  
+  return t;
 }

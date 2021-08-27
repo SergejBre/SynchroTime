@@ -66,8 +66,9 @@ uint32_t hexToInt( const uint8_t* const buff );
 uint32_t getUTCtime( const uint32_t localTimeSecs );
 bool adjustTime( const uint32_t utcTimeSecs );
 bool adjustTimeDrift( float drift_in_ppm );
-float calculateDrift_ppm( const time_t* const ref, const time_t* const t );
-uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
+static float calculateDrift_ppm( const time_t* const ref, const time_t* const t );
+static uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
+static int16_t read_Temperature( void );
 
 // ---- poty ----перенеcено сюда, так как теперь используется в setup()
 uint32_t tickCounter;
@@ -132,7 +133,9 @@ void setup () {
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
   attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
   */
-  Serial.print( F( "Boot.. Ok" ));
+  Serial.print( F( "Boot.. Ok, T[°С]=" ));
+  const int16_t temp = read_Temperature();
+  Serial.print( float( temp >> 8 ) + ( (temp & 0xFF) >> 6 ) * 0.25f );
 }
 
 /* удалено poty - фракция миллисекунд определяется другим способом
@@ -148,7 +151,7 @@ void loop () {
   bool ok = false;
   uint8_t byteCounter = 0U;
   uint8_t numberOfBytes = 0U;
-  float drift_in_ppm = 0;
+  float drift_in_ppm = .0f;
   time_t t, ref;
 
   // ---- poty ---- расчёт фракции миллисекунд
@@ -373,14 +376,14 @@ bool adjustTime( const uint32_t utcTimeSecs ) {
 // the result is rounded to the maximum possible values of type uint8_t
 bool adjustTimeDrift( float drift_in_ppm ) {
   drift_in_ppm *= 10;
-  int offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
+  int32_t offset = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
   if ( offset == 0 ) return true;  // if offset is 0, nothing needs to be done
   const int8_t last_offset_reg = readFromOffsetReg();
   // ---- poty ---- подмена функций EEPROM
   //const int8_t last_offset_ee = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
   //if ( last_offset_reg == last_offset_ee ) {
     drift_in_ppm += last_offset_reg;
-    offset = (drift_in_ppm > 0) ? ( drift_in_ppm + 0.5 ) : ( drift_in_ppm - 0.5 );
+    offset = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
   //}
   offset = (offset > 127) ? 127 : (offset < -128) ? -128 : offset;
   // ---- poty ---- подмена функций EEPROM
@@ -398,7 +401,7 @@ bool adjustTimeDrift( float drift_in_ppm ) {
    number_of_control_seconds = reference_time - last_set_time = 961492 sec, i.e 0.961492*10^6 sec
    drift_in_ppm = time_drift * 10^6 / number_of_control_seconds = -16*10^6 /(0.961492*10^6) = -16.64 ppm
 */
-float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const clockTime ) {
+static float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const clockTime ) {
   // ---- poty ---- подмена функций EEPROM
 //  if ( !i2c_eeprom_read_buffer( EEPROM_ADDRESS, 0U, buff, sizeof(buff)) ) {
   if ( !eeprom_read_buffer( 101U, buff, sizeof(buff)) ) {
@@ -416,7 +419,7 @@ float calculateDrift_ppm( const time_t* const referenceTime, const time_t* const
   return time_drift * 1000 / diff;
 }
 
-uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength ) {
+static uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength ) {
   uint8_t sum = 0U;
   for ( uint8_t idx = 0U; idx < blength; idx++ ) {
     sum += bbuffer[idx];
@@ -512,4 +515,16 @@ static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict_
     uint16_t idx;
     for( idx = 0U; idx < len; idx++ )
         *(dst++) = *(src++);
+}
+
+static int16_t read_Temperature() {
+  int16_t temp = 0;
+  Wire.beginTransmission( DS3231_ADDRESS );
+  Wire.write( DS3231_TEMPERATUREREG );
+  Wire.endTransmission();
+
+  Wire.requestFrom( DS3231_ADDRESS, 2 );
+  temp = Wire.read();
+  temp = (temp << 8) | Wire.read();
+  return temp;
 }
