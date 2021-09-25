@@ -24,7 +24,6 @@
 #include <QElapsedTimer>
 #include <QTimer>
 #include <QtEndian>
-#include <cmath>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -37,10 +36,11 @@
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
+Q_DECLARE_METATYPE(QSerialPort::SerialPortError)
 #define STARTBYTE 0x40   //!< The starting byte of the data set from the communication protocol.
 #define DEVICE_ID 0x00   //!< ID of the RTC device.
 #define WAIT_REBOOT 2500 //!< Interval for a time-out in milliseconds
-#define WAIT_TIME 200    //!< The waiting time for the reading of data in milliseconds.
+#define WAIT_TIME 100    //!< The waiting time for the reading of data in milliseconds.
 #define ESC_RED QStringLiteral("\x1b[31m")    //!< ESCAPE sequence for red.
 #define ESC_YELLOW QStringLiteral("\x1b[33m") //!< ESCAPE sequence for yellow.
 #define ESC_BLUE QStringLiteral("\x1b[36m")   //!< ESCAPE sequence for blue.
@@ -74,8 +74,8 @@ RTC::RTC( const QString &portName, QObject *parent )
         m_pSerialPort->setStopBits(QSerialPort::OneStop);
         m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
-        QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
-                          this, &RTC::handleError );
+        QObject::connect( m_pSerialPort, SIGNAL( error( QSerialPort::SerialPortError )),
+                          this, SLOT( handleError( QSerialPort::SerialPortError )));
         // Connect the serial port.
         connectToRTC();
 
@@ -119,8 +119,9 @@ RTC::RTC( const Settings *const portSettings, QObject *parent )
         m_pSerialPort->setStopBits( portSettings->stopBits );
         m_pSerialPort->setFlowControl( portSettings->flowControl );
 
-        QObject::connect( m_pSerialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
-                          this, &RTC::handleError );
+        qRegisterMetaType<QSerialPort::SerialPortError>( "QSerialPort::SerialPortError" );
+        QObject::connect( m_pSerialPort, SIGNAL( error( QSerialPort::SerialPortError )),
+                          this, SLOT( handleError( QSerialPort::SerialPortError )));
         // Open the serial port.
         m_isConnected = openSerialPort();
 
@@ -249,8 +250,8 @@ void RTC::infoFromDevice()
     Q_ASSERT( m_pSerialPort != nullptr );
     if ( m_isConnected && !m_isBusy )
     {
-        thread()->msleep( WAIT_TIME/10 );
-        emit getData( ESC_WHITE + m_pSerialPort->readLine(40) + ESC_RESET );
+        m_pSerialPort->waitForReadyRead( WAIT_TIME );
+        emit getData( ESC_WHITE + m_pSerialPort->readAll() + ESC_RESET );
     }
 }
 
@@ -377,6 +378,9 @@ void RTC::connectToRTC()
 //!
 const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *const data )
 {
+    Q_ASSERT( m_pSerialPort->isOpen() );
+    m_isBusy = true;
+
     // Data that are sent to the serial port.
     QByteArray sentData;
     sentData.resize(size + 3);
@@ -399,15 +403,14 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     // The last byte is the checksum.
     sentData[size + 2] = crc;
 
-    Q_ASSERT( m_pSerialPort->isOpen() );
-    m_isBusy = true;
     // Send data to the serial port
     m_pSerialPort->write( sentData );
-    bool ready = m_pSerialPort->flush();
+    bool ready = m_pSerialPort->waitForBytesWritten( WAIT_TIME );
 
     // Reading data from RTC.
     if ( ready ) {
-        if ( !m_pSerialPort->waitForReadyRead( WAIT_TIME ) ) {
+        ready = m_pSerialPort->waitForReadyRead( WAIT_TIME );
+        if ( !ready ) {
             qCritical() << QStringLiteral( "Failed to received a response from device: " ) + m_pSerialPort->errorString();
         }
     }
@@ -647,7 +650,7 @@ bool RTC::statusRequest()
 
     // Send a request to the RTC device
     auto receivedData = sendRequest( Request::STATUS );
-    const float delay = m_eTimer.nsecsElapsed()/1000000.0;
+    const float delay = m_eTimer.elapsed();
 
     // Check of the received response to the request
     if ( !receivedData.isEmpty() && receivedData.at(0) == STARTBYTE && checkCRC( receivedData ) )
@@ -660,7 +663,7 @@ bool RTC::statusRequest()
         case StatusMessages::STATUS_ERROR:
             out << QStringLiteral( "Processing the data failed" );
             break;
-        case StatusMessages::STATUS_INVALID_PARAMETER:
+        case StatusMessages::STATUS_INVALID_PARAMETER_:
             out << QStringLiteral( "Received parameter(s) are invalid" );
             break;
         case StatusMessages::STATUS_INPUT_DATA_TOLONG:

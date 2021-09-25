@@ -49,7 +49,7 @@ enum class StatusMessages : quint8
 {
     STATUS_SUCCESS = 0x00,           //!< Data processing has been successful.
     STATUS_ERROR = 0x01,             //!< Processing the data failed.
-    STATUS_INVALID_PARAMETER = 0x02, //!< Received parameter(s) are invalid.
+    STATUS_INVALID_PARAMETER_= 0x02, //!< Received parameter(s) are invalid.
     STATUS_INPUT_DATA_TOLONG = 0x03, //!< Input data too long.
     STATUS_NOT_SUPPORTED = 0x04,     //!< The state of the device is undefined.
     STATUS_UNKNOWN_ERROR = 0x05,     //!< Unexpected error.
