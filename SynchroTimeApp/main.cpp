@@ -34,9 +34,11 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QLibraryInfo>
-#ifndef Q_OS_WIN
 #include <QtPlugin>
 
+#ifdef Q_OS_WIN
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+#else
 Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 #endif
 
@@ -72,6 +74,7 @@ Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 //!
 int main(int argc, char *argv[])
 {
+    qputenv( "QT_STYLE_OVERRIDE", "Fusion" );
     QApplication app(argc, argv);
 
     app.setApplicationName( QStringLiteral( "SynchroTime" ));

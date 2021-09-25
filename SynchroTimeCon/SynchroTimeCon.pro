@@ -18,8 +18,6 @@ CONFIG += debug_and_release
 CONFIG -= app_bundle
 greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
 lessThan(QT_MAJOR_VERSION, 5): QMAKE_CXXFLAGS += -std=c++11
-QMAKE_CFLAGS_RELEASE += -O3
-QMAKE_CXXFLAGS_RELEASE += -O3
 
 CONFIG(debug, debug|release) {
     TARGET = synchroTimed
@@ -30,7 +28,6 @@ CONFIG(debug, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT
 }
 TEMPLATE = app
-LANGUAGE = C++
 # Define for the console application
 DEFINES += CONSOLE_APP
 
@@ -50,12 +47,11 @@ HEADERS += \
     helper.h \
     settings.h
 
-# For Linux, MacOS
+# for static-build ->
 linux|macx {
-    CONFIG += static
+# for dynamic build uncomment ->
 #    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
 }
-# For Win32 release
 win32 {
     VERSION = 1.1.0.0
     QMAKE_TARGET_COMPANY = Free Project

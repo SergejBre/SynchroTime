@@ -17,8 +17,6 @@ MOC_DIR = ../moc
 CONFIG += debug_and_release
 greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
 lessThan(QT_MAJOR_VERSION, 5): QMAKE_CXXFLAGS += -std=c++11
-QMAKE_CFLAGS_RELEASE += -O3
-QMAKE_CXXFLAGS_RELEASE += -O3
 
 CONFIG(debug, debug|release) {
     TARGET = synchroTimeAppd
@@ -32,7 +30,6 @@ CONFIG(debug, debug|release) {
 # Define for the GUI application
 DEFINES += GUI_APP QT_NO_TRANSLATION
 TEMPLATE = app
-LANGUAGE = C++
 
 INCLUDEPATH += ../include
 
@@ -56,14 +53,20 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     synchrotime.qrc
 
-# For Linux, MacOS
+# for static-build ->
+QTPLUGIN += qminimal
 linux|macx {
-    QTPLUGIN.platforms = qminimal qxcb
-    CONFIG -= import_plugins
-    CONFIG += static
+    QTPLUGIN += qxcb
+}
+win32 {
+    QTPLUGIN += qwindows
+}
+CONFIG -= import_plugins
+
+linux|macx {
+# for dynamic build uncomment ->
 #    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
 }
-# For Win32 release
 win32 {
     VERSION = 1.1.5.14
     QMAKE_TARGET_COMPANY = Free Project
