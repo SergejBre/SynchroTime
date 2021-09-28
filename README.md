@@ -21,6 +21,8 @@ ____
 * [Documentation](#Documentation)
 * [Dependencies](#Dependencies)
 * [Compilation on Linux](#Compilation-on-Linux)
+* [Issues](#Issues)
+  * [Request Failed](#Request-Failed)
 * [License](#License)
 ____
 
@@ -51,7 +53,7 @@ ____
 1. First, you need to upload the sketch to Arduino from the [arduino/synchro_RTC.ino](arduino/synchro_RTC.ino) project directory, if you have a **DS3231 ZS-042** module or [arduino/synchro_RTC_MINI.ino](arduino/synchro_RTC_MINI.ino), if you have a **DS3231 MINI** module, then connect the RTC DS3231 module according to the circuit shown in the part [Specification](#Specification).
  Connect your Arduino to your computer via a free USB port. If there is a necessary driver in the system, a new virtual serial port will appear in the system (under Linux it will be `/dev/ttyUSBx`, under Windows - `COMx`).
  To find the name of this port, call the application with the `-d (--discovery)` switch:
-```bash
+```
  $ ./synchroTime -d
  Serial Port : ttyUSB1
  Description : USB2.0-Serial
@@ -72,7 +74,7 @@ ____
  A total of 2 serial ports were found.
 ``` 
  And under the Windows OS
-```bash
+```
  C:\\SynchroTime\\build>synchroTime -d
  Serial Port : COM5
  Description : USB-SERIAL CH340
@@ -94,18 +96,18 @@ ____
 ``` 
 
 2. To select a virtual Serial Port, enter its system name after the command `-p \<portName\>`. The app will automatically create a configuration file, and the next call will contact the selected port.
-```bash
+```
  $ ./synchroTime -p ttyUSB0
  Added new serial interface ttyUSB0. 
 ```
  And under the Windows OS
-```bash
+```
  C:\\SynchroTime\\build>synchroTime -p COM5
  Added new serial interface COM5.
 ``` 
 
 3. Use the `-i (--information)` command to get the current information from the DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the aging register and the calculated time drift value in ppm. If the aging register and time drift are zero, then the DS3231 has not yet been calibrated (see step 5.)
-```bash
+```
  $ ./synchroTime -i
  DS3231 clock time	1598896552596 ms: 31.08.2020 19:55:52.596
  System local time	1598896589772 ms: 31.08.2020 19:56:29.772
@@ -116,7 +118,7 @@ ____
 ```
 
 4. To set the exact time, use the `-a (--adjust)` command. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module's memory, which will allow later to determine the exact drift of the clock time.
-```bash
+```
  $ ./synchroTime -a
  System local time	Mo. 31 Aug. 2020 20:02:52.000
  Request for adjustment completed successfully. 
@@ -125,7 +127,7 @@ ____
 5. To calibrate the clock of the DS3231 module, enter the `-c (--calibration)` command. For the successful execution of this procedure, the module must be activated (see point 4.) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error (ca 55 hours or 2.3 days, see part [Discussion](#Discussion)). The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the aging register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed, as in the screenshot.
 
 ⚠️ Note: This method is slow, but has the advantage of not requiring any manual effort other than setting and reading the clock. Letting it run quietly on a shelf for a day or two is pretty easy. It also means that the clock goes through many day/night cycles and is subject to temperature changes, so it helps measure the long-term stability of the clock.
-```bash
+```
  $ ./synchroTime -c
  System local time	Mo. 31 Aug. 2020 20:04:14.000
  Offset last value	0
@@ -135,14 +137,14 @@ ____
 ```
 
 6. To reset the aging register to its default value and clear the module's memory of calibration data, enter the `-r (--reset)` command. The default value will be written to the register, and memory cells will be overwritten with bytes with `0xFF`.
-```bash
+```
  $ ./synchroTime -r
 
  Request for reset completed successfully. 
 ```
 
 7. Use the `-s (--setreg)` command to add a new value (e.g. `-12.8`) to the aging register of the DS3231. The new value will overwrite the old register value. The result will be limited to the values 12.7 and -12.8. **Warning: it makes sense to do this operation only in case of resetting all calibration data (see step 6)**.
-```bash
+```
  $ ./synchroTime -s -12.8
 
  Request for SetRegister completed successfully. 
@@ -178,7 +180,7 @@ ____
 * The suggested connection to the DS3231 module is according to the Circuit below.
 ![CIRCUIT](images/Steckplatine_DS3231.png)
 
-(*)⚠️ Note that the accuracy depends on the accuracy of the underlying operating system; not all systems provide 1-millisecond accuracy!
+(*)⚠️ Please note that the reported accuracy depends on the specifications of your platform; not all systems are capable of providing 1 millisecond accuracy!
 
 [:arrow_up:Top](#Contents)
 ____
@@ -215,12 +217,12 @@ ____
 
 ## System Requirements
 * For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. The syncing to a nearby, reliable NTP server should get you within a few milliseconds. It doesn’t need to be on all the time, but it does need to be on, synced, and stable when setting the DS3231 and later when you decide to check the drift. In the intervening time it can be turned off, if you wish. The DS3231 must have continuous power and be uninterrupted at all times through the measurement. Under Linux, the ntp service is installed by the following command
-```bash
+```
  $ sudo apt-get install ntp 
 ```
 
 * Check the correct operation of the service ntp by running the command
-```bash
+```
  $ ntpq -p
      remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
@@ -245,11 +247,11 @@ ____
 ## Installing the CLI and GUI apps
 * According to the working platform, download the appropriate archive with the app from [![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases).
 * Unpack it to your home directory with write access, as the application retains its settings.
-```bash
+```
  $ tar -xvf SynchroTime_x64_linux_v1.1.0-beta.tar.xz
 ``` 
 * Run the application according to the instructions in the section [Using the CLI app](#Using the CLI app) or [Using the GUI app](#Using the GUI app).
-```bash
+```
  $ cd SynchroTime
  SynchroTime$ ./synchroTime -h
 ``` 
@@ -294,12 +296,12 @@ ____
 ## Dependencies
 | Name         | Version                           | Comment                                         |
 |--------------|-----------------------------------|-------------------------------------------------|
-| Qt lib 32bit | >= 5.5.1                          | Didn't test with older versions, but it may work|
-| Qt lib 64bit | >= 5.6.3                          | Didn't test with older versions, but it may work|
-| C++ compiler | supporting C++11 (i.e. gcc 4.8.1+)|                                                 |
-| Arduino IDE  | >= 1.8.13                         | !Replace compilation flags from -Os to -O2 (*)  |
-| RTC library  | >= 1.13.0                         | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
-| QCustomPlot  | >= 2.1.0                          | [QCustomPlot](https://gitlab.com/DerManu/QCustomPlot) |
+| Qt lib 32bit | ⩾ 5.5.1/or ⩾ 5.12.11 for Win32/pe | Didn't test with older versions, but it may work|
+| Qt lib 64bit | ⩾ 5.12.11                         | Didn't test with older versions, but it may work|
+| C++ compiler | supporting C++11 (i.e. GCC-7.3.0) | resp MinGW32-7.3.0 for Win32/pe release         |
+| Arduino IDE  | ⩾ 1.8.13                          | !Replace compilation flags from -Os to -O2 (*)  |
+| RTC library  | ⩾ 1.13.0                          | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
+| QCustomPlot  | ⩾ 2.1.0                           | [QCustomPlot](https://gitlab.com/DerManu/QCustomPlot) |
 
 (*) To do this, you need to edit the `platform.txt` file, which is located in the following path `[directory of the installed Arduino IDE]/hardware/arduino/avr/platform.txt`, find and edit these lines:
 ```
@@ -314,7 +316,7 @@ compiler.cpp.flags=-c -g -O2 {compiler.warning_flags} -std=gnu++11 -fpermissive 
 ```
 
 Dependencies on Qt libraries in case of dynamic application build:
-```bash
+```
  $ ldd synchroTime
 	libQt5SerialPort.so.5 => ./lib/libQt5SerialPort.so.5
 	libQt5Core.so.5 => ./lib/libQt5Core.so.5
@@ -333,6 +335,13 @@ ____
 * `cd ./SynchroTime`
 * `QT_SELECT=5 qmake SynchroTime.pro`
 * `make && make clean`
+
+[:arrow_up:Top](#Contents)
+____
+
+## Issues
+### Request Failed
+If an above-mentioned error message occurs during communication with the microcontroller, the following [report](https://github.com/SergejBre/SynchroTime/issues/1#issuecomment-907040118) may be helpful.
 
 [:arrow_up:Top](#Contents)
 ____
