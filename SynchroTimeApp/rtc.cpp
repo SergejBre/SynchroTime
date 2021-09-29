@@ -24,6 +24,7 @@
 #include <QElapsedTimer>
 #include <QTimer>
 #include <QtEndian>
+#include <cmath>
 
 //------------------------------------------------------------------------------
 // Preprocessor
