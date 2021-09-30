@@ -251,7 +251,7 @@ void RTC::infoFromDevice()
     Q_ASSERT( m_pSerialPort != nullptr );
     if ( m_isConnected && !m_isBusy )
     {
-        m_pSerialPort->waitForReadyRead( WAIT_TIME );
+        if ( !m_pSerialPort->bytesAvailable() ) m_pSerialPort->waitForReadyRead( WAIT_TIME );
         emit getData( ESC_WHITE + m_pSerialPort->readAll() + ESC_RESET );
     }
 }
