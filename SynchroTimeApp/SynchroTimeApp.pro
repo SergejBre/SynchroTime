@@ -55,7 +55,7 @@ RESOURCES += \
 
 # for static-build ->
 QTPLUGIN += qminimal
-linux|macx: greaterThan(QT_VERSION, 5.7): QTPLUGIN += qxcb
+linux|macx: equals(QT_MAJOR_VERSION, 5): greaterThan(QT_MINOR_VERSION, 7): QTPLUGIN += qxcb
 win32:      QTPLUGIN += qwindows
 CONFIG -= import_plugins
 
