@@ -1,13 +1,13 @@
 # SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 modules
 <p align="center">
-	<a href="https://sergejbre.github.io/SynchroTime/doc/html/index.html">
-		<img alt="Documentation" src="./images/doxygen_badge.svg"/>
+	<a href="http://www.kernel.org" rel="nofollow">
+		<img alt="Platform (GNU/Linux)" src="https://img.shields.io/badge/platform-GNU/Linux-blue"/>
 	</a>
 	<a href="https://github.com/SergejBre/SynchroTime/releases">
-		<img alt="releases page" src="./images/release_badge.svg"/>
+		<img alt="releases page" src="https://img.shields.io/github/v/release/SergejBre/SynchroTime"/>
 	</a>
 	<a href="https://github.com/SergejBre/SynchroTime/releases">
-		<img alt="Github All Releases" src="https://img.shields.io/github/downloads/SergejBre/SynchroTime/total.svg"/>
+		<img alt="Github All Releases" src="https://img.shields.io/github/downloads/SergejBre/SynchroTime/total"/>
 	</a>
 </p>
 
