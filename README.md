@@ -10,6 +10,7 @@
 		<img alt="Github All Releases" src="https://img.shields.io/github/downloads/SergejBre/SynchroTime/total.svg"/>
 	</a>
 </p>
+
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 ____
 
