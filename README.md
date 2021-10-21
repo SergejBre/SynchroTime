@@ -1,6 +1,15 @@
 # SynchroTime - CLI- and GUI-client for adjust the exact time and calibrating the RTC DS3231 modules
-[![Documentation](./images/doxygen_badge.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)[![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases)
-
+<p align="center">
+	<a href="https://sergejbre.github.io/SynchroTime/doc/html/index.html">
+		<img alt="Documentation" src="./images/doxygen_badge.svg"/>
+	</a>
+	<a href="https://github.com/SergejBre/SynchroTime/releases">
+		<img alt="releases page" src="./images/release_badge.svg"/>
+	</a>
+	<a href="https://github.com/SergejBre/SynchroTime/releases">
+		<img alt="Github All Releases" src="https://img.shields.io/github/downloads/SergejBre/SynchroTime/total.svg"/>
+	</a>
+</p>
 ![PROJECT_IMAGE](./images/guiApp_About.png)
 ____
 
