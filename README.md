@@ -3,6 +3,9 @@
 	<a href="http://www.kernel.org" rel="nofollow">
 		<img alt="Platform (GNU/Linux)" src="https://img.shields.io/badge/platform-GNU/Linux-blue"/>
 	</a>
+	<a href="https://www.wikipedia.org/wiki/Windows" rel="nofollow">
+		<img alt="Platform Win32" src="https://img.shields.io/badge/platform-Win32-green"/>
+	</a>
 	<a href="https://github.com/SergejBre/SynchroTime/releases">
 		<img alt="releases page" src="https://img.shields.io/github/v/release/SergejBre/SynchroTime"/>
 	</a>
@@ -247,7 +250,7 @@ ____
   * The **offset** value shows the difference between the reference time and the system clock.
   * The **jitter** value indicates the magnitude of jitter between several time queries.
 
-* Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max|offset ± jitter| <= 10ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
+* Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max|offset ± jitter| ⩽ 10 ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
 
 * The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced projects: [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm).
 
@@ -255,12 +258,12 @@ ____
 ____
 
 ## Installing the CLI and GUI apps
-* According to the working platform, download the appropriate archive with the app from [![releases page](./images/release_badge.svg)](https://github.com/SergejBre/SynchroTime/releases).
+* According to the working platform, download the appropriate archive with the app from <a href="https://github.com/SergejBre/SynchroTime/releases"><img alt="releases page" src="https://img.shields.io/github/v/release/SergejBre/SynchroTime"/></a>.
 * Unpack it to your home directory with write access, as the application retains its settings.
 ```
  $ tar -xvf SynchroTime_x64_linux_v1.1.0-beta.tar.xz
 ``` 
-* Run the application according to the instructions in the section [Using the CLI app](#Using the CLI app) or [Using the GUI app](#Using the GUI app).
+* Run the application according to the instructions in the section [Using the CLI app](#Using-the-CLI-app) or [Using the GUI app](#Using-the-GUI-app).
 ```
  $ cd SynchroTime
  SynchroTime$ ./synchroTime -h
@@ -298,7 +301,7 @@ A graph showing the approximate dependence of the Frequency Deviation on the Agi
 ____
 
 ## Documentation
-For the detailed API documentation, see [link](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
+For the detailed API documentation, see [![Docs](https://img.shields.io/badge/docs-Doxygen-blue.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
 
 [:arrow_up:Top](#Contents)
 ____
@@ -350,6 +353,9 @@ ____
 ____
 
 ## Issues
+<p align="center">
+	<img alt="Issues" src="https://img.shields.io/github/issues/SergejBre/SynchroTime"/>
+</p>
 ### Request Failed
 If an above-mentioned error message occurs during communication with the microcontroller, the following [report](https://github.com/SergejBre/SynchroTime/issues/1#issuecomment-907040118) may be helpful.
 
@@ -357,6 +363,6 @@ If an above-mentioned error message occurs during communication with the microco
 ____
 
 ## License
-SynchroTime is licensed under [![MIT](./images/license_badge.svg)](LICENSE)
+SynchroTime is licensed under [![MIT](https://img.shields.io/github/license/SergejBre/SynchroTime.svg)](LICENSE)
 
 [:arrow_up:Top](#Contents)
