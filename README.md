@@ -12,6 +12,9 @@
 	<a href="https://github.com/SergejBre/SynchroTime/releases">
 		<img alt="Github All Releases" src="https://img.shields.io/github/downloads/SergejBre/SynchroTime/total"/>
 	</a>
+	<a href="https://github.com/SergejBre/SynchroTime/issues">
+		<img alt="Issues" src="https://img.shields.io/github/issues/SergejBre/SynchroTime"/>
+	</a>
 </p>
 
 ![PROJECT_IMAGE](./images/guiApp_About.png)
@@ -353,9 +356,7 @@ ____
 ____
 
 ## Issues
-<p align="center">
-	<img alt="Issues" src="https://img.shields.io/github/issues/SergejBre/SynchroTime"/>
-</p>
+
 ### Request Failed
 If an above-mentioned error message occurs during communication with the microcontroller, the following [report](https://github.com/SergejBre/SynchroTime/issues/1#issuecomment-907040118) may be helpful.
 
