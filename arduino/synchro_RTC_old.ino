@@ -30,7 +30,8 @@ Dependencies:
 
 #define TIME_ZONE 1           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
-#define OFFSET_REGISTER 0x10  // Aging offset register address
+#define DS3231_ADDRESS 0x68   // I2C address for DS3231
+#define DS3231_AGINGREG 0x10  // Aging offset register address
 #define CONRTOL_REGISTER 0x0E // Control Register address
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 #define MIN_TIME_SPAN 200000  // The minimum time required for a stable calculation of the time drift.
@@ -229,7 +230,7 @@ void loop () {
 
 int8_t readFromOffsetReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
   Wire.endTransmission();
   int8_t offset_val = 0x00;
   Wire.requestFrom( DS3231_ADDRESS, 1 ); // Read a byte from register
@@ -239,7 +240,7 @@ int8_t readFromOffsetReg( void ) {
 
 bool writeToOffsetReg( const int8_t value ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
   Wire.write( value ); // Write value to register
   return ( Wire.endTransmission() == 0 );
 }

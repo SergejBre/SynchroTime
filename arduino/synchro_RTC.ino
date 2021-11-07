@@ -35,7 +35,9 @@ Connecting DS3231 MINI module to arduino board:
 #define TIME_ZONE 2           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
 #define STARTBYTE 0x40        // The starting byte of the data set from the communication protocol.
-#define OFFSET_REGISTER 0x10  // Aging offset register address
+#define DS3231_ADDRESS 0x68   // I2C address for DS3231
+#define DS3231_AGINGREG 0x10  // Aging offset register address
+#define DS3231_TEMPERATUREREG 0x11 // Temperature register (high byte - low byte is at 0x12), 10-bit temperature value
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 #define MIN_TIME_SPAN 100000  // The minimum time required for a stable calculation of the frequency drift [in secs]. Default value 200000.
 typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG } task_t;
@@ -275,7 +277,7 @@ void loop () {
 
 int8_t readFromOffsetReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
   Wire.endTransmission();
   int8_t offset_val = 0;
   Wire.requestFrom( uint8_t( DS3231_ADDRESS ), uint8_t(1) ); // Read a byte from register
@@ -285,7 +287,7 @@ int8_t readFromOffsetReg( void ) {
 
 bool writeToOffsetReg( const int8_t value ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( OFFSET_REGISTER ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
   Wire.write( value ); // Write value to register
   return ( Wire.endTransmission() == 0 );
 }
