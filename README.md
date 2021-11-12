@@ -15,6 +15,9 @@
 	<a href="https://github.com/SergejBre/SynchroTime/issues">
 		<img alt="Issues" src="https://img.shields.io/github/issues/SergejBre/SynchroTime"/>
 	</a>
+	<a href="https://sergejbre.github.io/SynchroTime/doc/html/index.html">
+		<img alt="Docs Doxygen" src="https://img.shields.io/badge/docs-Doxygen-blue"/>
+	</a>
 </p>
 
 ![PROJECT_IMAGE](./images/guiApp_About.png)
@@ -232,12 +235,15 @@ where:
 ____
 
 ## System Requirements
-* For correct work your system time required to be synchronized with Network Time Protocol (NTP). Only in this case the program will work according to the declared specifications. The syncing to a nearby, reliable NTP server should get you within a few milliseconds. It doesn’t need to be on all the time, but it does need to be on, synced, and stable when setting the DS3231 and later when you decide to check the drift. In the intervening time it can be turned off, if you wish. The DS3231 must have continuous power and be uninterrupted at all times through the measurement. Under Linux, the ntp service is installed by the following command
+For the synchroTime application to work properly, you must synchronize the system time using the Network Time Protocol (NTP). Only then can the stated calibration characteristics be guaranteed. A slight desynchronization of the PC system time with a nearest reference NTP time server is allowed (no more than 10 milliseconds). It is not necessary for the NTP service client (ntpd) to be enabled on your PC all the time, but the NTP service must be pre-started, synchronized and stable while testing the DS3231 module, as well as during module calibration. In between measurements, you can turn off the service if you want. The DS3231 module must have an uninterruptible power supply (3V battery) throughout the entire measurement and calibration interval.
+
+### ntpd service
+* Under Ubuntu/Debian Linux distributions, the **ntpd** service is installed by the following command
 ```
  $ sudo apt-get install ntp 
 ```
 
-* Check the correct operation of the service ntp by running the command
+* Check the correct operation of the service ntpd by running the command
 ```
  $ ntpq -p
      remote           refid      st t when poll reach   delay   offset  jitter
@@ -253,9 +259,47 @@ ____
   * The **offset** value shows the difference between the reference time and the system clock.
   * The **jitter** value indicates the magnitude of jitter between several time queries.
 
-* Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max|offset ± jitter| ⩽ 10 ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.
+* Look for a table entry `*`: table values offset and jitter, they should be as minimal as possible `max|offset ± jitter|⩽10 ms`. If this is not the case, adjust the configuration file `/etc/ntp.conf` in which you enter the local time servers.  The addresses of the nearest NTP time reference servers for your region can be found on the [NTP Pool Project](https://www.ntppool.org) page.
 
-* The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced projects: [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm).
+### Chrony service
+**Chrony** is an implementation of the Network Time Protocol (NTP). It's a replacement for the ntpd, which is a reference implementation of the NTP. It runs on Unix-like operating systems (including Linux and MacOS). It's the default NTP client and server in Red Hat Enterprise Linux 8 and SUSE Linux Enterprise Server 15, and available in many Linux distributions.
+
+* Under Ubuntu/Debian Linux distributions, the **chrony** service is installed by the following command
+```
+ $ sudo apt install chrony
+```
+* Chrony setting. The NTP client needs to know which the reference NTP time servers it needs to contact to get the current time. We can specify the reference NTP time servers in the server or pool directive in the NTP configuration file. Usually the default configuration file is `/etc/chrony/chrony.conf` or `/etc/chrony.conf` depending on the version of the Linux distribution. To improve reliability, it is recommended that you specify at least three reference time servers. The addresses of the nearest NTP time reference servers for your region can be found on the [NTP Pool Project](https://www.ntppool.org/zone/europe) page.
+
+The following lines are just an example taken from an Ubuntu 18.04 LTS server.
+```
+[...]
+# About using servers from the NTP Pool Project in general see (LP: #104525).
+# Approved by Ubuntu Technical Board on 2011-02-08.
+# See http://www.pool.ntp.org/join.html for more information.
+#pool ntp.ubuntu.com iburst maxsources 4
+pool 0.de.pool.ntp.org iburst maxsources 2
+pool 1.de.pool.ntp.org iburst maxsources 2
+pool 2.de.pool.ntp.org iburst maxsources 2
+pool 3.de.pool.ntp.org iburst maxsources 2
+[...]
+```
+* Check the correct operation of the service chrony by running the command
+```
+ $ chronyc sourcestats
+210 Number of sources = 8
+Name/IP Address            NP  NR  Span  Frequency  Freq Skew  Offset  Std Dev
+==============================================================================
+217.79.179.106              6   4   86m     +0.462      0.779  -1029us   367us
+144.76.59.37               13   7  103m     +0.318      0.339  +2752us   564us
+94.16.114.254              12   7  189m     +0.165      0.180   +106us   476us
+172.105.75.114              8   3  138m     +0.174      0.583  -1113us   756us
+141.30.228.4                6   3  154m     +0.194      0.190  +3641us   198us
+78.46.162.102              12   8  206m     +0.140      0.093  -1316us   280us
+90.187.148.77              56  23  584m     -0.115      0.072  +2010us  1670us
+131.188.3.220               9   6  137m     +0.222      0.402  -1656us   614us 
+```
+### windows time service
+The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced projects: [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm).
 
 [:arrow_up:Top](#Contents)
 ____
@@ -314,7 +358,7 @@ ____
 |--------------|-----------------------------------|-------------------------------------------------|
 | Qt lib 32bit | ⩾ 5.5.1/or ⩾ 5.12.11 for Win32/pe | Didn't test with older versions, but it may work|
 | Qt lib 64bit | ⩾ 5.12.11                         | Didn't test with older versions, but it may work|
-| C++ compiler | supporting C++11 (i.e. GCC-7.3.0) | resp MinGW32-7.3.0 for Win32/pe release         |
+| C++ compiler | supporting C++11 (i.e. GCC-7.5.0) | resp MinGW32-7.3.0 for Win32/pe release         |
 | Arduino IDE  | ⩾ 1.8.13                          | !Replace compilation flags from -Os to -O2 (*)  |
 | RTC library  | ⩾ 1.13.0                          | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
 | QCustomPlot  | ⩾ 2.1.0                           | [QCustomPlot](https://gitlab.com/DerManu/QCustomPlot) |
@@ -346,7 +390,7 @@ Dependencies on Qt libraries in case of dynamic application build:
 ____
 
 ## Compilation on Linux
-* `sudo apt-get install build-essential qt5-default qt5-qmake gdb git`
+* `sudo apt-get install build-essential qt5-default qt5-qmake git`
 * `git clone https://github.com/SergejBre/SynchroTime.git`
 * `cd ./SynchroTime`
 * `QT_SELECT=5 qmake SynchroTime.pro`
