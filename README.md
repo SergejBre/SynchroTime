@@ -269,8 +269,7 @@ For the synchroTime application to work properly, you must synchronize the syste
  $ sudo apt install chrony
 ```
 * Chrony setting. The NTP client needs to know which the reference NTP time servers it needs to contact to get the current time. We can specify the reference NTP time servers in the server or pool directive in the NTP configuration file. Usually the default configuration file is `/etc/chrony/chrony.conf` or `/etc/chrony.conf` depending on the version of the Linux distribution. To improve reliability, it is recommended that you specify at least three reference time servers. The addresses of the nearest NTP time reference servers for your region can be found on the [NTP Pool Project](https://www.ntppool.org/zone/europe) page.
-
-The following lines are just an example taken from an Ubuntu 18.04 LTS server.
+The following lines are just an example taken from an Ubuntu 18.04 LTS server:
 ```
 [...]
 # About using servers from the NTP Pool Project in general see (LP: #104525).
