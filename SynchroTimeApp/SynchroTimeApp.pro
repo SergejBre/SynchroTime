@@ -14,6 +14,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 DESTDIR = ../build
 MOC_DIR = ../moc
+UI_DIR = ../ui
 CONFIG += debug_and_release
 greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
 lessThan(QT_MAJOR_VERSION, 5): QMAKE_CXXFLAGS += -std=c++11
@@ -28,13 +29,13 @@ CONFIG(debug, debug|release) {
 }
 
 # Define for the GUI application
-DEFINES += GUI_APP QT_NO_TRANSLATION
+DEFINES += GUI_APP #QT_NO_TRANSLATION
 TEMPLATE = app
 
 INCLUDEPATH += ../include
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     rtc.cpp \
     console.cpp \
     settingsdialog.cpp \
@@ -50,8 +51,17 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     settingsdialog.ui
 
+TRANSLATIONS += \
+    ../translations/synchroTimeApp_de_DE.ts \
+    ../translations/synchroTimeApp_ru_RU.ts
+
+EXTRA_TRANSLATIONS += ../translations/synchroTimeApp_en.ts
+
 RESOURCES += \
-    synchrotime.qrc
+    synchrotime.qrc \
+    qm_files.qrc
+
+CONFIG += lrelease #embed_translations
 
 # for static-build ->
 QTPLUGIN += qminimal
