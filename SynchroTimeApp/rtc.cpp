@@ -429,7 +429,7 @@ void RTC::informationRequest()
 {
     QString output;
     QTextStream out( &output );
-    out << ESC_WHITE << QStringLiteral( "Information from Device:" ) << ESC_RESET;
+    out << ESC_WHITE << QObject::tr( "Information from Device:" ) << ESC_RESET;
 
     // Data that are sent to the serial interface.
     quint8 sentData[6];
@@ -487,7 +487,7 @@ void RTC::informationRequest()
     }
     else
     {
-        out << ESC_RED << QStringLiteral( "Request for the information failed. " ) << receivedData << ESC_RESET;
+        out << ESC_RED << QObject::tr( "Request for the information failed. " ) << receivedData << ESC_RESET;
     }
     emit getData( output );
 }
@@ -499,7 +499,7 @@ void RTC::adjustmentRequest()
 {
     QString output;
     QTextStream out( &output );
-    out << ESC_WHITE << QStringLiteral( "Adjust clock Date/Time.." ) << ESC_RESET;
+    out << ESC_WHITE << QObject::tr( "Adjust clock Date/Time.." ) << ESC_RESET;
 
     // Data that are sent to the serial interface.
     quint8 sentData[6];
@@ -523,11 +523,11 @@ void RTC::adjustmentRequest()
         QDateTime local; //(QDateTime::currentDateTime());
         local.setTime_t( localTimeSecs );
         out << "Local system time \t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" );
-        out << ESC_YELLOW << "Request for adjustment " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
+        out << ESC_YELLOW << QObject::tr("Request for adjustment ") << ( ret_value ? QObject::tr("completed successfully") : QObject::tr("failed") ) << ESC_RESET;
     }
     else
     {
-        out << ESC_RED << QStringLiteral( "Request for adjustment failed. " ) << receivedData << ESC_RESET;
+        out << ESC_RED << QObject::tr( "Request for adjustment failed. " ) << receivedData << ESC_RESET;
     }
     emit getData( output );
 }
@@ -539,7 +539,7 @@ void RTC::calibrationRequest()
 {
     QString output;
     QTextStream out( &output );
-    out << ESC_WHITE << QStringLiteral( "Calibration the Oscillator.." ) << ESC_RESET;
+    out << ESC_WHITE << QObject::tr( "Calibration the Oscillator.." ) << ESC_RESET;
 
     // Data that are sent to the serial interface.
     quint8 sentData[6];
@@ -573,11 +573,11 @@ void RTC::calibrationRequest()
             offset_reg = byteBuffer[6];
             out << "Offset new value  \t" << offset_reg;
         }
-        out << ESC_YELLOW << "Request for calibration " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
+        out << ESC_YELLOW << QObject::tr("Request for calibration ") << ( ret_value ? QObject::tr("completed successfully") : QObject::tr("failed") ) << ESC_RESET;
     }
     else
     {
-        out << ESC_RED << QStringLiteral( "Request for calibration failed. " ) << receivedData << ESC_RESET;
+        out << ESC_RED << QObject::tr( "Request for calibration failed. " ) << receivedData << ESC_RESET;
     }
     emit getData( output );
 }
@@ -589,7 +589,7 @@ void RTC::resetRequest()
 {
     QString output;
     QTextStream out( &output );
-    out << ESC_WHITE << QStringLiteral( "Reset the calibration Parameters.." ) << ESC_RESET;
+    out << ESC_WHITE << QObject::tr( "Reset the calibration Parameters.." ) << ESC_RESET;
 
     // Send a request to the RTC device
     auto receivedData = sendRequest( Request::RESET );
@@ -599,11 +599,11 @@ void RTC::resetRequest()
     {
         const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
-        out << ESC_YELLOW << "Request for reset " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
+        out << ESC_YELLOW << QObject::tr("Request for reset ") << ( ret_value ? QObject::tr("completed successfully") : QObject::tr("failed") ) << ESC_RESET;
     }
     else
     {
-        out << ESC_RED << QStringLiteral( "Request for reset failed. " ) << receivedData << ESC_RESET;
+        out << ESC_RED << QObject::tr( "Request for reset failed. " ) << receivedData << ESC_RESET;
     }
     emit getData( output );
 }
@@ -614,7 +614,7 @@ void RTC::setRegisterRequest( const float newValue )
 {
     QString output;
     QTextStream out( &output );
-    out << ESC_WHITE << QStringLiteral( "Set register Value to " ) << newValue << ESC_RESET;
+    out << ESC_WHITE << QObject::tr( "Set register Value to " ) << newValue << ESC_RESET;
 
     // Data that are sent to the serial interface.
     quint8 sentData[4];
@@ -628,11 +628,11 @@ void RTC::setRegisterRequest( const float newValue )
     {
         const qint8 blength = receivedData.size();
         const quint8 ret_value = receivedData.at( blength - 1 );
-        out << ESC_YELLOW << "Request for SetRegister " << ( ret_value ? "completed successfully" : "failed" ) << ESC_RESET;
+        out << ESC_YELLOW << QObject::tr("Request for SetRegister ") << ( ret_value ? QObject::tr("completed successfully") : QObject::tr("failed") ) << ESC_RESET;
     }
     else
     {
-        out << ESC_RED << QStringLiteral( "Request for SetRegister failed. " ) << receivedData << ESC_RESET;
+        out << ESC_RED << QObject::tr( "Request for SetRegister failed. " ) << receivedData << ESC_RESET;
     }
     emit getData( output );
 }
@@ -686,8 +686,8 @@ bool RTC::statusRequest()
     else
     {
         // Not received a response to the device status request.
-        out << ESC_RED << QStringLiteral( "Status Request failed. " ) << receivedData << ESC_RESET;
-        emit portError( QStringLiteral( "Not received a response to the device status request: " ) + m_pSerialPort->errorString() );
+        out << ESC_RED << QObject::tr( "Status Request failed. " ) << receivedData << ESC_RESET;
+        emit portError( QObject::tr( "Not received a response to the device status request: " ) + m_pSerialPort->errorString() );
     }
     if ( !result ) emit getData( output );
     else if ( m_isDetectDelayEnabled ) emit getDelay( delay );
