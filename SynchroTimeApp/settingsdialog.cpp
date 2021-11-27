@@ -278,7 +278,7 @@ void SettingsDialog::fillPortsParameters()
 
     ui->stopBitsBox->addItem( QStringLiteral( "1" ), QSerialPort::OneStop );
 #ifdef Q_OS_WIN
-    ui->stopBitsBox->addItem( QObject::tr( "1.5" ), QSerialPort::OneAndHalfStop );
+    ui->stopBitsBox->addItem( QStringLiteral( "1.5" ), QSerialPort::OneAndHalfStop );
 #endif
     ui->stopBitsBox->addItem( QStringLiteral( "2" ), QSerialPort::TwoStop );
 
