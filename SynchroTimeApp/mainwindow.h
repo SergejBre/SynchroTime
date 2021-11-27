@@ -36,6 +36,9 @@ class QTimer;
 class RTC;
 struct Settings;
 class QCPBars;
+class QTranslator;
+class QCloseEvent;
+class QEvent;
 
 namespace Ui {
 class MainWindow;
@@ -66,6 +69,7 @@ signals:
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+    void changeEvent( QEvent *event ) Q_DECL_OVERRIDE;
 
 private slots:
     void connectRTC();
@@ -82,6 +86,10 @@ private slots:
     void handleSettingsError( const QString &error );
     void initBars();
 
+    void on_actionEnglish_triggered();
+    void on_actionGerman_triggered();
+    void on_actionRussian_triggered();
+
 private:
     Ui::MainWindow *ui;
     QLabel *status;
@@ -95,11 +103,16 @@ private:
     RTC *m_pRTC;
     QCPBars *m_pCPBars;
     bool m_detectDelayFlag;
+    QTranslator *m_pTranslator;
+    QString postfix;
 
     void readSettings( void );
     void writeSettings( void ) const;
     void actionsTrigger( bool value ) const;
     void showStatusMessage(const QString &message) const;
+    void changeTranslator( const QString &postfix );
+    void setLanguage( const QString &postfix );
+    void uncheck( void );
 };
 
 #endif // MAINWINDOW_H

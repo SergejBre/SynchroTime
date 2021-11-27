@@ -32,6 +32,8 @@
 #include <QThread>
 #include <QInputDialog>
 #include <QFontDialog>
+#include <QTranslator>
+#include <QCloseEvent>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -110,17 +112,18 @@ MainWindow::MainWindow( QWidget *parent ) :
     m_pThread( nullptr ),
     m_pRTC( nullptr ),
     m_pCPBars( nullptr ),
-    m_detectDelayFlag( true )
+    m_detectDelayFlag( true ),
+    m_pTranslator( nullptr )
 {
     ui->setupUi( this );
-    actionsTrigger( false );
-    ui->actionSettings->setEnabled( false );
+    this->actionsTrigger( false );
     ui->actionQuit->setEnabled( true );
 
     m_pConsole = ui->console;
     m_pConsole->setEnabled( false );
     m_pSettings = new Settings();
     this->readSettings();
+    this->changeTranslator( postfix );
     m_pSettingsDialog = new SettingsDialog( m_pSettings, this );
     QObject::connect( m_pSettingsDialog, &SettingsDialog::settingsError, this, &MainWindow::handleSettingsError );
 
@@ -149,7 +152,7 @@ MainWindow::MainWindow( QWidget *parent ) :
     QObject::connect(ui->actionConnect, &QAction::triggered, this, &MainWindow::connectRTC);
     QObject::connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnectRTC);
     QObject::connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
-    QObject::connect(ui->actionClear, &QAction::triggered, m_pConsole, &Console::clear);
+    QObject::connect(ui->actionClean_Up, &QAction::triggered, m_pConsole, &Console::clear);
     QObject::connect(ui->actionPort_Setting, &QAction::triggered, m_pSettingsDialog, &SettingsDialog::show);
     QObject::connect(ui->actionSelect_Font, &QAction::triggered, this, &MainWindow::selectConsoleFont);
     QObject::connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
@@ -168,6 +171,9 @@ MainWindow::~MainWindow()
     if ( m_pThread != nullptr ) {
         m_pThread->quit();
         m_pThread->wait( WAIT_FOR_STREAM );
+    }
+    if ( m_pTranslator != nullptr ) {
+        delete m_pTranslator;
     }
     if ( m_pSettings != nullptr ) {
         delete m_pSettings;
@@ -202,6 +208,10 @@ void MainWindow::readSettings()
     font.fromString( settings.value( QStringLiteral( "font" ), QFont( QStringLiteral( "Monospace" ), 10) ).toString() );
     Q_ASSERT( m_pConsole != nullptr );
     m_pConsole->setFont( font );
+    settings.endGroup();
+
+    settings.beginGroup( QStringLiteral( "translations" ));
+    this->postfix = settings.value( QStringLiteral( "postfix" ), QStringLiteral( "en" )).toString();
     settings.endGroup();
 
     settings.beginGroup( QStringLiteral( "ULayout" ));
@@ -252,6 +262,10 @@ void MainWindow::writeSettings() const
     settings.beginGroup( QStringLiteral( "Font" ));
     Q_ASSERT( m_pConsole != nullptr );
     settings.setValue( QStringLiteral( "font" ), m_pConsole->font().toString() );
+    settings.endGroup();
+
+    settings.beginGroup( QStringLiteral( "translations" ));
+    settings.setValue( QStringLiteral( "postfix" ), this->postfix );
     settings.endGroup();
 
     settings.beginGroup( QStringLiteral( "ULayot" ));
@@ -423,7 +437,7 @@ void MainWindow::connectRTC()
             m_pThread->quit();
             m_pThread->wait( WAIT_FOR_STREAM );
 
-            showStatusMessage( QObject::tr( "Connection error" ));
+            showStatusMessage( QObject::tr( "Connection error with %1 port" ).arg( m_pSettings->name ));
             QMessageBox::critical(this, QObject::tr( "Connection error" ),
                                   QObject::tr( "Connect the RTC device to the correct serial port, "
                                                "or set the serial port name in the port settings." ),
@@ -566,11 +580,11 @@ void MainWindow::selectConsoleFont( void )
 {
     Q_ASSERT( m_pConsole != nullptr );
     bool selected;
-    QFont font = QFontDialog::getFont( &selected, m_pConsole->font(), this );
+    QFont font = QFontDialog::getFont( &selected, m_pConsole->font(), this, QObject::tr( "Select Font" ) );
 
     if ( selected )
     {
-        m_pConsole->setFont( font );
+        this->m_pConsole->setFont( font );
     }
 }
 
@@ -590,3 +604,145 @@ void MainWindow::setRegisterSlot()
         emit this->setRegister( value );
     }
 }
+
+//!
+//! \brief MainWindow::on_actionEnglish_triggered
+//! Slot for reacting to the choice of the English interface language
+//!
+void MainWindow::on_actionEnglish_triggered()
+{
+    if ( postfix.compare("en") ) {
+        this->postfix = QStringLiteral("en");
+        changeTranslator( postfix );
+    }
+    else {
+        ui->actionEnglish->setChecked( true );
+    }
+}
+
+//!
+//! \brief MainWindow::on_actionGerman_triggered
+//! Slot for reacting to the choice of the German interface language
+//!
+void MainWindow::on_actionGerman_triggered()
+{
+    if ( postfix.compare("de_DE") ) {
+        this->postfix = QStringLiteral("de_DE");
+        changeTranslator( postfix );
+    }
+    else {
+        ui->actionGerman->setChecked( true );
+    }
+}
+
+//!
+//! \brief MainWindow::on_actionRussian_triggered
+//! Slot for reacting to the choice of the Russian interface language
+//!
+void MainWindow::on_actionRussian_triggered()
+{
+    if ( postfix.compare("ru_RU") ) {
+        this->postfix = QStringLiteral("ru_RU");
+        changeTranslator( postfix );
+    }
+    else {
+        ui->actionRussian->setChecked( true );
+    }
+}
+
+//!
+//! \brief MainWindow::changeTranslator
+//! The Function creates an instance for the given localization.
+//!
+//! \param postfix of type QString (Suffix denoting language localization: "en", "de_DE", "ru_RU", ect)
+//!
+void MainWindow::changeTranslator( const QString &postfix )
+{
+    if ( m_pTranslator == nullptr ) {
+        m_pTranslator = new QTranslator( this );
+    }
+    else {
+        qApp->removeTranslator( m_pTranslator );
+    }
+
+    if ( m_pTranslator->load( QStringLiteral(":/i18n/") + qApp->applicationName() + QLatin1String("_") + postfix) \
+         || !postfix.compare( "en" ) )
+    {
+        qApp->installTranslator( m_pTranslator );
+    }
+    this->setLanguage( postfix );
+}
+
+//!
+//! \brief MainWindow::setLanguage
+//! The Function checks localization.
+//!
+//! \param postfix of type QString (Suffix denoting language localization: "en", "de_DE", "ru_RU", ect)
+//!
+void MainWindow::setLanguage(const QString &postfix)
+{
+    uncheck();
+    if ( !postfix.compare( "en" ) ) {
+        ui->actionEnglish->setChecked( true );
+    }
+    else if ( !postfix.compare( "de_DE" ) ) {
+        ui->actionGerman->setChecked( true );
+    }
+    else if ( !postfix.compare( "ru_RU" ) ) {
+        ui->actionRussian->setChecked( true );
+    }
+}
+
+//!
+//! \brief MainWindow::changeEvent
+//! This function intercepts events when the user interface language is changed.
+//!
+//! \param event of type QEvent*
+//!
+void MainWindow::changeEvent(QEvent *event)
+{
+    if ( event->type() == QEvent::LanguageChange ) {
+        ui->menuConnect->setTitle( QObject::tr( "Connect" ));
+        ui->actionConnect->setText( QObject::tr( "C&onnect" ));
+        ui->actionConnect->setToolTip( QObject::tr( "Connect to serial port" ));
+        ui->actionDisconnect->setText( QObject::tr( "&Disconnect" ));
+        ui->actionDisconnect->setToolTip( QObject::tr( "Disconnect from serial port" ));
+        ui->actionQuit->setText( QObject::tr( "&Quit" ));
+        ui->menuRequest->setTitle( QObject::tr( "Request" ) );
+        ui->actionInformation->setText( QObject::tr( "&Information" ));
+        ui->actionInformation->setToolTip( QObject::tr( "Read information from RTC" ));
+        ui->actionAdjustment->setText( QObject::tr( "Adjustment" ));
+        ui->actionCalibration->setText( QObject::tr( "Calibration" ));
+        ui->actionReset->setText( QObject::tr( "Reset" ));
+        ui->actionSetRegister->setText( QObject::tr( "Set Register" ));
+        ui->menuTools->setTitle( QObject::tr( "Tools" ));
+        ui->actionPort_Setting->setText( QObject::tr( "&Port Setting" ));
+        ui->actionPort_Setting->setToolTip( QObject::tr( "Configure serial port" ));
+        ui->actionSelect_Font->setText( QObject::tr( "Select Font" ));
+        ui->actionClean_Up->setText( QObject::tr( "C&lean Up" ));
+        ui->actionClean_Up->setToolTip( QObject::tr( "Clean up data" ));
+        ui->menuSelect_Language->setTitle( QObject::tr( "Select Language" ));
+        ui->actionEnglish->setText( QObject::tr( "English" ));
+        ui->actionGerman->setText( QObject::tr( "German" ));
+        ui->actionRussian->setText( QObject::tr( "Russian" ));
+        ui->menuHelp->setTitle( QObject::tr( "Help" ));
+        ui->actionContents->setText( QObject::tr( "Help" ));
+        ui->actionAbout_Qt->setText( QObject::tr( "Qt-Framework" ));
+        ui->actionAbout_App->setText( QObject::tr( "About App" ));
+    }
+    else {
+        QMainWindow::changeEvent( event );
+    }
+}
+
+//!
+//! \brief MainWindow::uncheck
+//! The help function that removes the check mark from all checkboxes.
+//!
+void MainWindow::uncheck()
+{
+    ui->actionEnglish->setChecked( false );
+    ui->actionGerman->setChecked( false );
+    ui->actionRussian->setChecked( false );
+}
+
