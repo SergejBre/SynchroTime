@@ -89,11 +89,23 @@
     <property name="title">
      <string>Tools</string>
     </property>
+    <widget class="QMenu" name="menuSelect_Language">
+     <property name="title">
+      <string>Select Language</string>
+     </property>
+     <property name="icon">
+      <iconset resource="synchrotime.qrc">
+       <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
+     </property>
+     <addaction name="actionEnglish"/>
+     <addaction name="actionGerman"/>
+     <addaction name="actionRussian"/>
+    </widget>
     <addaction name="actionPort_Setting"/>
-    <addaction name="actionClear"/>
+    <addaction name="actionClean_Up"/>
     <addaction name="actionSelect_Font"/>
     <addaction name="separator"/>
-    <addaction name="actionSettings"/>
+    <addaction name="menuSelect_Language"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -123,7 +135,7 @@
    <addaction name="separator"/>
    <addaction name="actionPort_Setting"/>
    <addaction name="separator"/>
-   <addaction name="actionClear"/>
+   <addaction name="actionClean_Up"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -247,15 +259,6 @@
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="actionSettings">
-   <property name="icon">
-    <iconset resource="synchrotime.qrc">
-     <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
-   </property>
-   <property name="text">
-    <string>Settings</string>
-   </property>
-  </action>
   <action name="actionSelect_Font">
    <property name="icon">
     <iconset resource="synchrotime.qrc">
@@ -265,16 +268,16 @@
     <string>Select Font</string>
    </property>
   </action>
-  <action name="actionClear">
+  <action name="actionClean_Up">
    <property name="icon">
     <iconset resource="synchrotime.qrc">
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
    </property>
    <property name="text">
-    <string>C&amp;lear</string>
+    <string>C&amp;lean Up</string>
    </property>
    <property name="toolTip">
-    <string>Clear data</string>
+    <string>Clean up data</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -303,6 +306,39 @@
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>English</string>
+   </property>
+   <property name="toolTip">
+    <string>Select English interface</string>
+   </property>
+  </action>
+  <action name="actionGerman">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>German</string>
+   </property>
+   <property name="toolTip">
+    <string>Select German interface</string>
+   </property>
+  </action>
+  <action name="actionRussian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Russian</string>
+   </property>
+   <property name="toolTip">
+    <string>Select Russian interface</string>
    </property>
   </action>
  </widget>
