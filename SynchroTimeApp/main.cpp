@@ -77,15 +77,15 @@ int main(int argc, char *argv[])
     qputenv( "QT_STYLE_OVERRIDE", "Fusion" );
     QApplication app(argc, argv);
 
-    app.setApplicationName( QStringLiteral( "SynchroTime" ));
+    app.setApplicationName( QStringLiteral( "synchroTimeApp" ));
     app.setApplicationVersion( QStringLiteral( "1.1.5.32, built on: " ) + QString(__DATE__).simplified() + " " + __TIME__ );
-    app.setWindowIcon( QIcon( QStringLiteral( "../images/icon.png") ));
+    app.setWindowIcon( QIcon( QStringLiteral( ":/images/icon.png") ));
 #ifdef Q_OS_WIN
     app.addLibraryPath( QLibraryInfo::location( QLibraryInfo::LibrariesPath ));
 #endif
 
-#ifndef QT_NO_TRANSLATION
-    QString translatorFileName = QLatin1String( QStringLiteral( "qt_" ));
+#if 0 //ndef QT_NO_TRANSLATION
+    QString translatorFileName = app.applicationName() + QLatin1String( "_" );
     translatorFileName += QLocale::system().name();
     QTranslator *translator = new QTranslator( &app );
     if ( translator->load( translatorFileName, QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ))
