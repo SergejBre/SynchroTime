@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/i18n">
+        <file alias="synchroTimeApp_de_DE.qm">../translations/synchroTimeApp_de_DE.qm</file>
+        <file alias="synchroTimeApp_ru_RU.qm">../translations/synchroTimeApp_ru_RU.qm</file>
+        <file alias="synchroTimeApp_en.qm">../translations/synchroTimeApp_en.qm</file>
+    </qresource>
+</RCC>
