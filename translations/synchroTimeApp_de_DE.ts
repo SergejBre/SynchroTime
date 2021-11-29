@@ -122,7 +122,7 @@
     <message>
         <location filename="../SynchroTimeApp/mainwindow.ui" line="241"/>
         <source>Set Register</source>
-        <translation>Wert am Aging-Register ändern</translation>
+        <translation>Setzen den Registerwert</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.ui" line="244"/>
@@ -285,7 +285,7 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.cpp" line="598"/>
         <source>Offset register modification</source>
-        <translation>Überschreiben</translation>
+        <translation>Aging-Register</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.cpp" line="599"/>
@@ -355,7 +355,7 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.cpp" line="717"/>
         <source>Set Register</source>
-        <translation>Einstellen Aging-Register</translation>
+        <translation>Setzen den Registerwert</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.cpp" line="718"/>
@@ -470,9 +470,14 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
         <translation>Ungültige Baudrate der seriellen Schnittstelle! Die Einstellung wird auf Standard zurückgesetzt</translation>
     </message>
     <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="267"/>
+        <source>Port %1: </source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="432"/>
         <source>Information from Device:</source>
-        <translation>Informationen vom RTC Gerät:</translation>
+        <translation>Information vom RTC Gerät:</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="490"/>
@@ -482,12 +487,12 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="502"/>
         <source>Adjust clock Date/Time..</source>
-        <translation>Einstellen auf der RTC Datum/Uhrzeit..</translation>
+        <translation>Einstellen Datum/Uhrzeit..</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="526"/>
         <source>Request for adjustment </source>
-        <translation>Anfrage zur Uhrzeiteinstellung </translation>
+        <translation>Uhrzeiteinstellen </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="526"/>
@@ -508,7 +513,7 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="530"/>
         <source>Request for adjustment failed. </source>
-        <translation>Korrekturanfrage ist fehlgeschlagen. </translation>
+        <translation>Uhrzeiteinstellen ist fehlgeschlagen. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="542"/>
@@ -518,12 +523,12 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="576"/>
         <source>Request for calibration </source>
-        <translation>Kalibrierungsanfrage </translation>
+        <translation>Kalibrieren </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="580"/>
         <source>Request for calibration failed. </source>
-        <translation>Kalibrierungsanforderung ist fehlgeschlagen. </translation>
+        <translation>Kalibrieren ist fehlgeschlagen. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="592"/>
@@ -533,27 +538,27 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="602"/>
         <source>Request for reset </source>
-        <translation>Anfrage zum Zurücksetzen </translation>
+        <translation>Zurücksetzen der Einstellparameter </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
         <source>Request for reset failed. </source>
-        <translation>Zurücksetzen ist fehlgeschlagen. </translation>
+        <translation>Zurücksetzen der Einstellparameter ist fehlgeschlagen. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="617"/>
         <source>Set register Value to </source>
-        <translation>Registerwert setzen gleich </translation>
+        <translation>Setzen den Registerwert auf </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="631"/>
         <source>Request for SetRegister </source>
-        <translation>Überschreiben vom Registerwert </translation>
+        <translation>Setzen den Registerwert </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="635"/>
         <source>Request for SetRegister failed. </source>
-        <translation>Zurücksetzen des Registers ist fehlgeschlagen. </translation>
+        <translation>Setzen den Registerwert ist fehlgeschlagen. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="689"/>
@@ -562,8 +567,8 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="690"/>
-        <source>Not received a response to the device status request: </source>
-        <translation>Keine Antwort auf die Gerätestatusanfrage erhalten: </translation>
+        <source>Not received a response to the device status request. Port %1: </source>
+        <translation>Keine Antwort auf die Gerätestatusanfrage erhalten. Port %1: </translation>
     </message>
 </context>
 <context>

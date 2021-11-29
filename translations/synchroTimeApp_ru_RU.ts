@@ -285,7 +285,7 @@ Advice: terminate unnecessary applications!</source>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.cpp" line="598"/>
         <source>Offset register modification</source>
-        <translation>Перезапись</translation>
+        <translation>Aging-регистр</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.cpp" line="599"/>
@@ -470,6 +470,11 @@ Advice: terminate unnecessary applications!</source>
         <translation>Недопустимая скорость передачи данных последовательного порта! Параметр сброшен на значение по умолчанию</translation>
     </message>
     <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="267"/>
+        <source>Port %1: </source>
+        <translation>Порт %1: </translation>
+    </message>
+    <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="432"/>
         <source>Information from Device:</source>
         <translation>Информация от RTC устройства:</translation>
@@ -477,7 +482,7 @@ Advice: terminate unnecessary applications!</source>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="490"/>
         <source>Request for the information failed. </source>
-        <translation>Запрос информации не удался. </translation>
+        <translation>Запрос информации от устройства не удался. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="502"/>
@@ -487,7 +492,7 @@ Advice: terminate unnecessary applications!</source>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="526"/>
         <source>Request for adjustment </source>
-        <translation>Запрос на установку времени </translation>
+        <translation>Запрос на установку точного времени </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="526"/>
@@ -508,7 +513,7 @@ Advice: terminate unnecessary applications!</source>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="530"/>
         <source>Request for adjustment failed. </source>
-        <translation>Запрос на корректировку не удался. </translation>
+        <translation>Запрос на установку точного времени не удался. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="542"/>
@@ -528,7 +533,7 @@ Advice: terminate unnecessary applications!</source>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="592"/>
         <source>Reset the calibration Parameters..</source>
-        <translation>Сбросить параметры калибровки..</translation>
+        <translation>Сброс параметров калибровки..</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="602"/>
@@ -538,7 +543,7 @@ Advice: terminate unnecessary applications!</source>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
         <source>Request for reset failed. </source>
-        <translation>Запрос на сброс не удался. </translation>
+        <translation>Запрос на сброс параметров не удался. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="617"/>
@@ -553,7 +558,7 @@ Advice: terminate unnecessary applications!</source>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="635"/>
         <source>Request for SetRegister failed. </source>
-        <translation>Запрос на установку регистра не удался. </translation>
+        <translation>Запрос на перезапись регистра не удался. </translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="689"/>
@@ -562,8 +567,8 @@ Advice: terminate unnecessary applications!</source>
     </message>
     <message>
         <location filename="../SynchroTimeApp/rtc.cpp" line="690"/>
-        <source>Not received a response to the device status request: </source>
-        <translation>Не получен ответ на запрос о статусе устройства: </translation>
+        <source>Not received a response to the device status request. Port %1: </source>
+        <translation>Не получен ответ на запрос о статусе устройства. Порт %1: </translation>
     </message>
 </context>
 <context>
