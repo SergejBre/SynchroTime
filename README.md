@@ -54,6 +54,8 @@ ____
   * The application allows you to evaluate the accuracy and reliability of the RTC oscillator for a particular sample, as well as the chances of successful correction in case of significant time drift;
   * automatically save parameters and calibration data to the energy-independent flash memory of the type AT24C256. In case there is a power failure to the module.
   * The application allows you to estimate the response delay over a serial port using a dynamic moving average method (Simple Moving Average).
+  
+* The interface and help system of the application are multilingual: English, German and Russian.
 
 * Developed in pure Qt, no third party libraries.
 
