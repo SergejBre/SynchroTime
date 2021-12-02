@@ -460,17 +460,17 @@ void RTC::informationRequest()
         numberOfSec = qFromLittleEndian( numberOfSec );
         numberOfMSec += numberOfSec;
         QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
-        out << "Time from Device  \t" << numberOfMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
-        out << "Local system time \t" << localTimeMSecs << " ms: " << local.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
-        out << "Difference between\t" << numberOfMSec - localTimeMSecs << " ms" << endl;
+        out << "Time from RTC Device\t" << numberOfMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
+        out << "Local system time   \t" << localTimeMSecs << " ms: " << local.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
+        out << "Difference between  \t" << numberOfMSec - localTimeMSecs << " ms" << endl;
         if ( blength > 7 ) {
-            const float offset_reg = static_cast<float>( p_byteBuffer[7] )/10;
-            out << "Offset reg. value \t" << offset_reg << " ppm" << endl;
+            const float aging_reg = static_cast<float>( p_byteBuffer[7] )/10;
+            out << "Aging register value\t" << aging_reg << " ppm" << endl;
             if ( blength > 11 ) {
                 float drift_in_ppm = 0;
                 memcpy( &drift_in_ppm, p_byteBuffer + 8, sizeof( drift_in_ppm ) );
-                out << "Frequency drift   \t" << drift_in_ppm << " ppm" << endl;
-                out << "Corrected value***\t" << std::abs(m_correctionFactor) * drift_in_ppm/10 << " ppm for correction faktor " << m_correctionFactor << endl;
+                out << "Frequency drift     \t" << drift_in_ppm << " ppm" << endl;
+                out << "Corrected Freq drift\t" << std::abs(m_correctionFactor) * drift_in_ppm/10 << " ppm for correction faktor " << m_correctionFactor << endl;
                 if ( blength > 15 ) {
                     quint32 lastAdjustOfTimeSec = 0L;
                     memcpy( &lastAdjustOfTimeSec, p_byteBuffer + 12, sizeof( lastAdjustOfTimeSec ) );
@@ -478,8 +478,8 @@ void RTC::informationRequest()
                     if ( lastAdjustOfTimeSec < 0xFFFFFFFF ) {
                         const qint64 lastAdjustOfTimeMSec = qint64(lastAdjustOfTimeSec) * 1000;
                         time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec );
-//                        out << "Frequency drift*  \t" << static_cast<float>(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
-                        out << "Last adjustm. time\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
+//                        out << "Frequency drift*    \t" << static_cast<float>(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
+                        out << "Last adjustment time\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
                     }
                 }
             }
@@ -522,7 +522,7 @@ void RTC::adjustmentRequest()
         const quint8 ret_value = receivedData.at( blength - 1 );
         QDateTime local; //(QDateTime::currentDateTime());
         local.setTime_t( localTimeSecs );
-        out << "Local system time \t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" );
+        out << "Local system time   \t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" );
         out << ESC_YELLOW << QObject::tr("Request for adjustment ") << ( ret_value ? QObject::tr("completed successfully") : QObject::tr("failed") ) << ESC_RESET;
     }
     else
@@ -563,15 +563,15 @@ void RTC::calibrationRequest()
         auto byteBuffer = receivedData.constData();
         const quint8 ret_value = byteBuffer[ blength-1 ];
         local.setTime_t( localTimeSecs );
-        out << "Local system time \t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" ) << endl;
-        qint8 offset_reg = byteBuffer[1];
-        out << "Offset last value \t" << offset_reg << endl;
+        out << "Local system time   \t" << local.toString( "ddd d MMM yyyy hh:mm:ss.zzz" ) << endl;
+        qint8 aging_reg = byteBuffer[1];
+        out << "Aging-Reg last value\t" << aging_reg << endl;
         if ( blength > 6 ) {
             float drift_in_ppm = 0;
             memcpy( &drift_in_ppm, byteBuffer + 2, sizeof( drift_in_ppm ) );
-            out << "Frequency drift   \t" << drift_in_ppm << " ppm" << endl;
-            offset_reg = byteBuffer[6];
-            out << "Offset new value  \t" << offset_reg;
+            out << "Frequency drift     \t" << drift_in_ppm << " ppm" << endl;
+            aging_reg = byteBuffer[6];
+            out << "Aging-Reg new value \t" << aging_reg;
         }
         out << ESC_YELLOW << QObject::tr("Request for calibration ") << ( ret_value ? QObject::tr("completed successfully") : QObject::tr("failed") ) << ESC_RESET;
     }
@@ -609,7 +609,7 @@ void RTC::resetRequest()
 }
 
 //! \brief RTC::setRegisterRequest
-//! \param newValue of the type const float. The new Value for Offset Register.
+//! \param newValue of the type const float. The new Value for Aging Register.
 void RTC::setRegisterRequest( const float newValue )
 {
     QString output;
