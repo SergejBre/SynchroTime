@@ -74,7 +74,7 @@ linux|macx {
 #    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
 }
 win32 {
-    VERSION = 1.1.5.32
+    VERSION = 1.2.0
     QMAKE_TARGET_COMPANY = Free Project
     QMAKE_TARGET_PRODUCT = SynchroTime
     QMAKE_TARGET_DESCRIPTION = Time adjust and calibration for RTC DS3231
