@@ -559,12 +559,6 @@ Advice: terminate unnecessary applications!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="266"/>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="316"/>
-        <source>Custom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../SynchroTimeApp/settingsdialog.cpp" line="339"/>
         <source>Invalid serial port baud rate! The setting is reset to default</source>
         <translation type="unfinished"></translation>

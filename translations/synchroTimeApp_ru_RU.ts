@@ -459,12 +459,6 @@ Advice: terminate unnecessary applications!</source>
         <translation>Настройки порта и программы не были обновлены</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="266"/>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="316"/>
-        <source>Custom</source>
-        <translation>Введите порт</translation>
-    </message>
-    <message>
         <location filename="../SynchroTimeApp/settingsdialog.cpp" line="339"/>
         <source>Invalid serial port baud rate! The setting is reset to default</source>
         <translation>Недопустимая скорость передачи данных последовательного порта! Параметр сброшен на значение по умолчанию</translation>

@@ -459,12 +459,6 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
         <translation>Einstellungen wurden nicht aktualisiert</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="266"/>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="316"/>
-        <source>Custom</source>
-        <translation>Namen angeben</translation>
-    </message>
-    <message>
         <location filename="../SynchroTimeApp/settingsdialog.cpp" line="339"/>
         <source>Invalid serial port baud rate! The setting is reset to default</source>
         <translation>Ungültige Baudrate der seriellen Schnittstelle! Die Einstellung wird auf Standard zurückgesetzt</translation>
