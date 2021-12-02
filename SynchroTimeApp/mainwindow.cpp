@@ -468,7 +468,7 @@ void MainWindow::disconnectRTC()
         m_pThread->wait( WAIT_FOR_STREAM );
     }
 
-    showStatusMessage( QObject::tr( "Disconnected" ) );
+    showStatusMessage( QObject::tr( "Disconnected from port %1" ).arg( this->m_pSettings->name ));
     m_detectDelayFlag = true;
 }
 
@@ -524,9 +524,9 @@ void MainWindow::help()
                                           "If everything is connected correctly, "
                                           "then you will get the current time of both clocks, "
                                           "the difference between the clocks in milliseconds "
-                                          "(with an accuracy of ±2 ms), the value written in the offset register "
+                                          "(with an accuracy of ±2 ms), the value written in the Aging register "
                                           "and the calculated time drift value in ppm. "
-                                          "If the offset register and time drift are zero, "
+                                          "If the Aging register and time drift are zero, "
                                           "then the DS3231 module has not yet been calibrated (see step 4).</li>"
                                           "<li>To set the exact time, use the <b>adjustment request</b>. "
                                           "The module clock will be synchronized with the computer time "
@@ -540,10 +540,10 @@ void MainWindow::help()
                                           "it is necessary that enough time has passed so that the calculated value "
                                           "of the clock drift is well distinguishable from the rounding error. "
                                           "The algorithm of the program will calculate the amount of drift of the clock time "
-                                          "and the correction factor, which will be written into the offset register. "
+                                          "and the correction factor, which will be written into the Aging register. "
                                           "The clock time will also be updated. If the calibration is successful, "
                                           "the current time, drift and correction factor will be displayed.</li>"
-                                          "<li>To reset the offset register to its default value and "
+                                          "<li>To reset the Aging register to its default value and "
                                           "clear the module's memory of calibration data, use the <b>reset request</b>.</li></ol>"
                                           "For more information follow the link to the <a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.") );
 }
@@ -595,8 +595,8 @@ void MainWindow::selectConsoleFont( void )
 void MainWindow::setRegisterSlot()
 {
     bool ok;
-    const float value = QInputDialog::getDouble( this, QObject::tr( "Offset register modification" ),
-                                         QObject::tr( "Enter a new value new value in the Offset Register:" ),
+    const float value = QInputDialog::getDouble( this, QObject::tr( "Aging register modification" ),
+                                         QObject::tr( "Enter a new value new value in the Aging Register:" ),
                                          0, -12.8, 12.7, 1, &ok );
     Q_ASSERT( m_pRTC != nullptr );
     if ( ok )

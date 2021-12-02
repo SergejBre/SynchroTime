@@ -241,7 +241,7 @@
     <string>Set Register</string>
    </property>
    <property name="toolTip">
-    <string>Set a new value to the RTC offset register</string>
+    <string>Set a new value to the RTC Aging register</string>
    </property>
   </action>
   <action name="actionPort_Setting">
