@@ -265,7 +265,7 @@ void RTC::handleError( QSerialPort::SerialPortError error )
     Q_ASSERT( m_pSerialPort != nullptr );
     if ( error == QSerialPort::ResourceError ) {
         emit portError( QObject::tr( "Port %1: " ).arg( m_pSerialPort->portName() ) + m_pSerialPort->errorString() );
-        m_pSerialPort->blockSignals( true );
+        m_pSerialPort->clearError();
     }
     else if ( error != QSerialPort::NoError )
     {
@@ -688,6 +688,7 @@ bool RTC::statusRequest()
         // Not received a response to the device status request.
         out << ESC_RED << QObject::tr( "Status Request failed. " ) << receivedData << ESC_RESET;
         emit portError( QObject::tr( "Not received a response to the device status request. Port %1: " ).arg( m_pSerialPort->portName() ) + m_pSerialPort->errorString() );
+        m_pSerialPort->clearError();
     }
     if ( !result ) emit getData( output );
     else if ( m_isDetectDelayEnabled ) emit getDelay( delay );
