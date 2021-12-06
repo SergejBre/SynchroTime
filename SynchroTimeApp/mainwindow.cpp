@@ -227,7 +227,7 @@ void MainWindow::readSettings()
     m_pSettings->baudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toUInt();
     m_pSettings->stringBaudRate = settings.value( QStringLiteral( "baudRate" ), 115200 ).toString();
     m_pSettings->stringDataBits = settings.value( QStringLiteral( "dataBits" ), 8 ).toString();
-    m_pSettings->stringParity = settings.value( QStringLiteral( "parity" ), QStringLiteral( "NoParity" )).toString();
+    m_pSettings->stringParity = settings.value( QStringLiteral( "parity" ), QStringLiteral( "No" )).toString();
     m_pSettings->stringStopBits = settings.value( QStringLiteral( "stopBits" ), 1 ).toString();
     m_pSettings->stringFlowControl = settings.value( QStringLiteral( "flowControl" ), QStringLiteral( "None" )).toString();
     settings.endGroup();
@@ -428,8 +428,8 @@ void MainWindow::connectRTC()
             showStatusMessage( QObject::tr( "Connected to %1 port, baud rate %2 / %3–%4–%5" )
                                .arg(m_pSettings->name)
                                .arg(m_pSettings->stringBaudRate)
-                               .arg(m_pSettings->dataBits)
-                               .arg(m_pSettings->parity == QSerialPort::NoParity ? 'N' : m_pSettings->parity == QSerialPort::EvenParity ? 'E' : m_pSettings->parity == QSerialPort::OddParity ? 'O' : m_pSettings->parity == QSerialPort::SpaceParity ? 'S' : m_pSettings->parity == QSerialPort::MarkParity ? 'M' : 'U')
+                               .arg(m_pSettings->stringDataBits)
+                               .arg(m_pSettings->stringParity)
                                .arg(m_pSettings->stringStopBits) );
             m_pRTC->infoFromDevice();
         }

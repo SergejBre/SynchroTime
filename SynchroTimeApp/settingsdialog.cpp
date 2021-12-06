@@ -270,11 +270,11 @@ void SettingsDialog::fillPortsParameters()
     ui->dataBitsBox->addItem( QStringLiteral( "7" ), QSerialPort::Data7 );
     ui->dataBitsBox->addItem( QStringLiteral( "8" ), QSerialPort::Data8 );
 
-    ui->parityBox->addItem( QStringLiteral( "NoParity" ), QSerialPort::NoParity );
-    ui->parityBox->addItem( QStringLiteral( "EvenParity" ), QSerialPort::EvenParity );
-    ui->parityBox->addItem( QStringLiteral( "OddParity" ), QSerialPort::OddParity );
-    ui->parityBox->addItem( QStringLiteral( "SpaceParity" ), QSerialPort::SpaceParity );
-    ui->parityBox->addItem( QStringLiteral( "MarkParity" ), QSerialPort::MarkParity );
+    ui->parityBox->addItem( QStringLiteral( "No" ), QSerialPort::NoParity );
+    ui->parityBox->addItem( QStringLiteral( "Even" ), QSerialPort::EvenParity );
+    ui->parityBox->addItem( QStringLiteral( "Odd" ), QSerialPort::OddParity );
+    ui->parityBox->addItem( QStringLiteral( "Space" ), QSerialPort::SpaceParity );
+    ui->parityBox->addItem( QStringLiteral( "Mark" ), QSerialPort::MarkParity );
 
     ui->stopBitsBox->addItem( QStringLiteral( "1" ), QSerialPort::OneStop );
 #ifdef Q_OS_WIN
