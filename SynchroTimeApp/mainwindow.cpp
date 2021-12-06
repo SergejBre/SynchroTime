@@ -429,8 +429,8 @@ void MainWindow::connectRTC()
                                .arg(m_pSettings->name)
                                .arg(m_pSettings->stringBaudRate)
                                .arg(m_pSettings->dataBits)
-                               .arg(m_pSettings->parity == QSerialPort::NoParity ? 'N' : m_pSettings->parity == QSerialPort::EvenParity ? 'E' : m_pSettings->parity == QSerialPort::OddParity ? 'O' : m_pSettings->parity == QSerialPort::SpaceParity ? 'S' : 'M')
-                               .arg(m_pSettings->stopBits) );
+                               .arg(m_pSettings->parity == QSerialPort::NoParity ? 'N' : m_pSettings->parity == QSerialPort::EvenParity ? 'E' : m_pSettings->parity == QSerialPort::OddParity ? 'O' : m_pSettings->parity == QSerialPort::SpaceParity ? 'S' : m_pSettings->parity == QSerialPort::MarkParity ? 'M' : 'U')
+                               .arg(m_pSettings->stringStopBits) );
             m_pRTC->infoFromDevice();
         }
         else {
