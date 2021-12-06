@@ -265,7 +265,7 @@ void RTC::handleError( QSerialPort::SerialPortError error )
     Q_ASSERT( m_pSerialPort != nullptr );
     if ( error == QSerialPort::ResourceError ) {
         emit portError( QObject::tr( "Port %1: " ).arg( m_pSerialPort->portName() ) + m_pSerialPort->errorString() );
-        m_pSerialPort->clearError();
+        m_pSerialPort->blockSignals( true );
     }
     else if ( error != QSerialPort::NoError )
     {
@@ -299,7 +299,7 @@ void RTC::handleError( QSerialPort::SerialPortError error )
             break;
         case QSerialPort::ReadError:
             out << QStringLiteral( "ReadError" );
-            m_pSerialPort->blockSignals( true );
+            m_pSerialPort->clear( QSerialPort::Input );
             break;
         case QSerialPort::ResourceError:
             out << QStringLiteral( "ResourceError" );
@@ -409,7 +409,7 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     bool ready = m_pSerialPort->waitForBytesWritten( WAIT_TIME );
 
     // Reading data from RTC.
-    if ( ready ) {
+    if ( ready && m_pSerialPort->clear( QSerialPort::Input ) ) {
         ready = m_pSerialPort->waitForReadyRead( WAIT_TIME );
         if ( !ready ) {
             qCritical() << QStringLiteral( "Failed to received a response from device: " ) + m_pSerialPort->errorString();
