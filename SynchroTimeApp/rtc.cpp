@@ -53,7 +53,7 @@ Q_DECLARE_METATYPE(QSerialPort::SerialPortError)
 //------------------------------------------------------------------------------
 
 //! \brief RTC::RTC
-//! Constructor for test purposes.
+//! The standalone Constructor for test purposes.
 //! \param portName of the type const QString. Name of the port in the system.
 //! \param parent of the type *QObject - pThread.
 //! \note There is no need to specify the parent.
@@ -174,6 +174,36 @@ bool RTC::isConnected() const
 bool RTC::isBusy() const
 {
     return m_isBusy;
+}
+
+//!
+//! \brief RTC::startConnectionCheckTimer
+//! Timer control function
+//!
+//! \return The number of milliseconds in the interval if the timer is active, otherwise zero.
+//!
+int RTC::startConnectionCheckTimer( void ) const
+{
+    if ( m_pTimerCheckConnection != nullptr && !m_pTimerCheckConnection->isActive() ) {
+        m_pTimerCheckConnection->start();
+        return m_pTimerCheckConnection->interval();
+    }
+    else return 0;
+}
+
+//!
+//! \brief RTC::stopConnectionCheckTimer
+//! Timer control function
+//!
+//! \return The number of milliseconds in the interval if the timer was active, otherwise zero.
+//!
+int RTC::stopConnectionCheckTimer() const
+{
+    if ( m_pTimerCheckConnection != nullptr && m_pTimerCheckConnection->isActive() ) {
+        m_pTimerCheckConnection->stop();
+        return m_pTimerCheckConnection->interval();
+    }
+    else return 0;
 }
 
 //!
@@ -409,7 +439,7 @@ const QByteArray RTC::sendRequest( Request request, quint8 size, const quint8 *c
     bool ready = m_pSerialPort->waitForBytesWritten( WAIT_TIME );
 
     // Reading data from RTC.
-    if ( ready && m_pSerialPort->clear( QSerialPort::Input ) ) {
+    if ( m_pSerialPort->clear( QSerialPort::Input ) && ready ) {
         ready = m_pSerialPort->waitForReadyRead( WAIT_TIME );
         if ( !ready ) {
             qCritical() << QStringLiteral( "Failed to received a response from device: " ) + m_pSerialPort->errorString();
@@ -662,36 +692,42 @@ bool RTC::statusRequest()
             result =  true;
             break;
         case StatusMessages::STATUS_ERROR:
-            out << QStringLiteral( "Processing the data failed" );
+            out << QObject::tr( "Processing of data failed" ) << endl;
             break;
         case StatusMessages::STATUS_INVALID_PARAMETER_:
-            out << QStringLiteral( "Received parameter(s) are invalid" );
+            out << QObject::tr( "Received parameters are invalid" ) << endl;
             break;
         case StatusMessages::STATUS_INPUT_DATA_TOLONG:
-            out << QStringLiteral( "Input data too long" );
+            out << QObject::tr( "Input data too long" );
             break;
         case StatusMessages::STATUS_NOT_SUPPORTED:
-            out << QStringLiteral( "The state of the device is undefined" );
+            out << QObject::tr( "State of device is undefined" ) << endl;
             break;
         case StatusMessages::STATUS_UNKNOWN_ERROR:
-            out << QStringLiteral( "Unexpected error" );
+            out << QObject::tr( "Unpredictable error" ) << endl;
             break;
         case StatusMessages::STATUS_DISCONNECTION:
-            out << QStringLiteral( "No confirmation of connection received" );
+            out << QObject::tr( "No connection to RTC device" ) << endl;
             break;
         default:
-            out << receivedData.toHex() << endl;
+            out << QObject::tr( "The received status is invalid: " ) << receivedData.toHex('\\') << endl;
         }
     }
     else
     {
         // Not received a response to the device status request.
-        out << ESC_RED << QObject::tr( "Status Request failed. " ) << receivedData << ESC_RESET;
+        out << QObject::tr( "Status Request failed. " ) << receivedData << endl;
         emit portError( QObject::tr( "Not received a response to the device status request. Port %1: " ).arg( m_pSerialPort->portName() ) + m_pSerialPort->errorString() );
         m_pSerialPort->clearError();
     }
-    if ( !result ) emit getData( output );
-    else if ( m_isDetectDelayEnabled ) emit getDelay( delay );
+    if ( !result ) {
+        if ( this->stopConnectionCheckTimer() )
+            out << QObject::tr( "Device status requests have been stopped" );
+        emit getData( ESC_RED + output + ESC_RESET );
+    }
+    else if ( m_isDetectDelayEnabled ) {
+        emit getDelay( delay );
+    }
     return result;
 }
 
