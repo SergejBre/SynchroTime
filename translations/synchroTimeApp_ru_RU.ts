@@ -464,105 +464,145 @@ Advice: terminate unnecessary applications!</source>
         <translation>Недопустимая скорость передачи данных последовательного порта! Параметр сброшен на значение по умолчанию</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="267"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="297"/>
         <source>Port %1: </source>
         <translation>Порт %1: </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="432"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="462"/>
         <source>Information from Device:</source>
         <translation>Информация от RTC устройства:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="490"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="520"/>
         <source>Request for the information failed. </source>
         <translation>Запрос информации от устройства не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="502"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="532"/>
         <source>Adjust clock Date/Time..</source>
         <translation>Настройка точного времени..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="526"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="556"/>
         <source>Request for adjustment </source>
         <translation>Запрос на установку точного времени </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="526"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="576"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="602"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="631"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="556"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="632"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="661"/>
         <source>completed successfully</source>
         <translation>успешно завершен</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="526"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="576"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="602"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="631"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="556"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="632"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="661"/>
         <source>failed</source>
         <translation>не удался</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="530"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="560"/>
         <source>Request for adjustment failed. </source>
         <translation>Запрос на установку точного времени не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="542"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="572"/>
         <source>Calibration the Oscillator..</source>
         <translation>Калибровка осциллятора..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="576"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
         <source>Request for calibration </source>
         <translation>Запрос на калибровку </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="580"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="610"/>
         <source>Request for calibration failed. </source>
         <translation>Запрос на калибровку не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="592"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="622"/>
         <source>Reset the calibration Parameters..</source>
         <translation>Сброс параметров калибровки..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="602"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="632"/>
         <source>Request for reset </source>
         <translation>Запрос на сброс параметров </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="636"/>
         <source>Request for reset failed. </source>
         <translation>Запрос на сброс параметров не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="617"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="647"/>
         <source>Set register Value to </source>
         <translation>Установить значение регистра равным </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="631"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="661"/>
         <source>Request for SetRegister </source>
         <translation>Запрос на перезапись регистра </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="635"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="665"/>
         <source>Request for SetRegister failed. </source>
         <translation>Запрос на перезапись регистра не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="689"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="695"/>
+        <source>Processing of data failed</source>
+        <translation>Ошибка обработки данных</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="698"/>
+        <source>Received parameters are invalid</source>
+        <translation>Получены недопустимые значения</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="701"/>
+        <source>Input data too long</source>
+        <translation>Входящие данные превышают лимит</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="704"/>
+        <source>State of device is undefined</source>
+        <translation>Состояние устройства не определено</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="707"/>
+        <source>Unpredictable error</source>
+        <translation>Непредсказуемая ошибка</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="710"/>
+        <source>No connection to RTC device</source>
+        <translation>Нет подключения к RTC устройству</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="713"/>
+        <source>The received status is invalid: </source>
+        <translation>Получен недопустимый статус: </translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="719"/>
         <source>Status Request failed. </source>
         <translation>Запрос статуса устройства не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="690"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="720"/>
         <source>Not received a response to the device status request. Port %1: </source>
         <translation>Не получен ответ на запрос о статусе устройства. Порт %1: </translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="725"/>
+        <source>Device status requests have been stopped</source>
+        <translation>Остановлены запросы статуса устройства</translation>
     </message>
 </context>
 <context>
