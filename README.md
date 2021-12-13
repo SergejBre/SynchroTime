@@ -36,10 +36,12 @@ ____
   * [Protocol table](#Protocol-table)
 * [System Requirements](#System-Requirements)
 * [Installing the CLI and GUI apps](#Installing-the-CLI-and-GUI-apps)
+  * [under the Linux](#under-the-Linux)
+  * [under the Windows](#under-the-Windows)
 * [Discussion](#Discussion)
 * [Documentation](#Documentation)
 * [Dependencies](#Dependencies)
-* [Compilation on Linux](#Compilation-on-Linux)
+* [Compilation under Linux](#Compilation-under-Linux)
 * [Issues](#Issues)
   * [Request Failed](#Request-Failed)
 * [License](#License)
@@ -306,6 +308,8 @@ The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes 
 ____
 
 ## Installing the CLI and GUI apps
+
+### under the Linux
 ![Platform (GNU/Linux](https://img.shields.io/badge/platform-GNU/Linux-blue.svg)
 
 * According to the working platform, download the appropriate archive with the app from [![Realise](https://img.shields.io/github/v/release/SergejBre/SynchroTime.svg)](https://github.com/SergejBre/SynchroTime/releases).
@@ -327,9 +331,9 @@ ____
  $ cd SynchroTime
  SynchroTime$ ./synchroTimeApp
 ``` 
-
+### under the Windows
 ![Platform Win32](https://img.shields.io/badge/platform-Win32-green.svg)
-* You need to unpack the downloaded archive `SynchroTime_Win32.7z` somewhere (eg., to the Desktop). Next, you need to create a shortcut to the executable file `synchroTimeApp.exe` in Explover. then in the folder that opens, right-click on the application shortcut and select “Properties”. Click the Compatibility tab. Here you can use the Use the compatibility troubleshooter button or do it yourself.
+* You need to unpack the downloaded archive `SynchroTime_Win32.7z somewhere (eg., to the Desktop). Next, you need to create a shortcut for the synchroTimeApp.exe executable file in Explover. Then, in the folder that opens, right-click the application's shortcut and select **Properties**. Click the **Compatibility** tab. Here you can use the Use the Compatibility Troubleshooter button or do it yourself (choose Windows 7 compatibility).
 
 [:arrow_up:Top](#Contents)
 ____
@@ -406,7 +410,7 @@ Dependencies on Qt libraries in case of dynamic application build:
 [:arrow_up:Top](#Contents)
 ____
 
-## Compilation on Linux
+## Compilation under Linux
 ![Platform (GNU/Linux](https://img.shields.io/badge/platform-GNU/Linux-blue.svg)
 
 * `sudo apt-get install build-essential qt5-default qt5-qmake git`
