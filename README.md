@@ -306,16 +306,30 @@ The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes 
 ____
 
 ## Installing the CLI and GUI apps
-* According to the working platform, download the appropriate archive with the app from <a href="https://github.com/SergejBre/SynchroTime/releases"><img alt="releases page" src="https://img.shields.io/github/v/release/SergejBre/SynchroTime"/></a>.
-* Unpack it to your home directory with write access, as the application retains its settings.
+![Platform (GNU/Linux](https://img.shields.io/badge/platform-GNU/Linux-blue.svg)
+
+* According to the working platform, download the appropriate archive with the app from [![Realise](https://img.shields.io/github/v/release/SergejBre/SynchroTime.svg)](https://github.com/SergejBre/SynchroTime/releases).
+* Unpack it to your home directory with write access, as the application retains its settings
 ```
- $ tar -xvf SynchroTime_x64_linux_v1.1.0-beta.tar.xz
+ # for CLI app
+ $ tar -xvf SynchroTime_x86_64_linux_v1.1.0-beta.tar.xz -C ~/
+ 
+ # for GUI app
+ $ tar -xvf SynchroTime_x86_64_linux.tar.xz -C ~/
 ``` 
-* Run the application according to the instructions in the section [Using the CLI app](#Using-the-CLI-app) or [Using the GUI app](#Using-the-GUI-app).
+* Run the application according to the instructions in the section [Using the CLI app](#Using-the-CLI-app) or [Using the GUI app](#Using-the-GUI-app)
 ```
+ # for CLI app
  $ cd SynchroTime
- SynchroTime$ ./synchroTime -h
+ SynchroTime$ ./synchroTime
+
+ # for GUI app
+ $ cd SynchroTime
+ SynchroTime$ ./synchroTimeApp
 ``` 
+
+![Platform Win32](https://img.shields.io/badge/platform-Win32-green.svg)
+* You need to unpack the downloaded archive `SynchroTime_Win32.7z` somewhere (eg., to the Desktop). Next, you need to create a shortcut to the executable file `synchroTimeApp.exe` in Explover. then in the folder that opens, right-click on the application shortcut and select “Properties”. Click the Compatibility tab. Here you can use the Use the compatibility troubleshooter button or do it yourself.
 
 [:arrow_up:Top](#Contents)
 ____
@@ -349,7 +363,9 @@ A graph showing the approximate dependence of the Frequency Deviation on the Agi
 ____
 
 ## Documentation
-For the detailed API documentation, see [![Docs](https://img.shields.io/badge/docs-Doxygen-blue.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
+[![Docs](https://img.shields.io/badge/docs-Doxygen-blue.svg)](https://sergejbre.github.io/SynchroTime/doc/html/index.html)
+
+For the detailed API documentation, see [link](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
 
 [:arrow_up:Top](#Contents)
 ____
@@ -391,6 +407,8 @@ Dependencies on Qt libraries in case of dynamic application build:
 ____
 
 ## Compilation on Linux
+![Platform (GNU/Linux](https://img.shields.io/badge/platform-GNU/Linux-blue.svg)
+
 * `sudo apt-get install build-essential qt5-default qt5-qmake git`
 * `git clone https://github.com/SergejBre/SynchroTime.git`
 * `cd ./SynchroTime`
@@ -401,6 +419,7 @@ ____
 ____
 
 ## Issues
+[![Issues](https://img.shields.io/github/issues/SergejBre/SynchroTime.svg)](https://github.com/SergejBre/SynchroTime/issues)
 
 ### Request Failed
 If an above-mentioned error message occurs during communication with the microcontroller, the following [report](https://github.com/SergejBre/SynchroTime/issues/1#issuecomment-907040118) may be helpful.
@@ -409,6 +428,6 @@ If an above-mentioned error message occurs during communication with the microco
 ____
 
 ## License
-SynchroTime is licensed under [![MIT](https://img.shields.io/github/license/SergejBre/SynchroTime.svg)](LICENSE)
+[![MIT](https://img.shields.io/github/license/SergejBre/SynchroTime.svg)](LICENSE)
 
 [:arrow_up:Top](#Contents)
