@@ -18,6 +18,9 @@
 	<a href="https://sergejbre.github.io/SynchroTime/doc/html/index.html">
 		<img alt="Docs Doxygen" src="https://img.shields.io/badge/docs-Doxygen-blue"/>
 	</a>
+	<a href="https://github.com/SergejBre/SynchroTime/blob/master/LICENSE">
+		<img alt="License" src="https://img.shields.io/github/license/SergejBre/SynchroTime"/>
+	</a>
 </p>
 
 ![PROJECT_IMAGE](./images/guiApp_About.png)
@@ -69,7 +72,7 @@ ____
 
 ![synchroTime -h](./images/consoleApp_About.png)
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Using the CLI app
@@ -173,7 +176,7 @@ ____
  Request for SetRegister completed successfully. 
 ```
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Using the GUI app
@@ -182,7 +185,7 @@ ____
 All functionality is similar to the [CLI application](#Using-the-CLI-app) (see figure above). As an extra, there is the option of selecting the numerous Serial Port settings and three features: **Status Control**, **Detect Delay** and **Correction Factor**. The **Correction Factor** is described in detail in the [Discussion](#Discussion) part. **Status Control** is an additional functionality to monitor the connection with a device with a **Request Rate** (from 500 to 10000 ms). The **Detect Delay** feature allows you to display the approximate delay in the exchange of information with the device. For the exchange rate of 115200 baud and the exchange of three bytes with the Device, the delay usually should not exceed 3-4ms, i.e. one byte per ms (depends mainly on the driver used and the HW UART device). Both features can be deactivated.
 ![SERIAL_PORT_SETTINGS](./images/serial_port_settings.png)
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Specification
@@ -205,7 +208,7 @@ ____
 
 (*)⚠️ Please note that the reported accuracy depends on the specifications of your platform; not all systems are capable of providing 1 millisecond accuracy!
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Description of the request protocol
@@ -235,7 +238,7 @@ where:
 |Reset          |`@r`|`[CRC]`             |2+1   |`<successful/failed> [CRC]`                    |
 |Status         |`@t`|`[CRC]`             |2+1   |`<successful/failed> [CRC]`                    |
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## System Requirements
@@ -304,7 +307,7 @@ Name/IP Address            NP  NR  Span  Frequency  Freq Skew  Offset  Std Dev
 ### windows time service
 The OS Windows has its own specifics. Windows `W32tm` Time Service synchronizes time once a week, which is not enough for fine tuning and calibration. The optimal solution for OS Windows would be to install a new NTP time synchronization system service to replace the default W32Time service. As an example, you can use one of the advanced projects: [NTP for Windows](https://www.meinbergglobal.com/english/sw/ntp.htm).
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Installing the CLI and GUI apps
@@ -335,7 +338,7 @@ ____
 ![Platform Win32](https://img.shields.io/badge/platform-Win32-green.svg)
 * You need to unpack the downloaded archive `SynchroTime_Win32.7z somewhere (eg., to the Desktop). Next, you need to create a shortcut for the synchroTimeApp.exe executable file in Explover. Then, in the folder that opens, right-click the application's shortcut and select **Properties**. Click the **Compatibility** tab. Here you can use the Use the Compatibility Troubleshooter button or do it yourself (choose Windows 7 compatibility).
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Discussion
@@ -363,7 +366,7 @@ A graph showing the approximate dependence of the Frequency Deviation on the Agi
 
 ![Linear approximation](./images/linear_approximation.png)
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Documentation
@@ -371,7 +374,7 @@ ____
 
 For the detailed API documentation, see [link](https://sergejbre.github.io/SynchroTime/doc/html/index.html). Documentation is produced by doxygen.
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Dependencies
@@ -407,7 +410,7 @@ Dependencies on Qt libraries in case of dynamic application build:
 	libicudata.so.54 => ./lib/libicudata.so.54
 ``` 
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Compilation under Linux
@@ -419,7 +422,7 @@ ____
 * `QT_SELECT=5 qmake SynchroTime.pro`
 * `make && make clean`
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## Issues
@@ -428,10 +431,8 @@ ____
 ### Request Failed
 If an above-mentioned error message occurs during communication with the microcontroller, the following [report](https://github.com/SergejBre/SynchroTime/issues/1#issuecomment-907040118) may be helpful.
 
-[:arrow_up:Top](#Contents)
+[![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
 
 ## License
 [![MIT](https://img.shields.io/github/license/SergejBre/SynchroTime.svg)](LICENSE)
-
-[:arrow_up:Top](#Contents)
