@@ -212,7 +212,7 @@ ____
 ____
 
 ## Description of the request protocol
-The computer is a client. The client is always the first to send a request. Upon receipt of each request, the microprocessor must send back the appropriate response.
+The PC always acts as a client. The client is usually the first to send a request. Upon receipt of any request, the microcontroller (MC) must send a response corresponding to the request, even in the event of errors in data processing.
 
 Each request is as follows: `<@ req> <local time> or <value> [CRC]`,
 where:
