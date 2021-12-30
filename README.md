@@ -189,9 +189,9 @@ All functionality is similar to the [CLI application](#Using-the-CLI-app) (see f
 ____
 
 ## Specification
-* The application allows you to adjust the time with an accuracy of ±1 ms (guaranteed only for the Linux OS) (*).
+* The application allows you to adjust the time with an accuracy of ±1 ms (guaranteed only for the Linux OS) (\*).
 
-* The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms (guaranteed only for the Linux OS) (*).
+* The application allows you to control the time difference between the DS3231 module and the computer with an accuracy of ±2 ms (guaranteed only for the Linux OS) (\*).
 
 * The application allows you to calibrate the module clock within the range from -12.8 to +12.7 ppm.
 
@@ -206,7 +206,7 @@ ____
 * The suggested connection to the DS3231 module is according to the Circuit below.
 ![CIRCUIT](images/Steckplatine_DS3231.png)
 
-(*)⚠️ Please note that the reported accuracy depends on the specifications of your platform; not all systems are capable of providing 1 millisecond accuracy!
+(\*)⚠️ Please note that the reported accuracy depends on the specifications of your platform; not all systems are capable of providing 1 millisecond accuracy!
 
 [![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
@@ -380,14 +380,14 @@ ____
 ## Dependencies
 | Name         | Version                           | Comment                                         |
 |--------------|-----------------------------------|-------------------------------------------------|
-| Qt lib 32bit | ⩾ 5.5.1/or ⩾ 5.12.11 for Win32/pe | Didn't test with older versions, but it may work|
-| Qt lib 64bit | ⩾ 5.12.11                         | Didn't test with older versions, but it may work|
+| Qt lib 32bit | ⩾ 5.5.1 or 5.12.12 for Win32/pe  | Didn't test with older versions, but it may work|
+| Qt lib 64bit | ⩾ 5.6.3                          | Didn't test with older versions, but it may work|
 | C++ compiler | supporting C++11 (i.e. GCC-7.5.0) | resp MinGW32-7.3.0 for Win32/pe release         |
-| Arduino IDE  | ⩾ 1.8.13                          | !Replace compilation flags from -Os to -O2 (*)  |
+| Arduino IDE  | ⩾ 1.8.13                          | !Replace compilation flags from -Os to -O2 (\*)  |
 | RTC library  | ⩾ 1.13.0                          | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
 | QCustomPlot  | ⩾ 2.1.0                           | [QCustomPlot](https://gitlab.com/DerManu/QCustomPlot) |
 
-(*) To do this, you need to edit the `platform.txt` file, which is located in the following path `[directory of the installed Arduino IDE]/hardware/arduino/avr/platform.txt`, find and edit these lines:
+(\*) To do this, you need to edit the `platform.txt` file, which is located in the following path `[directory of the installed Arduino IDE]/hardware/arduino/avr/platform.txt`, find and edit these lines:
 ```
 ...
 # compiler.c.flags=-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects
