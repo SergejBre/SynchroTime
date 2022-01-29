@@ -32,27 +32,27 @@ Connecting DS3231 MINI module to arduino board:
 #include <Wire.h>
 #include "RTClib.h"
 
-#define TIME_ZONE 2           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
+#define TIME_ZONE 1           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 #define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
 #define STARTBYTE 0x40        // The starting byte of the data set from the communication protocol.
 #define DS3231_ADDRESS 0x68   // I2C address for DS3231
-#define DS3231_AGINGREG 0x10  // Aging offset register address
+#define DS3231_AGINGREG 0x10  // Aging register address
 #define DS3231_TEMPERATUREREG 0x11 // Temperature register (high byte - low byte is at 0x12), 10-bit temperature value
 #define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 #define MIN_TIME_SPAN 100000  // The minimum time required for a stable calculation of the frequency drift [in secs]. Default value 200000.
-typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG } task_t;
-typedef struct time_s {
+enum task_t : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG };
+struct time_t {
   uint32_t utc;
   uint16_t milliSecs;
-} time_t;
+};
 
 RTC_DS3231 rtc;
 static uint8_t buff[4];  // temporary buffer
 static uint8_t byteBuffer[18];
 
 // Function Prototypes
-int8_t readFromOffsetReg( void ); // read from offset register
-bool writeToOffsetReg( const int8_t value ); // write to offset register
+int8_t readFromAgingReg( void ); // read from Aging register
+bool writeToAgingReg( const int8_t value ); // write to Aging register
 static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict__ srcp, uint16_t len );
 inline void intToHex( uint8_t* const buff, const uint32_t value );
 inline void floatToHex( uint8_t* const buff, const float value );
@@ -84,14 +84,14 @@ void setup () {
   if ( rtc.lostPower() ) {
     // If the RTC have lost power it will sets the RTC to the date & time this sketch was compiled in the following line
     const uint32_t newtime = DateTime( F(__DATE__), F(__TIME__) ).unixtime();
-    // offset value from -128 to +127, default is 0
-    uint8_t offset_val = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+    // Aging value from -128 to +127, default is 0
+    uint8_t aging_val = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
     rtc.adjust( newtime );
     intToHex( buff, newtime - TIME_ZONE * 3600 ); // write time to buffer
     i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
 
-    if ( offset_val != 0xFF ) {
-        writeToOffsetReg( int8_t( offset_val ) );
+    if ( aging_val != 0xFF ) {
+        writeToAgingReg( int8_t( aging_val ) );
     }
   }
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
@@ -138,7 +138,7 @@ void loop () {
         numberOfBytes = Serial.readBytes( byteBuffer, 1 );
         task = TASK_RESET;
         break;
-      case 's':                     // set offset reg. request
+      case 's':                     // set Aging reg. request
         numberOfBytes = Serial.readBytes( byteBuffer, 5 );
         task = TASK_SETREG;
         break;
@@ -162,7 +162,7 @@ void loop () {
       sum += sumOfBytes( byteBuffer, sizeof( ref ));
     }
     else if ( numberOfBytes > sizeof( drift_in_ppm ) ) {
-      // reading new value for the offset reg. in the form [float] = 4 bytes
+      // reading new value for the Aging reg. in the form [float] = 4 bytes
       
       memcpy_byte( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ));
       crc = byteBuffer[ sizeof( drift_in_ppm )];
@@ -197,7 +197,7 @@ void loop () {
     case TASK_INFO:                 // information
       memcpy_byte( byteBuffer + byteCounter, &t, sizeof( t ) );  // write time to buffer bytes
       byteCounter += sizeof( t );
-      byteBuffer[byteCounter] = readFromOffsetReg();  // reading offset value
+      byteBuffer[byteCounter] = readFromAgingReg();  // reading Aging value
       byteCounter++;
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
       floatToHex( byteBuffer + byteCounter, drift_in_ppm );
@@ -208,7 +208,7 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_CALIBR:               // calibrating
-      byteBuffer[byteCounter] = readFromOffsetReg();  // read last value from the offset register
+      byteBuffer[byteCounter] = readFromAgingReg();  // read last value from the Aging register
       byteCounter++;
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
       floatToHex( byteBuffer + byteCounter, drift_in_ppm ); // read drift as float value
@@ -216,19 +216,19 @@ void loop () {
       drift_val = roundUpDrift( drift_in_ppm );
       if ( drift_val != 0 ) {
         ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, drift_val );  // write drift value to EEPROM of AT24C256
-        ok &= writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
+        ok &= writeToAgingReg( drift_val );  // write drift value to Aging Reg. of DS3231
         if ( ok ) {
           oneHz();                   // reset milliseconds
           adjustTime( ref.utc );     // adjust time
           intToHex( buff, ref.utc ); // write time to buffer
           ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
         }
-        byteBuffer[byteCounter] = drift_val;  // read new value from the offset register
+        byteBuffer[byteCounter] = drift_val;  // read new value from the Aging register
         byteCounter++;
       }
       else {
         ok = true;
-        byteBuffer[byteCounter] = byteBuffer[1];  // read value from the offset register
+        byteBuffer[byteCounter] = byteBuffer[1];  // read value from the Aging register
         byteCounter++;
       }
       byteBuffer[byteCounter] = ok;
@@ -236,7 +236,7 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_RESET:                // reset
-      ok = writeToOffsetReg( 0 );
+      ok = writeToAgingReg( 0 );
       if ( ok ) {
         uint8_t buff5b[5];
         for (numberOfBytes = 0; numberOfBytes < sizeof(buff5b); numberOfBytes++ ) buff5b[numberOfBytes] = 0xFF;
@@ -250,7 +250,7 @@ void loop () {
       drift_in_ppm *= 10;
       drift_val = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
       ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, drift_val );  // write drift value to EEPROM of AT24C256
-      ok &= writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
+      ok &= writeToAgingReg( drift_val );  // write drift value to Aging Reg. of DS3231
       byteBuffer[byteCounter] = ok;
       byteCounter++;
       task = TASK_IDLE;
@@ -275,19 +275,19 @@ void loop () {
   }
 }
 
-int8_t readFromOffsetReg( void ) {
+int8_t readFromAgingReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the aging register address
   Wire.endTransmission();
-  int8_t offset_val = 0;
-  Wire.requestFrom( uint8_t( DS3231_ADDRESS ), uint8_t(1) ); // Read a byte from register
-  offset_val = int8_t( Wire.read() );
-  return offset_val;
+  int8_t aging_val = 0;
+  Wire.requestFrom( uint8_t( DS3231_ADDRESS ), 1U ); // Read a byte from register
+  aging_val = int8_t( Wire.read() );
+  return aging_val;
 }
 
-bool writeToOffsetReg( const int8_t value ) {
+bool writeToAgingReg( const int8_t value ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the aging register address
   Wire.write( value ); // Write value to register
   return ( Wire.endTransmission() == 0 );
 }
@@ -320,10 +320,10 @@ static int8_t roundUpDrift( float drift_in_ppm ) {
   if ( offset == 0 ) {
     return offset;  // if offset is 0, nothing needs to be done
   }
-  const int8_t last_offset_reg = readFromOffsetReg();
-  const int8_t last_offset_ee = (int8_t)i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
-  if ( last_offset_reg == last_offset_ee ) {
-    drift_in_ppm += last_offset_reg;
+  const int8_t last_aging_reg = readFromAgingReg();
+  const int8_t last_aging_ee = (int8_t)i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
+  if ( last_aging_reg == last_aging_ee ) {
+    drift_in_ppm += last_aging_reg;
     offset = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
   }
   return (offset > 127) ? 127 : (offset < -128) ? -128 : offset;
@@ -364,8 +364,8 @@ static uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength )
 uint8_t i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
   uint8_t rdata = 0xFF;
   Wire.beginTransmission( deviceAddress );
-  Wire.write( (int)( eeAddress >> 8 ) ); // MSB
-  Wire.write( (int)( eeAddress & 0xFF)); // LSB
+  Wire.write( int( eeAddress >> 8 ) ); // MSB
+  Wire.write( int( eeAddress & 0xFF)); // LSB
   Wire.endTransmission();
   Wire.requestFrom( deviceAddress, 1 );
   if ( Wire.available() ) rdata = Wire.read();
@@ -374,8 +374,8 @@ uint8_t i2c_eeprom_read_byte( int deviceAddress, unsigned int eeAddress ) {
 
 bool i2c_eeprom_read_buffer( int deviceAddress, unsigned int eeAddress, uint8_t* const buffer, int length ) {
   Wire.beginTransmission( deviceAddress );
-  Wire.write( (int)( eeAddress >> 8 ) ); // MSB
-  Wire.write( (int)( eeAddress & 0xFF ) ); // LSB
+  Wire.write( int( eeAddress >> 8 ) ); // MSB
+  Wire.write( int( eeAddress & 0xFF ) ); // LSB
   bool ret_val = ( Wire.endTransmission() == 0 );
   Wire.requestFrom( deviceAddress, length );
   int i;
@@ -390,8 +390,8 @@ bool i2c_eeprom_read_buffer( int deviceAddress, unsigned int eeAddress, uint8_t*
 bool i2c_eeprom_write_byte( int deviceAddress, unsigned int eeAddress, uint8_t data ) {
   int rdata = data;
   Wire.beginTransmission( deviceAddress );
-  Wire.write( (int)( eeAddress >> 8 ) ); // MSB
-  Wire.write( (int)( eeAddress & 0xFF)); // LSB
+  Wire.write( int( eeAddress >> 8 ) ); // MSB
+  Wire.write( int( eeAddress & 0xFF)); // LSB
   Wire.write( rdata );
   return ( Wire.endTransmission() == 0 );
 }
