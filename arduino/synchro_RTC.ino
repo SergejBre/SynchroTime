@@ -29,6 +29,8 @@ Connecting DS3231 MINI module to arduino board:
   - SQW should be connected to INTERRUPT_PIN
   - INTERRUPT_PIN needs to work with interrupts
 */
+#include <avr/io.h>
+#include <avr/interrupt.h>
 #include <Wire.h>
 #include "RTClib.h"
 
@@ -95,7 +97,10 @@ void setup () {
     }
   }
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
-  attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
+  EICRA &= ~( bit(ISC00) | bit(ISC01) ); // Reset ISC00
+  EICRA |= bit(ISC01); // Set ISC01 - tracks FALLING at INT0
+  EIMSK |= bit(INT0); // Enable interrupt INT0
+
   Serial.print( F( "Boot.. Ok, T[°С]=" ));
   const int16_t temp = read_Temperature();
   Serial.print( float( temp >> 8 ) + ( (temp & 0xFF) >> 6 ) * 0.25f );
@@ -103,8 +108,12 @@ void setup () {
 
 volatile uint32_t tickCounter;
 
-void oneHz( void ) {
-  tickCounter = millis();
+ISR( INT0_vect ) {
+  tickCounter = micros();
+}
+
+inline void reset( void ) {
+  tickCounter = micros();
 }
 
 void loop () {
@@ -186,7 +195,7 @@ void loop () {
   switch ( task )
   {
     case TASK_ADJUST:               // adjust time
-      oneHz();                   // reset milliseconds
+      reset();                   // reset milliseconds
       adjustTime( ref.utc );
       intToHex( buff, ref.utc ); // write time to buffer
       ok = i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
@@ -218,7 +227,7 @@ void loop () {
         ok = i2c_eeprom_write_byte( EEPROM_ADDRESS, 4U, drift_val );  // write drift value to EEPROM of AT24C256
         ok &= writeToAgingReg( drift_val );  // write drift value to Aging Reg. of DS3231
         if ( ok ) {
-          oneHz();                   // reset milliseconds
+          reset();                   // reset milliseconds
           adjustTime( ref.utc );     // adjust time
           intToHex( buff, ref.utc ); // write time to buffer
           ok &= i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
@@ -376,7 +385,7 @@ bool i2c_eeprom_read_buffer( int deviceAddress, unsigned int eeAddress, uint8_t*
   Wire.beginTransmission( deviceAddress );
   Wire.write( int( eeAddress >> 8 ) ); // MSB
   Wire.write( int( eeAddress & 0xFF ) ); // LSB
-  bool ret_val = ( Wire.endTransmission() == 0 );
+  const bool ret_val = ( Wire.endTransmission() == 0 );
   Wire.requestFrom( deviceAddress, length );
   int i;
   for ( i = 0; i < length; i++ ) {
@@ -413,7 +422,7 @@ bool i2c_eeprom_write_page( int deviceAddress, unsigned int eeAddressPage, const
 
 static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict__ srcp, uint16_t len ) {
     uint8_t *dst = ( uint8_t *) dstp;
-    uint8_t *src = ( uint8_t *) srcp;
+    const uint8_t *src = ( uint8_t *) srcp;
     uint16_t idx;
     for( idx = 0U; idx < len; idx++ )
         *(dst++) = *(src++);
@@ -433,9 +442,10 @@ static int16_t read_Temperature() {
 
 static time_t getTime() {
   time_t t;
-  while ( millis() - tickCounter > 998 );
-  t.milliSecs = (millis() - tickCounter);// % 1000;
-  DateTime now = rtc.now();       // reading clock time
-  t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
+  while ( micros() - tickCounter > 999980UL );
+  const uint32_t difference = micros() - tickCounter;
+  t.milliSecs = (difference + difference % 1000U)/ 1000U;
+  DateTime dt = rtc.now();       // reading clock time
+  t.utc = getUTCtime( dt.unixtime() ); // reading clock time as UTC-time
   return t;
 }
