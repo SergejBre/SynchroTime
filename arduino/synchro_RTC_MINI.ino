@@ -29,6 +29,8 @@ Connecting DS3231 MINI module to arduino board:
   - SQW should be connected to INTERRUPT_PIN
   - INTERRUPT_PIN needs to work with interrupts
 */
+#include <avr/io.h>
+#include <avr/interrupt.h>
 #include <Wire.h>
 #include "RTClib.h"
 
@@ -37,22 +39,22 @@ Connecting DS3231 MINI module to arduino board:
 #define STARTBYTE 0x40        // The starting byte of the data set from the communication protocol.
 #define DS3231_ADDRESS 0x68   // I2C address for DS3231
 #define DS3231_ALARM1 0x07    // Alarm 1 register
-#define DS3231_AGINGREG 0x10  // Aging offset register address
+#define DS3231_AGINGREG 0x10  // Aging register address
 #define DS3231_TEMPERATUREREG 0x11 // Temperature register (high byte - low byte is at 0x12), 10-bit temperature value
 #define MIN_TIME_SPAN 100000  // The minimum time required for a stable calculation of the frequency drift [in secs]. Default value 200000.
-typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG } task_t;
-typedef struct time_s {
+enum task_t : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG };
+struct time_t {
   uint32_t utc;
   uint16_t milliSecs;
-} time_t;
+};
 
 RTC_DS3231 rtc;
 static uint8_t buff[4];  // temporary buffer
 static uint8_t byteBuffer[18];
 
 // Function Prototypes
-int8_t readFromOffsetReg( void ); // read from offset register
-bool writeToOffsetReg( const int8_t value ); // write to offset register
+int8_t readFromAgingReg( void ); // read from Aging register
+bool writeToAgingReg( const int8_t value ); // write to Aging register
 static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict__ srcp, uint16_t len );
 inline void intToHex( uint8_t* const buff, const uint32_t value );
 inline void floatToHex( uint8_t* const buff, const float value );
@@ -100,7 +102,10 @@ void setup () {
   rtc.disableAlarm(2);
 
   pinMode( INTERRUPT_PIN, INPUT_PULLUP );
-  attachInterrupt( digitalPinToInterrupt( INTERRUPT_PIN ), oneHz, FALLING );
+  EICRA &= ~( bit(ISC00) | bit(ISC01) ); // Reset ISC00
+  EICRA |= bit(ISC01); // Set ISC01 - tracks FALLING at INT0
+  EIMSK |= bit(INT0); // Enable interrupt INT0
+
   Serial.print( F( "Boot.. Ok, T[°С]=" ));
   const int16_t temp = read_Temperature();
   Serial.print( float( temp >> 8 ) + ( (temp & 0xFF) >> 6 ) * 0.25f );
@@ -108,8 +113,12 @@ void setup () {
 
 volatile uint32_t tickCounter;
 
-void oneHz( void ) {
-  tickCounter = millis();
+ISR( INT0_vect ) {
+  tickCounter = micros();
+}
+
+inline void reset( void ) {
+  tickCounter = micros();
 }
 
 void loop () {
@@ -143,7 +152,7 @@ void loop () {
         numberOfBytes = Serial.readBytes( byteBuffer, 1 );
         task = TASK_RESET;
         break;
-      case 's':                     // set offset reg. request
+      case 's':                     // set Aging reg. request
         numberOfBytes = Serial.readBytes( byteBuffer, 5 );
         task = TASK_SETREG;
         break;
@@ -167,7 +176,7 @@ void loop () {
       sum += sumOfBytes( byteBuffer, sizeof( ref ));
     }
     else if ( numberOfBytes > sizeof( drift_in_ppm ) ) {
-      // reading new value for the offset reg. in the form [float] = 4 bytes
+      // reading new value for the Aging reg. in the form [float] = 4 bytes
       
       memcpy_byte( &drift_in_ppm, byteBuffer, sizeof( drift_in_ppm ));
       crc = byteBuffer[ sizeof( drift_in_ppm )];
@@ -191,7 +200,7 @@ void loop () {
   switch ( task )
   {
     case TASK_ADJUST:               // adjust time
-      oneHz();                   // reset milliseconds
+      reset();                   // reset milliseconds
       adjustTime( ref.utc );
       ok = i2c_write_value( ref.utc );   // write the time to the Alarm1 Registers
       byteBuffer[byteCounter] = ok;
@@ -201,7 +210,7 @@ void loop () {
     case TASK_INFO:                 // information
       memcpy_byte( byteBuffer + byteCounter, &t, sizeof( t ) );  // write time to buffer bytes
       byteCounter += sizeof( t );
-      byteBuffer[byteCounter] = readFromOffsetReg();  // reading offset value
+      byteBuffer[byteCounter] = readFromAgingReg();  // reading Aging value
       byteCounter++;
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
       floatToHex( byteBuffer + byteCounter, drift_in_ppm );
@@ -212,25 +221,25 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_CALIBR:               // calibrating
-      byteBuffer[byteCounter] = readFromOffsetReg();  // read last value from the offset register
+      byteBuffer[byteCounter] = readFromAgingReg();  // read last value from the Aging register
       byteCounter++;
       drift_in_ppm = calculateDrift_ppm( &ref, &t );  // calculate drift time
       floatToHex( byteBuffer + byteCounter, drift_in_ppm ); // read drift as float value
       byteCounter += sizeof(drift_in_ppm);
       drift_val = roundUpDrift( drift_in_ppm );
       if ( drift_val != 0 ) {
-        ok = writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
+        ok = writeToAgingReg( drift_val );  // write drift value to Aging Reg. of DS3231
         if ( ok ) {
-          oneHz();                   // reset milliseconds
+          reset();                   // reset milliseconds
           adjustTime( ref.utc ); // adjust time
           ok &= i2c_write_value( ref.utc );   // write last_set_time to the Alarm1 Registers
         }
-        byteBuffer[byteCounter] = drift_val;  // read new value from the offset register
+        byteBuffer[byteCounter] = drift_val;  // read new value from the Aging register
         byteCounter++;
       }
       else {
         ok = true;
-        byteBuffer[byteCounter] = byteBuffer[1];  // read value from the offset register
+        byteBuffer[byteCounter] = byteBuffer[1];  // read value from the Aging register
         byteCounter++;
       }
       byteBuffer[byteCounter] = ok;
@@ -238,7 +247,7 @@ void loop () {
       task = TASK_IDLE;
       break;
     case TASK_RESET:                // reset
-      ok = writeToOffsetReg( 0 );
+      ok = writeToAgingReg( 0 );
       if ( ok ) {
         ok &= i2c_write_value( 0xFFFFFFFF );   // write 0xFFFFFFFF to the Alarm1 Registers
       }
@@ -249,7 +258,7 @@ void loop () {
     case TASK_SETREG:               // set register
       drift_in_ppm *= 10;
       drift_val = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
-      ok = writeToOffsetReg( drift_val );  // write drift value to Offset Reg. of DS3231
+      ok = writeToAgingReg( drift_val );  // write drift value to Aging Reg. of DS3231
       byteBuffer[byteCounter] = ok;
       byteCounter++;
       task = TASK_IDLE;
@@ -274,19 +283,19 @@ void loop () {
   }
 }
 
-int8_t readFromOffsetReg( void ) {
+int8_t readFromAgingReg( void ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the aging register address
   Wire.endTransmission();
-  int8_t offset_val = 0;
-  Wire.requestFrom( uint8_t( DS3231_ADDRESS ), uint8_t(1) ); // Read a byte from register
-  offset_val = int8_t( Wire.read() );
-  return offset_val;
+  int8_t aging_val = 0;
+  Wire.requestFrom( uint8_t( DS3231_ADDRESS ), 1U ); // Read a byte from register
+  aging_val = int8_t( Wire.read() );
+  return aging_val;
 }
 
-bool writeToOffsetReg( const int8_t value ) {
+bool writeToAgingReg( const int8_t value ) {
   Wire.beginTransmission( DS3231_ADDRESS ); // Sets the DS3231 RTC module address
-  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the offset register address
+  Wire.write( uint8_t( DS3231_AGINGREG ) ); // sets the aging register address
   Wire.write( value ); // Write value to register
   return ( Wire.endTransmission() == 0 );
 }
@@ -319,8 +328,8 @@ static int8_t roundUpDrift( float drift_in_ppm ) {
   if ( offset == 0 ) {
     return offset;  // if offset is 0, nothing needs to be done
   }
-  const int8_t last_offset_reg = readFromOffsetReg();
-  drift_in_ppm += last_offset_reg;
+  const int8_t last_aging_reg = readFromAgingReg();
+  drift_in_ppm += last_aging_reg;
   offset = (drift_in_ppm > .0f) ? ( drift_in_ppm + 0.5f ) : ( drift_in_ppm - 0.5f );
   return (offset > 127) ? 127 : (offset < -128) ? -128 : offset;
 }
@@ -386,7 +395,7 @@ static bool i2c_read_buffer( uint8_t* const buffer, const uint8_t length ) {
 
 static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict__ srcp, uint16_t len ) {
     uint8_t *dst = ( uint8_t *) dstp;
-    uint8_t *src = ( uint8_t *) srcp;
+    const uint8_t *src = ( uint8_t *) srcp;
     uint16_t idx;
     for( idx = 0U; idx < len; idx++ )
         *(dst++) = *(src++);
@@ -406,9 +415,10 @@ static int16_t read_Temperature() {
 
 static time_t getTime() {
   time_t t;
-  while ( millis() - tickCounter > 998 );
-  t.milliSecs = (millis() - tickCounter);// % 1000;
-  DateTime now = rtc.now();       // reading clock time
-  t.utc = getUTCtime( now.unixtime() ); // reading clock time as UTC-time
+  while ( micros() - tickCounter > 999980UL );
+  const uint32_t difference = micros() - tickCounter;
+  t.milliSecs = (difference + difference % 1000U)/ 1000U;
+  DateTime dt = rtc.now();       // reading clock time
+  t.utc = getUTCtime( dt.unixtime() ); // reading clock time as UTC-time
   return t;
 }
