@@ -133,11 +133,13 @@ private:
     bool checkCRC( const QByteArray &bufferArray ) const;
 
     QSerialPort *m_pSerialPort;
-    bool m_isConnected;
-    bool m_isBusy;
-    bool m_isDetectDelayEnabled;
+    bool m_isConnected;                                     //!< This is a flag that allows you to determine the connection of the device.
+    bool m_isBusy;                                          //!< Is this a flag that allows you to determine if the device is busy?
+    bool m_isDetectDelayEnabled;                            //!< This is a flag that allows determining access delay via the serial interface.
     QTimer *m_pTimerCheckConnection;
-    float m_correctionFactor;
+    float m_correctionFactor;                               //!< Correction factor between frequency deviation and Aging register value.
+    int m_timeZone;                                         //!< The Value for local timezone (-12, -11, .., 0, 1, 2, .., 12).
+    bool m_isSummerTime;                                    //!< Is automatic daylight saving time turned on?
 };
 
 #endif // RTC_H

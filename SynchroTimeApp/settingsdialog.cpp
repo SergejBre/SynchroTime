@@ -134,6 +134,8 @@ void SettingsDialog::fillSettingsUi()
     ui->requestRateSpinBox->setValue( m_pSettings->requestRate );
     ui->detectDelayCheckBox->setEnabled( m_pSettings->statusControlEnabled );
     ui->requestRateSpinBox->setEnabled( m_pSettings->statusControlEnabled );
+    ui->summerTimeCheckBox->setChecked( m_pSettings->summerTimeEnabled );
+    ui->timeZoneSpinBox->setValue( m_pSettings->timeZone );
 }
 
 //! \brief SettingsDialog::show
@@ -366,5 +368,7 @@ void SettingsDialog::updateSettings()
     m_pSettings->statusControlEnabled = ui->statusControlCheckBox->isChecked();
     m_pSettings->requestRate = ui->requestRateSpinBox->value();
     m_pSettings->correctionFactor = static_cast<float>( ui->factorDoubleSpinBox->value() );
+    m_pSettings->timeZone = ui->timeZoneSpinBox->value();
+    m_pSettings->summerTimeEnabled = ui->summerTimeCheckBox->isChecked();
 }
 

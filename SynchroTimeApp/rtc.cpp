@@ -108,7 +108,9 @@ RTC::RTC( const Settings *const portSettings, QObject *parent )
       m_isBusy( false ),
       m_isDetectDelayEnabled( false ),
       m_pTimerCheckConnection( nullptr ),
-      m_correctionFactor( portSettings->correctionFactor )
+      m_correctionFactor( portSettings->correctionFactor ),
+      m_timeZone( portSettings->timeZone ),
+      m_isSummerTime( portSettings->summerTimeEnabled )
 {
     // Initialization of the serial interface.
     m_pSerialPort = ::new( std::nothrow ) QSerialPort( this );

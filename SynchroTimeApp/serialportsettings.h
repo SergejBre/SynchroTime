@@ -54,8 +54,10 @@ typedef struct Settings {
     QString stringFlowControl;              //!< description of the parameter flow control mode.
     float correctionFactor;                 //!< Additional parameter: Correction factor between frequency deviation and Aging register value.
     int requestRate;                        //!< Additional parameter: The interval, in milliseconds, between requests for device status.
+    int timeZone;                           //!< Additional parameter: The Value for local timezone (-12, -11, .., 0, 1, 2, .., 12).
     bool statusControlEnabled;              //!< Additional parameter: This is a flag that allows periodic requests for device status.
     bool detectDelayEnabled;                //!< Additional parameter: This is a flag that allows determining access delay via the serial interface.
+    bool summerTimeEnabled;                 //!< Additional parameter: Is automatic daylight saving time turned on?
     bool localEchoEnabled;                  //!< Additional parameter: This is a flag that allows console input.
     bool isChanged = false;                 //!< This is a flag to save changes to the serial port parameters.
 } Settings_t;

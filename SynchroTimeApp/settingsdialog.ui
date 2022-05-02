@@ -96,17 +96,31 @@
       <string>Additional options</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="1">
-       <widget class="QLabel" name="requestRateLabel">
+      <item row="2" column="1">
+       <widget class="QLabel" name="timeZoneLabel">
         <property name="text">
-         <string>Request rate, ms:</string>
+         <string>Local Time Zone:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="summerTimeCheckBox">
+        <property name="text">
+         <string>Summer time?</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="statusControlCheckBox">
+        <property name="text">
+         <string>Status Control</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="QSpinBox" name="requestRateSpinBox">
         <property name="minimum">
          <number>500</number>
@@ -119,21 +133,30 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="detectDelayCheckBox">
-        <property name="text">
-         <string>Detect delay</string>
+      <item row="2" column="2">
+       <widget class="QSpinBox" name="timeZoneSpinBox">
+        <property name="minimum">
+         <number>-12</number>
+        </property>
+        <property name="maximum">
+         <number>12</number>
+        </property>
+        <property name="value">
+         <number>1</number>
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="statusControlCheckBox">
+      <item row="0" column="1">
+       <widget class="QLabel" name="requestRateLabel">
         <property name="text">
-         <string>Status Control</string>
+         <string>Request rate, ms:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
+      <item row="1" column="2">
        <widget class="QDoubleSpinBox" name="factorDoubleSpinBox">
         <property name="toolTip">
          <string>Correction factor between frequency deviation and Aging register value.</string>
@@ -146,6 +169,13 @@
         </property>
         <property name="singleStep">
          <double>0.100000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="detectDelayCheckBox">
+        <property name="text">
+         <string>Detect delay</string>
         </property>
        </widget>
       </item>

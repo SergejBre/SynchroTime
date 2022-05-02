@@ -237,6 +237,8 @@ void MainWindow::readSettings()
     m_pSettings->detectDelayEnabled = settings.value( QStringLiteral( "detectDelayEnabled" ), true ).toBool();
     m_pSettings->statusControlEnabled = settings.value( QStringLiteral( "statusControlEnabled" ), true ).toBool();
     m_pSettings->requestRate = settings.value( QStringLiteral( "requestRate" ), 500 ).toInt();
+    m_pSettings->timeZone = settings.value( QStringLiteral( "timeZone" ), 1 ).toInt();
+    m_pSettings->summerTimeEnabled = settings.value( QStringLiteral( "summerTimeEnabled" ), false ).toBool();
     settings.endGroup();
 }
 
@@ -289,6 +291,8 @@ void MainWindow::writeSettings() const
         settings.setValue( QStringLiteral( "detectDelayEnabled" ), QString::number( m_pSettings->detectDelayEnabled ) );
         settings.setValue( QStringLiteral( "statusControlEnabled" ), QString::number( m_pSettings->statusControlEnabled ) );
         settings.setValue( QStringLiteral( "requestRate" ), QString::number( m_pSettings->requestRate ) );
+        settings.setValue( QStringLiteral( "timeZone" ), QString::number( m_pSettings->timeZone ) );
+        settings.setValue( QStringLiteral( "summerTimeEnabled" ), QString::number( m_pSettings->summerTimeEnabled ) );
     }
     settings.endGroup();
 }
