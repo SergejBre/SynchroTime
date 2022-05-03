@@ -55,6 +55,9 @@
       </item>
       <item row="7" column="1">
        <widget class="QPushButton" name="resetButton">
+        <property name="toolTip">
+         <string>Set all port parameters to default values.</string>
+        </property>
         <property name="text">
          <string>Restore</string>
         </property>
@@ -108,13 +111,19 @@
       </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="summerTimeCheckBox">
+        <property name="toolTip">
+         <string>Do you need automatic daylight savings time?</string>
+        </property>
         <property name="text">
-         <string>Summer time?</string>
+         <string>Summer time</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="statusControlCheckBox">
+        <property name="toolTip">
+         <string>Do you want the status of your device to be checked automatically?</string>
+        </property>
         <property name="text">
          <string>Status Control</string>
         </property>
@@ -122,6 +131,9 @@
       </item>
       <item row="0" column="2">
        <widget class="QSpinBox" name="requestRateSpinBox">
+        <property name="toolTip">
+         <string>Interval for repeating device status requests, in milliseconds.</string>
+        </property>
         <property name="minimum">
          <number>500</number>
         </property>
@@ -135,6 +147,9 @@
       </item>
       <item row="2" column="2">
        <widget class="QSpinBox" name="timeZoneSpinBox">
+        <property name="toolTip">
+         <string>Select your local time zone.</string>
+        </property>
         <property name="minimum">
          <number>-12</number>
         </property>
@@ -174,6 +189,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="detectDelayCheckBox">
+        <property name="toolTip">
+         <string>Whether to display the median delay per request?</string>
+        </property>
         <property name="text">
          <string>Detect delay</string>
         </property>

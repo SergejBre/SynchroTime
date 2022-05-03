@@ -218,389 +218,389 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="302"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="306"/>
         <source>About SynchroTime App</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="303"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="307"/>
         <source>The application is used to adjust the exact time and to calibrate the &lt;b&gt;RTC DS3231&lt;/b&gt; modules.&lt;br /&gt;&lt;b&gt;Version&lt;/b&gt; %1&lt;br /&gt;&lt;b&gt;Copyright&lt;/b&gt; © 2021 sergej1@email.ua&lt;br /&gt;&lt;br /&gt;For more information follow the link to the &lt;a href=&quot;https://github.com/SergejBre/SynchroTime&quot;&gt;project page&lt;/a&gt;.</source>
         <translation>Приложение используется для установки точного времени и калибровки модулей &lt;b&gt;RTC DS3231&lt;/b&gt;.&lt;br /&gt;&lt;b&gt;Версия&lt;/b&gt; %1&lt;br /&gt;&lt;b&gt;Копирайт&lt;/b&gt; © 2021 sergej1@email.ua&lt;br /&gt;&lt;br /&gt;Для дополнительной информации о приложении перейдите по ссылке на &lt;a href=&quot;https://github.com/SergejBre/SynchroTime&quot;&gt;страницу проекта&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="347"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="351"/>
         <source>Serial Port Error</source>
         <translation>Ошибка последовательного порта</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="428"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="432"/>
         <source>Connected to %1 port, baud rate %2 / %3–%4–%5</source>
         <translation>Соединен с портом %1, скорость/параметры %2 / %3–%4–%5</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="440"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="444"/>
         <source>Connection error with %1 port</source>
         <translation>Ошибка соединения с последовательным портом %1</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="441"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="445"/>
         <source>Connection error</source>
         <translation>Ошибка соединения</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="442"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="446"/>
         <source>Connect the RTC device to the correct serial port, or set the serial port name in the port settings.</source>
         <translation>Подключите устройство к действующему последовательному порту или измените имя порта в настройках программы.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="448"/>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="449"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="452"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="453"/>
         <source>Bad allocation memory</source>
         <translation>Ошибка в распределении памяти</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="450"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="454"/>
         <source>Bad allocation memory, execution terminating.
 Advice: terminate unnecessary applications!</source>
         <translation>Проблема с выделением памяти, процесс аварийно завершен.
 Совет: закройте ненужные приложения!</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="471"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="475"/>
         <source>Disconnected from port %1</source>
         <translation>Отключен от порта %1</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="518"/>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="728"/>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="729"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="522"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="732"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="733"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="519"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="523"/>
         <source>&lt;h4&gt;The Application is used to adjust and calibration the RTC DS3231 module&lt;/h4&gt;&lt;ol&gt;&lt;li&gt;To select the correct &lt;b&gt;serial port&lt;/b&gt;, you need to go to the Port Settings and select its name and parameters.&lt;/li&gt;&lt;li&gt;Use the &lt;b&gt;information request&lt;/b&gt; to get the information from DS3231 module. If everything is connected correctly, then you will get the current time of both clocks, the difference between the clocks in milliseconds (with an accuracy of ±2 ms), the value written in the Aging register and the calculated time drift value in ppm. If the Aging register and time drift are zero, then the DS3231 module has not yet been calibrated (see step 4).&lt;/li&gt;&lt;li&gt;To set the exact time, use the &lt;b&gt;adjustment request&lt;/b&gt;. The module clock will be synchronized with the computer time with an accuracy of ±1 ms. After updating the time, the date of the time setting will be recorded in the module&apos;s memory, which will allow later to determine the exact drift of the clock time.&lt;/li&gt;&lt;li&gt;To calibrate the clock of the DS3231 module, use the &lt;b&gt;calibration request&lt;/b&gt;. For the successful execution of this procedure, the module must be activated (see step 3) and it is necessary that enough time has passed so that the calculated value of the clock drift is well distinguishable from the rounding error. The algorithm of the program will calculate the amount of drift of the clock time and the correction factor, which will be written into the Aging register. The clock time will also be updated. If the calibration is successful, the current time, drift and correction factor will be displayed.&lt;/li&gt;&lt;li&gt;To reset the Aging register to its default value and clear the module&apos;s memory of calibration data, use the &lt;b&gt;reset request&lt;/b&gt;.&lt;/li&gt;&lt;/ol&gt;For more information follow the link to the &lt;a href=&quot;https://github.com/SergejBre/SynchroTime&quot;&gt;project page&lt;/a&gt;.</source>
         <translation>&lt;h4&gt;Инструкция по использованию приложения SynchroTime&lt;/h4&gt;&lt;ol&gt;&lt;li&gt;Во-первых, вам необходимо загрузить скетч в Arduino UNO/Nano из директории проекта &lt;span style=&quot;color: #0000FF;&quot;&gt;arduino/synchro_RTC.ino&lt;/span&gt;, если у вас модуль DS3231 ZS-042 или &lt;span style=&quot;color: #0000FF;&quot;&gt;arduino/synchro_RTC_MINI.ino&lt;/span&gt;, если у вас модуль DS3231 MINI. Затем подключите модуль RTC DS3231 к Arduino в соответствии со схемой, указанной в разделе документации &lt;i&gt;Specification&lt;/i&gt;. Подключите Arduino к компьютеру через свободный USB порт. Если в вашей системе установлен необходимый драйвер, в диспетчере устройств появится новый виртуальный последовательный порт (под Linux это будет ttyUSBx, под Windows - COMx). Чтобы узнать имя порта, раскройте список имеющихся портов в настройках программы и выберете нужный вам порт. Подтвердите ваш выбор кнопкой &lt;b&gt;Ok&lt;/b&gt;.&lt;/li&gt;&lt;li&gt;Используйте команду &lt;b&gt;Information&lt;/b&gt; (&lt;i&gt;Информация&lt;/i&gt;), чтобы получить текущую информацию из RTC DS3231. Если все подключено правильно, вы получите текущее время обоих часов, а также разницу между RTC и системными часами в миллисекундах (с точностью ±2мс), а также значение, записанное в регистре старения, и значение дрейфа частоты RTC рассчитанное в ppm. Если регистр старения и дрейф частоты равны нулю, это означает, модуль DS3231 еще не откалиброван (см. Пункт 4).&lt;/li&gt;&lt;li&gt;Чтобы установить точное время, используйте команду &lt;b&gt;Adjustment&lt;/b&gt; (&lt;i&gt;Настройка времени&lt;/i&gt;). Часы модуля будут синхронизированы с системным временем компьютора с точностью до ±1 мс. После успешного обновления времени, метка времени будет записана в память модуля, что позволит позже определить дрейф частоты осциллятора.&lt;/li&gt;&lt;li&gt;Чтобы откалибровать осцилятор модуля DS3231, введите команду &lt;b&gt;Calibration&lt;/b&gt; (&lt;i&gt;Калибровка&lt;/i&gt;). Для успешного выполнения этой процедуры, модуль должен быть активирован (см. Пункт 3) и необходимо, чтобы прошло достаточно времени, чтобы рассчитанное значение ухода частоты было хорошо отличимо от ошибки вычислений/округления (это около 55 часов или 2,3 дня, см. раздел документации &lt;i&gt;Discussion&lt;/i&gt;). Алгоритм программы рассчитает величину отклонения частоты и поправочный коэффициент, которые будут записаны в регистр старения. Если калибровка прошла успешно, отобразятся текущее время, дрейф частоты и поправочный коэффициент. &lt;i&gt;Время на часах также будет актуализировано!&lt;/i&gt; &lt;span style=&quot;color: #0000FF;&quot;&gt;Примечание:&lt;/span&gt; &lt;i&gt;Этот метод медленный, но его преимущество заключается в том, что он не требует каких-либо ручных усилий, кроме установки и считывания текущего времени. Нужно просто дать модулю спокойно поработать на полке день или два. Преимущество этого метода заключается еще в том, что часы проходят несколько дневных и ночных циклов, где они подвержены суточным колебаниям температуры. И поэтому этот метод помогает лучше спрогнозировать долгосрочную стабильность часов.&lt;/i&gt;&lt;/li&gt;&lt;li&gt;Чтобы сбросить регистр старения до значения по умолчанию (0x00) и очистить память модуля от данных калибровки, введите команду &lt;b&gt;Reset&lt;/b&gt; (&lt;i&gt;Сброс параметров&lt;/i&gt;). Значение по умолчанию будет записано в регистр, а ячейки памяти будут перезаписаны байтами 0xFF.&lt;/li&gt;&lt;li&gt;Используйте команду &lt;b&gt;Set Register&lt;/b&gt; (&lt;i&gt;Записать в регистр&lt;/i&gt;), чтобы добавить новое значение (например, -12,8) в регистр старения DS3231. Новое значение перезапишет старое значение регистра. Результат ввода будет ограничен значениями между -12,8 и 12,7. &lt;span style=&quot;color: #0000FF;&quot;&gt;Предупреждение:&lt;/span&gt; &lt;i&gt;эту операцию имеет смысл выполнять только в случае сброса всех данных калибровки (см. Пункт 5)&lt;/i&gt;.&lt;/li&gt;&lt;/ol&gt;Для дополнительной информации о работе с приложением перейдите по ссылке на &lt;a href=&quot;https://github.com/SergejBre/SynchroTime&quot;&gt;страницу проекта&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="598"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="602"/>
         <source>Aging register modification</source>
         <translation>Aging-регистр</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="599"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="603"/>
         <source>Enter a new value new value in the Aging Register:</source>
         <translation>Введите новое значение в Aging-регистр:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="705"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="709"/>
         <source>Connect</source>
         <translation>Подключение</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="706"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="710"/>
         <source>C&amp;onnect</source>
         <translation>С&amp;оединить</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="707"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="711"/>
         <source>Connect to serial port</source>
         <translation>Подключиться к последовательному порту</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="708"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="712"/>
         <source>&amp;Disconnect</source>
         <translation>&amp;Разъединить</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="709"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="713"/>
         <source>Disconnect from serial port</source>
         <translation>Отключиться от последовательного порта</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="710"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="714"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выйти</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="711"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="715"/>
         <source>Request</source>
         <translation>Запрос</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="712"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="716"/>
         <source>&amp;Information</source>
         <translation>&amp;Информация</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="713"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="717"/>
         <source>Read information from RTC</source>
         <translation>Читать информацию из RTC</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="714"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="718"/>
         <source>Adjustment</source>
         <translation>Настройка времени</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="715"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="719"/>
         <source>Calibration</source>
         <translation>Калибровка</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="716"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="720"/>
         <source>Reset</source>
         <translation>Сброс параметров</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="717"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="721"/>
         <source>Set Register</source>
         <translation>Записать в регистр</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="718"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="722"/>
         <source>Tools</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="720"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="724"/>
         <source>Configure serial port</source>
         <translation>Настроить последовательный порт</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="723"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="727"/>
         <source>Clean up data</source>
         <translation>Очистить вывод терминала</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="730"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="734"/>
         <source>Qt-Framework</source>
         <translation>Qt-Framework</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="731"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="735"/>
         <source>About App</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="583"/>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="721"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="587"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="725"/>
         <source>Select Font</source>
         <translation>Выбор шрифта</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="719"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="723"/>
         <source>&amp;Port Setting</source>
         <translation>&amp;Настройка порта</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="722"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="726"/>
         <source>C&amp;lean Up</source>
         <translation>&amp;Очистить вывод</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="724"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="728"/>
         <source>Select Language</source>
         <translation>Выбор языка</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="725"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="729"/>
         <source>English</source>
         <translation>английский</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="726"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="730"/>
         <source>German</source>
         <translation>немецкий</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/mainwindow.cpp" line="727"/>
+        <location filename="../SynchroTimeApp/mainwindow.cpp" line="731"/>
         <source>Russian</source>
         <translation>русский</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="157"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="159"/>
         <source>Description: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="158"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="160"/>
         <source>Manufacturer: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="159"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="161"/>
         <source>Serial number: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="160"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="162"/>
         <source>Location: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="161"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="163"/>
         <source>Vendor Identifier: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="162"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="164"/>
         <source>Product Identifier: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="176"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="178"/>
         <source>The settings have been successfully updated</source>
         <translation>Настройки порта и программы успешно обновлены</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="187"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="189"/>
         <source>The settings have not been updated</source>
         <translation>Настройки порта и программы не были обновлены</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="339"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="341"/>
         <source>Invalid serial port baud rate! The setting is reset to default</source>
         <translation>Недопустимая скорость передачи данных последовательного порта! Параметр сброшен на значение по умолчанию</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="297"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="299"/>
         <source>Port %1: </source>
         <translation>Порт %1: </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="462"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="464"/>
         <source>Information from Device:</source>
         <translation>Информация от RTC устройства:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="520"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="522"/>
         <source>Request for the information failed. </source>
         <translation>Запрос информации от устройства не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="532"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="534"/>
         <source>Adjust clock Date/Time..</source>
         <translation>Настройка точного времени..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="556"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="558"/>
         <source>Request for adjustment </source>
         <translation>Запрос на установку точного времени </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="556"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="632"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="661"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="558"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="608"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="634"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="663"/>
         <source>completed successfully</source>
         <translation>успешно завершен</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="556"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="632"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="661"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="558"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="608"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="634"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="663"/>
         <source>failed</source>
         <translation>не удался</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="560"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="562"/>
         <source>Request for adjustment failed. </source>
         <translation>Запрос на установку точного времени не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="572"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="574"/>
         <source>Calibration the Oscillator..</source>
         <translation>Калибровка осциллятора..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="606"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="608"/>
         <source>Request for calibration </source>
         <translation>Запрос на калибровку </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="610"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="612"/>
         <source>Request for calibration failed. </source>
         <translation>Запрос на калибровку не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="622"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="624"/>
         <source>Reset the calibration Parameters..</source>
         <translation>Сброс параметров калибровки..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="632"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="634"/>
         <source>Request for reset </source>
         <translation>Запрос на сброс параметров </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="636"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="638"/>
         <source>Request for reset failed. </source>
         <translation>Запрос на сброс параметров не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="647"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="649"/>
         <source>Set register Value to </source>
         <translation>Установить значение регистра равным </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="661"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="663"/>
         <source>Request for SetRegister </source>
         <translation>Запрос на перезапись регистра </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="665"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="667"/>
         <source>Request for SetRegister failed. </source>
         <translation>Запрос на перезапись регистра не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="695"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="697"/>
         <source>Processing of data failed</source>
         <translation>Ошибка обработки данных</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="698"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="700"/>
         <source>Received parameters are invalid</source>
         <translation>Получены недопустимые значения</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="701"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="703"/>
         <source>Input data too long</source>
         <translation>Входящие данные превышают лимит</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="704"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="706"/>
         <source>State of device is undefined</source>
         <translation>Состояние устройства не определено</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="707"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="709"/>
         <source>Unpredictable error</source>
         <translation>Непредсказуемая ошибка</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="710"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="712"/>
         <source>No connection to RTC device</source>
         <translation>Нет подключения к RTC устройству</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="713"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="715"/>
         <source>The received status is invalid: </source>
         <translation>Получен недопустимый статус: </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="719"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="721"/>
         <source>Status Request failed. </source>
         <translation>Запрос статуса устройства не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="720"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="722"/>
         <source>Not received a response to the device status request. Port %1: </source>
         <translation>Не получен ответ на запрос о статусе устройства. Порт %1: </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="725"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="727"/>
         <source>Device status requests have been stopped</source>
         <translation>Остановлены запросы статуса устройства</translation>
     </message>
@@ -634,86 +634,126 @@ Advice: terminate unnecessary applications!</source>
     </message>
     <message>
         <location filename="../SynchroTimeApp/settingsdialog.ui" line="59"/>
+        <source>Set all port parameters to default values.</source>
+        <translation>Устанавливает параметры серийного порта по умолчанию.</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="62"/>
         <source>Restore</source>
         <translation>Восстановить</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="66"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="69"/>
         <source>Data bits:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="76"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="79"/>
         <source>BaudRate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="83"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="86"/>
         <source>Stop bits:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="96"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="99"/>
         <source>Additional options</source>
         <translation>Дополнительные настройки</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="102"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="105"/>
+        <source>Local Time Zone:</source>
+        <translation>Часовой пояс:</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="167"/>
         <source>Request rate, ms:</source>
-        <translation type="unfinished"></translation>
+        <translation>Запросы, ms:</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="196"/>
+        <source>Detect delay</source>
+        <translation>Отображать delay</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="128"/>
+        <source>Status Control</source>
+        <translation>Контроль статуса</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="115"/>
+        <source>Do you need automatic daylight savings time?</source>
+        <translation>автоматический переход на летнее время?</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="118"/>
+        <source>Summer time</source>
+        <translation>Летнее время</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/settingsdialog.ui" line="125"/>
-        <source>Detect delay</source>
-        <translation type="unfinished"></translation>
+        <source>Do you want the status of your device to be checked automatically?</source>
+        <translation>Установите, чтобы состояние вашего устройства проверялось автоматически.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="132"/>
-        <source>Status Control</source>
-        <translation type="unfinished"></translation>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="135"/>
+        <source>Interval for repeating device status requests, in milliseconds.</source>
+        <translation>Интервал повторения запросов состояния устройства в миллисекундах.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="139"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="151"/>
+        <source>Select your local time zone.</source>
+        <translation>Выберите ваш местный часовой пояс.</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="177"/>
         <source>Correction factor between frequency deviation and Aging register value.</source>
-        <translation type="unfinished"></translation>
+        <translation>Поправочный коэффициент между отклонением частоты и значением регистра старения.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="155"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="193"/>
+        <source>Whether to display the median delay per request?</source>
+        <translation>Отображать медианную задержку на запрос?</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="203"/>
         <source>Correction factor:</source>
-        <translation type="unfinished"></translation>
+        <translation>Поправка k:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="179"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="227"/>
         <source>Select Serial Port</source>
         <translation>Выбор серийного порта</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="188"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="236"/>
         <source>Description:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="195"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="243"/>
         <source>Manufacturer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="202"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="250"/>
         <source>Serial number:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="209"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="257"/>
         <source>Location:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="216"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="264"/>
         <source>Vendor ID:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="223"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="271"/>
         <source>Product ID:</source>
         <translation type="unfinished"></translation>
     </message>
