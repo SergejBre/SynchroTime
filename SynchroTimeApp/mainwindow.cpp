@@ -183,6 +183,29 @@ MainWindow::~MainWindow()
 }
 
 //!
+//! \brief MainWindow::firstStart
+//! The slot prompts you to set the program settings when you first start it.
+//!
+void MainWindow::firstStart()
+{
+    if ( this->m_firstStartFlag ) {
+        int ok;
+        ok = QMessageBox::question( this, QObject::tr( "Initial application settings" ),
+                                    QObject::tr( "Before using the application, "
+                                                 "it is recommended to check the correctness of the program settings."
+                                                 "<br /><br />Need to set your <b>Local Time Zone</b> or need daylight saving time?"
+                                                 "<br /><br />Click OK to go to the program settings." ),
+                                    QMessageBox::Yes | QMessageBox::Default,
+                                    QMessageBox::No | QMessageBox::Escape,
+                                    QMessageBox::NoButton );
+        if ( ok == QMessageBox::Yes ) {
+            this->m_pSettingsDialog->show();
+            this->m_firstStartFlag = false;
+        }
+    }
+}
+
+//!
 //! \brief MainWindow::readSettings
 //! The function reads the parameters necessary for the user interface that were saved in the previous session.
 //!
@@ -215,6 +238,7 @@ void MainWindow::readSettings()
     settings.endGroup();
 
     settings.beginGroup( QStringLiteral( "ULayout" ));
+    this->m_firstStartFlag = settings.value( QStringLiteral( "firstStart" ), true ).toBool();
     settings.endGroup();
 
     Q_ASSERT( m_pSettings != nullptr );
@@ -263,14 +287,15 @@ void MainWindow::writeSettings() const
 
     settings.beginGroup( QStringLiteral( "Font" ));
     Q_ASSERT( m_pConsole != nullptr );
-    settings.setValue( QStringLiteral( "font" ), m_pConsole->font().toString() );
+    settings.setValue( QStringLiteral( "font" ), this->m_pConsole->font().toString() );
     settings.endGroup();
 
     settings.beginGroup( QStringLiteral( "translations" ));
     settings.setValue( QStringLiteral( "postfix" ), this->postfix );
     settings.endGroup();
 
-    settings.beginGroup( QStringLiteral( "ULayot" ));
+    settings.beginGroup( QStringLiteral( "ULayout" ));
+    settings.setValue( QStringLiteral( "firstStart" ), QString::number( this->m_firstStartFlag ) );
     settings.endGroup();
 
     Q_ASSERT( m_pSettings != nullptr );

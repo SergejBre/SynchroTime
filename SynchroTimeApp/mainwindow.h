@@ -63,6 +63,7 @@ public:
     static void fill( Container &stack, const float value );
     template <typename Container>
     static float mean( const Container &stack );
+    void firstStart( void );
 
 signals:
     void setRegister( const float value );
@@ -102,7 +103,8 @@ private:
     QThread *m_pThread;
     RTC *m_pRTC;
     QCPBars *m_pCPBars;
-    bool m_detectDelayFlag;
+    bool m_detectDelayFlag;                             //!< Flag to enable display of communication delay.
+    bool m_firstStartFlag;                              //!< Flag for initial application settings.
     QTranslator *m_pTranslator;
     QString postfix;
 
