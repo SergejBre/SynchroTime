@@ -108,10 +108,10 @@ RTC::RTC( const Settings *const portSettings, QObject *parent )
       m_isBusy( false ),
       m_isDetectDelayEnabled( false ),
       m_pTimerCheckConnection( nullptr ),
-      m_correctionFactor( portSettings->correctionFactor ),
-      m_timeZone( portSettings->timeZone ),
-      m_isSummerTime( portSettings->summerTimeEnabled )
+      m_correctionFactor( portSettings->correctionFactor )
 {
+    // Initialization of local timezone in seconds.
+    m_timeZoneSecs = ( portSettings->timeZone + ( portSettings->summerTimeEnabled ? 1 : 0 )) * 3600;
     // Initialization of the serial interface.
     m_pSerialPort = ::new( std::nothrow ) QSerialPort( this );
     if ( m_pSerialPort != nullptr ) {
@@ -486,12 +486,12 @@ void RTC::informationRequest()
         quint16 numberOfSec = 0U;
         auto p_byteBuffer = receivedData.constData();
         memcpy( &numberOfMSec, p_byteBuffer + 1, sizeof( quint32 ) );
-        numberOfMSec = qFromLittleEndian( numberOfMSec );
+        numberOfMSec = qFromLittleEndian( numberOfMSec ) - m_timeZoneSecs;
         numberOfMSec *= 1000;
         memcpy( &numberOfSec, p_byteBuffer + 5, sizeof( numberOfSec ) );
         numberOfSec = qFromLittleEndian( numberOfSec );
         numberOfMSec += numberOfSec;
-        QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec ) );
+        QDateTime time( QDateTime::fromMSecsSinceEpoch( numberOfMSec, Qt::LocalTime ) );
         out << "Time from RTC Device\t" << numberOfMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
         out << "Local system time   \t" << localTimeMSecs << " ms: " << local.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
         out << "Difference between  \t" << numberOfMSec - localTimeMSecs << " ms" << endl;
@@ -508,8 +508,9 @@ void RTC::informationRequest()
                     memcpy( &lastAdjustOfTimeSec, p_byteBuffer + 12, sizeof( lastAdjustOfTimeSec ) );
                     lastAdjustOfTimeSec = qFromLittleEndian( lastAdjustOfTimeSec );
                     if ( lastAdjustOfTimeSec < 0xFFFFFFFF ) {
+                        lastAdjustOfTimeSec -= m_timeZoneSecs;
                         const qint64 lastAdjustOfTimeMSec = qint64(lastAdjustOfTimeSec) * 1000;
-                        time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec );
+                        time = QDateTime::fromMSecsSinceEpoch( lastAdjustOfTimeMSec, Qt::LocalTime );
 //                        out << "Frequency drift*    \t" << static_cast<float>(numberOfMSec - localTimeMSecs)*1000000/(localTimeMSecs - lastAdjustOfTimeMSec ) << " ppm" << endl;
                         out << "Last adjustment time\t" << lastAdjustOfTimeMSec << " ms: " << time.toString("dd.MM.yyyy hh:mm:ss.zzz") << endl;
                     }
@@ -538,7 +539,7 @@ void RTC::adjustmentRequest()
     const qint64 localTimeMSecs = QDateTime::currentDateTime().toMSecsSinceEpoch(); //local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
     const quint16 milliSecs = localTimeMSecs % 1000;
-    quint32 le_localTimeSecs = qToLittleEndian<quint32>( ++localTimeSecs );
+    quint32 le_localTimeSecs = qToLittleEndian<quint32>( ++localTimeSecs + m_timeZoneSecs );
     memcpy( sentData, &le_localTimeSecs, sizeof(le_localTimeSecs) );
     sentData[4] = sentData[5] = 0U;
 
@@ -579,7 +580,7 @@ void RTC::calibrationRequest()
     const qint64 localTimeMSecs = local.toMSecsSinceEpoch();
     quint32 localTimeSecs = localTimeMSecs/1000;
     const quint16 milliSecs = localTimeMSecs % 1000;
-    quint32 le_localTimeSecs = qToLittleEndian<quint32>( ++localTimeSecs );
+    quint32 le_localTimeSecs = qToLittleEndian<quint32>( ++localTimeSecs + m_timeZoneSecs );
     memcpy( sentData, &le_localTimeSecs, sizeof( le_localTimeSecs ) );
     sentData[4] = sentData[5] = 0U;
 

@@ -138,8 +138,7 @@ private:
     bool m_isDetectDelayEnabled;                            //!< This is a flag that allows determining access delay via the serial interface.
     QTimer *m_pTimerCheckConnection;
     float m_correctionFactor;                               //!< Correction factor between frequency deviation and Aging register value.
-    int m_timeZone;                                         //!< The Value for local timezone (-12, -11, .., 0, 1, 2, .., 12).
-    bool m_isSummerTime;                                    //!< Is automatic daylight saving time turned on?
+    int m_timeZoneSecs;                                     //!< The Value for local timezone in seconds.
 };
 
 #endif // RTC_H
