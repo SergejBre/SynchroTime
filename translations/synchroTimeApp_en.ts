@@ -224,7 +224,7 @@
     </message>
     <message>
         <location filename="../SynchroTimeApp/mainwindow.cpp" line="303"/>
-        <source>The application is used to adjust the exact time and to calibrate the &lt;b&gt;RTC DS3231&lt;/b&gt; modules.&lt;br /&gt;&lt;b&gt;Version&lt;/b&gt; %1&lt;br /&gt;&lt;b&gt;Copyright&lt;/b&gt; © 2021 sergej1@email.ua&lt;br /&gt;&lt;br /&gt;For more information follow the link to the &lt;a href=&quot;https://github.com/SergejBre/SynchroTime&quot;&gt;project page&lt;/a&gt;.</source>
+        <source>The application is used to adjust the exact time and to calibrate the &lt;b&gt;RTC DS3231&lt;/b&gt; modules.&lt;br /&gt;&lt;b&gt;Version&lt;/b&gt; %1&lt;br /&gt;&lt;b&gt;Copyright&lt;/b&gt; © 2022 sergej1@email.ua&lt;br /&gt;&lt;br /&gt;For more information follow the link to the &lt;a href=&quot;https://github.com/SergejBre/SynchroTime&quot;&gt;project page&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
