@@ -186,6 +186,7 @@ ____
 
 All functionality is similar to the [CLI application](#Using-the-CLI-app) (see figure above). As an extra, there is the option of selecting the numerous Serial Port settings and three features: **Status Control**, **Detect Delay** and **Correction Factor**. The **Correction Factor** is described in detail in the [Discussion](#Discussion) part. **Status Control** is an additional functionality to monitor the connection with a device with a **Request Rate** (from 500 to 10000 ms). The **Detect Delay** feature allows you to display the approximate delay in the exchange of information with the device. For the exchange rate of 115200 baud and the exchange of three bytes with the Device, the delay usually should not exceed 3-4ms, i.e. one byte per ms (depends mainly on the driver used and the HW UART device). Both features can be deactivated.
 ![SERIAL_PORT_SETTINGS](./images/serial_port_settings.png)
+⚠️ Note: Since version 2.0, it became possible to comfortably set the time zone in the application settings. And not as before to edit the arduino sketch. For this reason, controller firmware is no longer backward compatible with older versions of the program. The old sketches are placed in the `arduino/old` subdirectory.
 
 [![Top](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#Contents)
 ____
