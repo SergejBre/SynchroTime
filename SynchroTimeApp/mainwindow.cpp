@@ -332,7 +332,7 @@ void MainWindow::about()
                        QObject::tr("The application is used to adjust the exact time "
                                    "and to calibrate the <b>RTC DS3231</b> modules."
                                    "<br /><b>Version</b> %1"
-                                   "<br /><b>Copyright</b> © 2021 sergej1@email.ua"
+                                   "<br /><b>Copyright</b> © 2022 sergej1@email.ua"
                                    "<br /><br />For more information follow the link to the "
                                    "<a href=\"https://github.com/SergejBre/SynchroTime\">project page</a>.").arg(qApp->applicationVersion()));
 }
