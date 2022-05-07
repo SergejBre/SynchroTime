@@ -470,7 +470,7 @@ void RTC::informationRequest()
     {
         quint32 localTimeSecs = localTimeMSecs/1000;
         quint16 milliSecs = localTimeMSecs % 1000;
-        localTimeSecs = qToLittleEndian<quint32>( localTimeSecs );
+        localTimeSecs = qToLittleEndian<quint32>( localTimeSecs + m_timeZoneSecs );
         memcpy( sentData, &localTimeSecs, sizeof(localTimeSecs) );
         milliSecs = qToLittleEndian<quint16>( milliSecs );
         memcpy( sentData + sizeof(localTimeSecs), &milliSecs, sizeof(milliSecs) );
