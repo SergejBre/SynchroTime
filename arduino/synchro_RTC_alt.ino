@@ -2,8 +2,8 @@
 //  Home Office
 //  Nürnberg, Germany
 //  E-Mail: sergej1@email.ua
-//
-//  Copyright (C) 2021 free Project SynchroTime. All rights reserved.
+//  Version 2.0.0 / is compatible with SynchroTimeApp version 2.x.x
+//  Copyright (C) 2022 free Project SynchroTime. All rights reserved.
 //------------------------------------------------------------------------------
 /*
 This sketch performs as a server on an arduino controller for connecting the PC with an RTC DS3231 module via a serial port.
@@ -16,9 +16,9 @@ This sketch performs as a server on an arduino controller for connecting the PC 
   - read value from the Aging register;
   - write value to the Aging register.
 The settings are:
-  - The selection of the time zone, which is determined as the local local time on the worker computer.
-    time_zone = Difference of the UTC-time. A value from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
-    +1/+2 for Europe, depending on which season is winter (+1) or summer time (+2).
+  - Set your local time zone in the settings of the application synchroTimeApp.
+    time zone = Difference of the local time and UTC-time, a value from { -12, .., -2, -1, 0, +1, +2, +3, .., +12, +13, +14 }.
+    For example, time zone for Central Europe = +1/+2, depending on which season is winter (+1) or summer time (+2).
   - MIN_TIME_SPAN the minimum time required for a stable calculation of the frequency drift.
 Dependencies:
   - Arduino IDE version >= 1.8.13 (!Replace compilation flags from -Os to -O2);
@@ -36,7 +36,6 @@ Connecting DS3231 MINI module to arduino board:
 #include <EEPROM.h>
 #include "RTClib.h"
 
-#define TIME_ZONE 2           // Difference to UTC-time on the work computer, from { -12, .., -2, -1, 0, +1, +2, +3, .., +12 }
 //#define INTERRUPT_PIN  2      // Interrupt pin (for Arduino Uno = 2 or 3)
 #define STARTBYTE 0x40        // The starting byte of the data set from the communication protocol.
 #define DS3231_ADDRESS 0x68   // I2C address for DS3231
@@ -65,8 +64,6 @@ static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict_
 inline void intToHex( uint8_t* const buff, const uint32_t value );
 inline void floatToHex( uint8_t* const buff, const float value );
 uint32_t hexToInt( const uint8_t* const buff );
-uint32_t getUTCtime( const uint32_t localTimeSecs );
-bool adjustTime( const uint32_t utcTimeSecs );
 bool adjustTimeDrift( float drift_in_ppm );
 static float calculateDrift_ppm( const time_t* const ref, const time_t* const t );
 static uint8_t sumOfBytes( const uint8_t* const bbuffer, const uint8_t blength );
@@ -111,7 +108,7 @@ void setup () {
     /* удалено poty - отсутствует EEPROM в mini-версиях DS3231
     uint8_t offset_val = i2c_eeprom_read_byte( EEPROM_ADDRESS, 4U );
     */
-    adjustTime( newtime - TIME_ZONE * 3600 );
+    rtc.adjust( newtime );
     /* удалено poty - отсутствует EEPROM в mini-версиях DS3231, EEPROM в Arduino бесполезен, так как не привязан к модулю
     if ( offset_val != 0xFF ) {
         writeToOffsetReg( int8_t( offset_val ) );
@@ -172,7 +169,7 @@ void loop () {
     */
     // ---- poty ---- начало определения фракции millis()
     nowMillis = millis() - tickCounter;
-    t.utc = getUTCtime( _now.unixtime() ); // reading clock time as UTC-time
+    t.utc = _now.unixtime(); // reading clock time as UTC-time
     while ( nowMillis > 1000 ) nowMillis -= 1000;
     t.milliSecs = nowMillis;
     // --------------
@@ -245,14 +242,14 @@ void loop () {
   switch ( task )
   {
     case TASK_ADJUST:               // adjust time
-//      oneHz();
-      ok = adjustTime( ref.utc );
+      rtc.adjust( DateTime( ref.utc ) );
 
       // ---- poty ----
-      previousSec = DateTime( ref.utc + TIME_ZONE * 3600 ).second();
+      previousSec = DateTime( ref.utc ).second();
       tickCounter = millis();
       // --------------
       
+      ok = true;
       byteBuffer[byteCounter] = ok;
       byteCounter++;
       task = TASK_IDLE;
@@ -280,10 +277,10 @@ void loop () {
       byteCounter += sizeof(drift_in_ppm);
       ok = adjustTimeDrift( drift_in_ppm );
       if ( ok ) {
-        ok &= adjustTime( ref.utc ); // adjust time
+        rtc.adjust( DateTime( ref.utc ) ); // adjust time
 
         // ---- poty ----
-        previousSec = DateTime( ref.utc + TIME_ZONE * 3600 ).second();
+        previousSec = DateTime( ref.utc ).second();
         tickCounter = millis();
         // --------------
         
@@ -361,18 +358,6 @@ inline void floatToHex( uint8_t* const buff, const float value ) {
 uint32_t hexToInt( const uint8_t* const buff ) {
   uint32_t *y = (uint32_t *)buff;
   return y[0];
-}
-
-uint32_t getUTCtime( const uint32_t localTimeSecs ) {
-  return ( localTimeSecs - TIME_ZONE * 3600 ); // UTC_time = local_Time - TIME_ZONE*3600 sec
-}
-
-bool adjustTime( const uint32_t utcTimeSecs ) {
-  rtc.adjust( DateTime( utcTimeSecs + TIME_ZONE * 3600 ) );
-  intToHex( buff, utcTimeSecs ); // data to write
-  // ---- poty ---- подмена функций EEPROM
-//  return i2c_eeprom_write_page( EEPROM_ADDRESS, 0U, buff, sizeof(buff)); // write last_set_time to EEPROM AT24C256
-  return eeprom_write_page( 101U, buff, sizeof(buff)); // write last_set_time to EEPROM
 }
 
 // the result is rounded to the maximum possible values of type uint8_t
@@ -513,7 +498,7 @@ bool eeprom_write_page( unsigned int eeAddressPage, const uint8_t* data, uint8_t
 
 static inline void memcpy_byte( void *__restrict__ dstp, const void *__restrict__ srcp, uint16_t len ) {
     uint8_t *dst = ( uint8_t *) dstp;
-    uint8_t *src = ( uint8_t *) srcp;
+    const uint8_t *src = ( uint8_t *) srcp;
     uint16_t idx;
     for( idx = 0U; idx < len; idx++ )
         *(dst++) = *(src++);
