@@ -110,8 +110,14 @@ RTC::RTC( const Settings *const portSettings, QObject *parent )
       m_pTimerCheckConnection( nullptr ),
       m_correctionFactor( portSettings->correctionFactor )
 {
+    // Checking for Daylight Savings Time.
+    bool isDaylightTime = false;
+    if ( portSettings->summerTimeEnabled ) {
+        const QDateTime localTime = QDateTime::currentDateTime().toLocalTime();
+        isDaylightTime = localTime.isDaylightTime();
+    }
     // Initialization of local timezone in seconds.
-    m_timeZoneSecs = ( portSettings->timeZone + ( portSettings->summerTimeEnabled ? 1 : 0 )) * 3600;
+    m_timeZoneSecs = ( portSettings->timeZone + ( isDaylightTime ? 1 : 0 )) * 3600;
     // Initialization of the serial interface.
     m_pSerialPort = ::new( std::nothrow ) QSerialPort( this );
     if ( m_pSerialPort != nullptr ) {
