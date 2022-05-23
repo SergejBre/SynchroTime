@@ -22,6 +22,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QIntValidator>
 #include <QLineEdit>
+#include <QDateTime>
 
 //------------------------------------------------------------------------------
 // Preprocessor
@@ -59,6 +60,12 @@ SettingsDialog::SettingsDialog( Settings *const settings, QWidget *parent ) :
     m_pIntValidator = new QIntValidator( 1200, 4000000, this );
 
     ui->baudRateBox->setInsertPolicy( QComboBox::NoInsert );
+    const QDateTime localTime = QDateTime::currentDateTime().toLocalTime();
+    QDateTime utc( localTime );
+    utc.setTimeSpec( Qt::UTC );
+    const qint64 timeZone = localTime.secsTo( utc ) / 3600;
+    const char sign = ( timeZone < 0 ) ? '\0' : '+';
+    ui->localTimeZoneLabel->setText( QObject::tr( "System TimeZone set to GMT %1%2" ).arg(sign).arg(timeZone) );
 
     QObject::connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     QObject::connect(this, &QDialog::accepted, this, &SettingsDialog::apply);
