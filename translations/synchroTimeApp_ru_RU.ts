@@ -429,188 +429,193 @@ Advice: terminate unnecessary applications!</source>
         <translation>русский</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="159"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="68"/>
+        <source>System TimeZone set to GMT %1%2</source>
+        <translation>Часовой пояс системы GMT %1%2</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="166"/>
         <source>Description: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="160"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="167"/>
         <source>Manufacturer: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="161"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="168"/>
         <source>Serial number: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="162"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="169"/>
         <source>Location: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="163"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="170"/>
         <source>Vendor Identifier: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="164"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="171"/>
         <source>Product Identifier: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="178"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="185"/>
         <source>The settings have been successfully updated</source>
         <translation>Настройки порта и программы успешно обновлены</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="189"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="196"/>
         <source>The settings have not been updated</source>
         <translation>Настройки порта и программы не были обновлены</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="341"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="348"/>
         <source>Invalid serial port baud rate! The setting is reset to default</source>
         <translation>Недопустимая скорость передачи данных последовательного порта! Параметр сброшен на значение по умолчанию</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="299"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="305"/>
         <source>Port %1: </source>
         <translation>Порт %1: </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="464"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="470"/>
         <source>Information from Device:</source>
         <translation>Информация от RTC устройства:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="523"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="529"/>
         <source>Request for the information failed. </source>
         <translation>Запрос информации от устройства не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="535"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="541"/>
         <source>Adjust clock Date/Time..</source>
         <translation>Настройка точного времени..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="559"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="565"/>
         <source>Request for adjustment </source>
         <translation>Запрос на установку точного времени </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="559"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="609"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="635"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="664"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="565"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="615"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="641"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="670"/>
         <source>completed successfully</source>
         <translation>успешно завершен</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="559"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="609"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="635"/>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="664"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="565"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="615"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="641"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="670"/>
         <source>failed</source>
         <translation>не удался</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="563"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="569"/>
         <source>Request for adjustment failed. </source>
         <translation>Запрос на установку точного времени не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="575"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="581"/>
         <source>Calibration the Oscillator..</source>
         <translation>Калибровка осциллятора..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="609"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="615"/>
         <source>Request for calibration </source>
         <translation>Запрос на калибровку </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="613"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="619"/>
         <source>Request for calibration failed. </source>
         <translation>Запрос на калибровку не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="625"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="631"/>
         <source>Reset the calibration Parameters..</source>
         <translation>Сброс параметров калибровки..</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="635"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="641"/>
         <source>Request for reset </source>
         <translation>Запрос на сброс параметров </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="639"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="645"/>
         <source>Request for reset failed. </source>
         <translation>Запрос на сброс параметров не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="650"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="656"/>
         <source>Set register Value to </source>
         <translation>Установить значение регистра равным </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="664"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="670"/>
         <source>Request for SetRegister </source>
         <translation>Запрос на перезапись регистра </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="668"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="674"/>
         <source>Request for SetRegister failed. </source>
         <translation>Запрос на перезапись регистра не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="698"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="704"/>
         <source>Processing of data failed</source>
         <translation>Ошибка обработки данных</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="701"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="707"/>
         <source>Received parameters are invalid</source>
         <translation>Получены недопустимые значения</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="704"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="710"/>
         <source>Input data too long</source>
         <translation>Входящие данные превышают лимит</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="707"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="713"/>
         <source>State of device is undefined</source>
         <translation>Состояние устройства не определено</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="710"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="716"/>
         <source>Unpredictable error</source>
         <translation>Непредсказуемая ошибка</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="713"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="719"/>
         <source>No connection to RTC device</source>
         <translation>Нет подключения к RTC устройству</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="716"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="722"/>
         <source>The received status is invalid: </source>
         <translation>Получен недопустимый статус: </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="722"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="728"/>
         <source>Status Request failed. </source>
         <translation>Запрос статуса устройства не удался. </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="723"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="729"/>
         <source>Not received a response to the device status request. Port %1: </source>
         <translation>Не получен ответ на запрос о статусе устройства. Порт %1: </translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/rtc.cpp" line="728"/>
+        <location filename="../SynchroTimeApp/rtc.cpp" line="734"/>
         <source>Device status requests have been stopped</source>
         <translation>Остановлены запросы статуса устройства</translation>
     </message>
@@ -673,47 +678,47 @@ Advice: terminate unnecessary applications!</source>
         <translation>Дополнительные настройки</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="105"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="193"/>
         <source>Local Time Zone:</source>
         <translation>Часовой пояс:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="167"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="131"/>
         <source>Request rate, ms:</source>
         <translation>Запросы, ms:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="196"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="108"/>
         <source>Detect delay</source>
         <translation>Отображать delay</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="128"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="144"/>
         <source>Status Control</source>
         <translation>Контроль статуса</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="115"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="203"/>
         <source>Do you need automatic daylight savings time?</source>
         <translation>автоматический переход на летнее время?</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="118"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="206"/>
         <source>Summer time</source>
         <translation>Летнее время</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="125"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="141"/>
         <source>Do you want the status of your device to be checked automatically?</source>
         <translation>Установите, чтобы состояние вашего устройства проверялось автоматически.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="135"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="151"/>
         <source>Interval for repeating device status requests, in milliseconds.</source>
         <translation>Интервал повторения запросов состояния устройства в миллисекундах.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="151"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="115"/>
         <source>Select your local time zone.</source>
         <translation>Выберите ваш местный часовой пояс.</translation>
     </message>
@@ -723,52 +728,57 @@ Advice: terminate unnecessary applications!</source>
         <translation>Поправочный коэффициент между отклонением частоты и значением регистра старения.</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="193"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="105"/>
         <source>Whether to display the median delay per request?</source>
         <translation>Отображать медианную задержку на запрос?</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="203"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="167"/>
         <source>Correction factor:</source>
         <translation>Поправка k:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="227"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="213"/>
+        <source>System TimeZone set to:</source>
+        <translation>Часовой пояс системы:</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="234"/>
         <source>Select Serial Port</source>
         <translation>Выбор серийного порта</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="236"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="243"/>
         <source>Description:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="243"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="250"/>
         <source>Manufacturer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="250"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="257"/>
         <source>Serial number:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="257"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="264"/>
         <source>Location:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="264"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="271"/>
         <source>Vendor ID:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="271"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="278"/>
         <source>Product ID:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="39"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="40"/>
         <source>N/A</source>
         <translation type="unfinished"></translation>
     </message>
