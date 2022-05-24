@@ -429,52 +429,107 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
         <translation>Russisch</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="68"/>
-        <source>System TimeZone set to GMT %1%2</source>
-        <translation>Zeitzone des Systems GMT %1%2</translation>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="165"/>
+        <source>Serial Port Settings</source>
+        <translation>Einstellungen serieller Schnittstelle</translation>
     </message>
     <message>
         <location filename="../SynchroTimeApp/settingsdialog.cpp" line="166"/>
+        <source>Select Serial Port</source>
+        <translation>Auswahl der seriellen Ports</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="167"/>
+        <source>Select UART Parameters</source>
+        <translation>UART-Parameters</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="168"/>
+        <source>Additional options</source>
+        <translation>Zusätzliche Einstellungen</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="169"/>
+        <source>Restore</source>
+        <translation>Zurücksetzen</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="170"/>
+        <source>Status Control</source>
+        <translation>Statuskontrolle</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="171"/>
+        <source>Detect delay</source>
+        <translation>Zeigen delay</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="172"/>
+        <source>Summer time</source>
+        <translation>Sommerzeit</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="173"/>
+        <source>Request rate, ms:</source>
+        <translation>Statusabfrage ms:</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="174"/>
+        <source>Correction factor:</source>
+        <translation>Korrekturfaktor k:</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="175"/>
+        <source>Local Time Zone:</source>
+        <translation>Örtliche Zeitzone:</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="176"/>
+        <source>System TimeZone set to:</source>
+        <translation>Zeitzone des Systems:</translation>
+    </message>
+    <message>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="192"/>
         <source>Description: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="167"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="193"/>
         <source>Manufacturer: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="168"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="194"/>
         <source>Serial number: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="169"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="195"/>
         <source>Location: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="170"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="196"/>
         <source>Vendor Identifier: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="171"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="197"/>
         <source>Product Identifier: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="185"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="211"/>
         <source>The settings have been successfully updated</source>
         <translation>Einstellungen wurden erfolgreich aktualisiert</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="196"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="222"/>
         <source>The settings have not been updated</source>
         <translation>Einstellungen wurden nicht aktualisiert</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="348"/>
+        <location filename="../SynchroTimeApp/settingsdialog.cpp" line="374"/>
         <source>Invalid serial port baud rate! The setting is reset to default</source>
         <translation>Ungültige Baudrate der seriellen Schnittstelle! Die Einstellung wird auf Standard zurückgesetzt</translation>
     </message>
@@ -743,37 +798,37 @@ Hinweis: Schließen Sie unnötige Anwendungen!</translation>
         <translation>Zeitzone des Systems:</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="234"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="241"/>
         <source>Select Serial Port</source>
         <translation>Auswahl der seriellen Ports</translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="243"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="250"/>
         <source>Description:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="250"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="257"/>
         <source>Manufacturer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="257"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="264"/>
         <source>Serial number:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="264"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="271"/>
         <source>Location:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="271"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="278"/>
         <source>Vendor ID:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SynchroTimeApp/settingsdialog.ui" line="278"/>
+        <location filename="../SynchroTimeApp/settingsdialog.ui" line="285"/>
         <source>Product ID:</source>
         <translation type="unfinished"></translation>
     </message>

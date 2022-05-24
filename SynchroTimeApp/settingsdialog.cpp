@@ -65,7 +65,7 @@ SettingsDialog::SettingsDialog( Settings *const settings, QWidget *parent ) :
     utc.setTimeSpec( Qt::UTC );
     const qint64 timeZone = localTime.secsTo( utc ) / 3600;
     const char sign = ( timeZone < 0 ) ? '\0' : '+';
-    ui->localTimeZoneLabel->setText( QObject::tr( "System TimeZone set to GMT %1%2" ).arg(sign).arg(timeZone) );
+    ui->timeZoneValueLabel->setText( QStringLiteral( "GMT%1%2" ).arg(sign).arg(timeZone) );
 
     QObject::connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     QObject::connect(this, &QDialog::accepted, this, &SettingsDialog::apply);
@@ -152,6 +152,32 @@ void SettingsDialog::show()
 {
     fillPortsInfo();
     QWidget::show();
+}
+
+//! \brief SettingsDialog::changeEvent
+//! This function intercepts events when the user interface language is changed.
+//!
+//! \param event of type QEvent*
+//!
+void SettingsDialog::changeEvent(QEvent *event)
+{
+    if ( event->type() == QEvent::LanguageChange ) {
+        SettingsDialog::setWindowTitle( QObject::tr( "Serial Port Settings" ));
+        ui->selectBox->setTitle( QObject::tr( "Select Serial Port" ));
+        ui->parametersBox->setTitle( QObject::tr( "Select UART Parameters" ));
+        ui->additionalOptionsGroupBox->setTitle( QObject::tr( "Additional options" ));
+        ui->resetButton->setText( QObject::tr( "Restore" ));
+        ui->statusControlCheckBox->setText( QObject::tr( "Status Control" ));
+        ui->detectDelayCheckBox->setText( QObject::tr( "Detect delay" ));
+        ui->summerTimeCheckBox->setText( QObject::tr( "Summer time" ));
+        ui->requestRateLabel->setText( QObject::tr( "Request rate, ms:" ));
+        ui->faktorLabel->setText( QObject::tr( "Correction factor:" ));
+        ui->timeZoneLabel->setText( QObject::tr( "Local Time Zone:" ));
+        ui->localTimeZoneLabel->setText( QObject::tr( "System TimeZone set to:" ));
+    }
+    else {
+        QDialog::changeEvent( event );
+    }
 }
 
 //! \brief SettingsDialog::showPortInfo

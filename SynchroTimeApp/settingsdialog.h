@@ -54,6 +54,9 @@ signals:
 public slots:
     void show();
 
+protected:
+    void changeEvent( QEvent *event ) Q_DECL_OVERRIDE;
+
 private slots:
     void showPortInfo(int idx);
     void apply();
