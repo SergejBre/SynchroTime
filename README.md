@@ -27,7 +27,7 @@
 ____
 
 ## Motivation. What is a Real-Time Clock (RTC)?
-Electronic devices perform tasks in response to the periodic oscillation of an electrically varying digital voltage signal or clock signal. On the other hand, human time (also known as “real” time) is measured in seconds, minutes, hours, days, months, and years as dictated by the rotational cycles of the earth. For electronic devices (such as a smart watch) to perform their tasks when required by a user, they must store a digital representation of real time, which is then kept in sync by the digital clock signal. In an electronic device, realtime information is maintained by its RTC circuitry. This will usually be located within the device microcontroller or may be a separate IC on the system board, like IC DS3231.
+Electronic devices perform tasks in response to the periodic oscillation of an electrically varying digital voltage signal or clock signal. On the other hand, human time (also known as “real” time) is measured in seconds, minutes, hours, days, months, and years as dictated by the rotational cycles of the earth. For electronic devices (such as a smart watch) to perform their tasks when required by a user, they must store a digital representation of real time, which is then kept in sync by the digital clock signal. In an electronic device, realtime information is maintained by its RTC circuitry. This will usually be located within the device microcontroller or may be a separate IC on the system board.
 
 The real-time clock module on the IC [DS3231](https://create.arduino.cc/projecthub/MisterBotBreak/how-to-use-a-real-time-clock-module-ds3231-bc90fe) has proven itself well in work with microcontrollers Arduino, Raspberry Pi, etc. According to the declared specification, it is an extremely accurate RTC with a guaranteed accuracy ±2 ppm (from 0°C to +40°C), which translates into an error of just 1 minute over the course of a year under the worst case scenario. But a large number of modules on the market do not meet the accuracy declared by the manufacturer, which is undoubtedly upsetting. Nevertheless, the manufacturer has provided for the possibility of correcting the drift of the frequency, which is associated with the aging of the oscillator crystal in the range from -12.8 to +12.7 ppm. This correction value can be written to one of the registers on the DS3231 (see part [Discussion](#Discussion) for exact ppm values). In addition, the manufacturer has provided a the energy-independent flash memory AT24C256 in the module, into which calibration parameters and correction factors can be placed. The tool below can automatically calibrate the DS3231 module.
 ____
@@ -388,21 +388,9 @@ ____
 | Qt lib 32bit | ⩾ 5.5.1 or 5.12.12 for Win32/pe  | Didn't test with older versions, but it may work|
 | Qt lib 64bit | ⩾ 5.6.3                          | Didn't test with older versions, but it may work|
 | C++ compiler | supporting C++11 (i.e. GCC-7.5.0) | resp MinGW32-7.3.0 for Win32/pe release         |
-| Arduino IDE  | ⩾ 1.8.13                          | !Replace compilation flags from -Os to -O2 (\*)  |
+| Arduino IDE  | ⩾ 1.8.13                          | [Arduino IDE](https://www.arduino.cc/en/software) |
 | RTC library  | ⩾ 1.13.0                          | Adafruit RTC library for Arduino [RTClib](https://github.com/adafruit/RTClib) |
 | QCustomPlot  | ⩾ 2.1.0                           | [QCustomPlot](https://gitlab.com/DerManu/QCustomPlot) |
-
-(\*) To do this, you need to edit the `platform.txt` file, which is located in the following path `[directory of the installed Arduino IDE]/hardware/arduino/avr/platform.txt`, find and edit these lines:
-```
-...
-# compiler.c.flags=-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects
-# compiler.c.elf.flags={compiler.warning_flags} -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections
-compiler.c.flags=-c -g -O2 {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects
-compiler.c.elf.flags={compiler.warning_flags} -O2 -g -flto -fuse-linker-plugin -Wl,--gc-sections
-...
-# compiler.cpp.flags=-c -g -Os {compiler.warning_flags} -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto
-compiler.cpp.flags=-c -g -O2 {compiler.warning_flags} -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto
-```
 
 Dependencies on Qt libraries in case of dynamic application build:
 ```
