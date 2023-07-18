@@ -43,11 +43,11 @@ Connecting DS3231 MINI module to arduino board:
 #define DS3231_TEMPERATUREREG 0x11 // Temperature register (high byte - low byte is at 0x12), 10-bit temperature value
 //#define EEPROM_ADDRESS 0x57   // AT24C256 address (256 kbit = 32 kbyte serial EEPROM)
 #define MIN_TIME_SPAN 100000  // The minimum time required for a stable calculation of the frequency drift [in secs]. Default value 200000.
-typedef enum task : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG } task_t;
-typedef struct time_s {
-  uint32_t utc;
+enum task_t : uint8_t { TASK_IDLE, TASK_ADJUST, TASK_INFO, TASK_CALIBR, TASK_RESET, TASK_SETREG, TASK_STATUS, TASK_WRONG };
+struct time_t {
+  uint32_t utc;       // This is a Coordinated Universal Time (UTC-time) + time-zone offset
   uint16_t milliSecs;
-} time_t;
+};
 
 RTC_DS3231 rtc;
 static uint8_t buff[4];  // temporary buffer
